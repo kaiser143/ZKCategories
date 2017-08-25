@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'ZKCategories_Example' do
+  pod 'ZKCategories', :path => '../'
+
+  target 'ZKCategories_Tests' do
+    inherit! :search_paths
+
+    pod 'FBSnapshotTestCase'
+  end
+end
