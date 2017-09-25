@@ -47,6 +47,8 @@
 		4B817C941F4FC12C006D22DF /* ZKCategories.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B817C731F4FC12C006D22DF /* ZKCategories.h */; };
 		4B817C951F4FC12C006D22DF /* ZKCGUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B817C741F4FC12C006D22DF /* ZKCGUtilities.h */; };
 		4B817C961F4FC12C006D22DF /* ZKCGUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B817C751F4FC12C006D22DF /* ZKCGUtilities.m */; };
+		4BD626A91F78AF3700A7F616 /* UIColor+ZKAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BD626A71F78AF3700A7F616 /* UIColor+ZKAdd.h */; };
+		4BD626AA1F78AF3700A7F616 /* UIColor+ZKAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD626A81F78AF3700A7F616 /* UIColor+ZKAdd.m */; };
 		4D1C92CB4ADFF0820902B9485DA31B97 /* Pods-ZKCategories_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = D1DB3786681610DB2FC0CA8FD572A474 /* Pods-ZKCategories_Tests-dummy.m */; };
 		4F970E30684B4BCBF69FF90250FB30CB /* Pods-ZKCategories_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = D24A6BEC4D2AE503C7392A15DDA3F8A3 /* Pods-ZKCategories_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		506D761F91EC3583789A837C559972FE /* FBSnapshotTestCase-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 52C18C0EB1FED5EB5CE3B0E768AC510F /* FBSnapshotTestCase-dummy.m */; };
@@ -137,6 +139,8 @@
 		4B817C731F4FC12C006D22DF /* ZKCategories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZKCategories.h; path = ZKCategories/Classes/ZKCategories.h; sourceTree = "<group>"; };
 		4B817C741F4FC12C006D22DF /* ZKCGUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZKCGUtilities.h; path = ZKCategories/Classes/ZKCGUtilities.h; sourceTree = "<group>"; };
 		4B817C751F4FC12C006D22DF /* ZKCGUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZKCGUtilities.m; path = ZKCategories/Classes/ZKCGUtilities.m; sourceTree = "<group>"; };
+		4BD626A71F78AF3700A7F616 /* UIColor+ZKAdd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+ZKAdd.h"; sourceTree = "<group>"; };
+		4BD626A81F78AF3700A7F616 /* UIColor+ZKAdd.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+ZKAdd.m"; sourceTree = "<group>"; };
 		52C18C0EB1FED5EB5CE3B0E768AC510F /* FBSnapshotTestCase-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "FBSnapshotTestCase-dummy.m"; sourceTree = "<group>"; };
 		58A2557E7CE20AACCD1B28B1CD1F920D /* FBSnapshotTestCasePlatform.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FBSnapshotTestCasePlatform.m; path = FBSnapshotTestCase/FBSnapshotTestCasePlatform.m; sourceTree = "<group>"; };
 		5F4A25359350F249BBACE4DE0C2F9BE4 /* FBSnapshotTestCase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSnapshotTestCase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -379,6 +383,8 @@
 				4B817C731F4FC12C006D22DF /* ZKCategories.h */,
 				4B817C741F4FC12C006D22DF /* ZKCGUtilities.h */,
 				4B817C751F4FC12C006D22DF /* ZKCGUtilities.m */,
+				4BD626A71F78AF3700A7F616 /* UIColor+ZKAdd.h */,
+				4BD626A81F78AF3700A7F616 /* UIColor+ZKAdd.m */,
 				CC64D607E0D4F81EB95709115681E3BA /* Support Files */,
 			);
 			name = ZKCategories;
@@ -478,6 +484,7 @@
 				4B817C801F4FC12C006D22DF /* NSRunLoop+ZKAdd.h in Headers */,
 				4B817C8C1F4FC12C006D22DF /* UITableView+ZKAdd.h in Headers */,
 				4B817C901F4FC12C006D22DF /* UIView+ZKAdd.h in Headers */,
+				4BD626A91F78AF3700A7F616 /* UIColor+ZKAdd.h in Headers */,
 				BC952FC04FC963C1294DCD619C9B6B3B /* UIApplication+StrictKeyWindow.h in Headers */,
 				4B817C7E1F4FC12C006D22DF /* NSObject+ZKAdd.h in Headers */,
 				CAFA5E486BCE117A7D8C0FBF9DA6666B /* UIImage+Compare.h in Headers */,
@@ -622,6 +629,7 @@
 				DB7A106243AC974FC7EBEB00B506C786 /* FBSnapshotTestCasePlatform.m in Sources */,
 				4B817C7D1F4FC12C006D22DF /* NSNumber+ZKAdd.m in Sources */,
 				4B817C871F4FC12C006D22DF /* UIBarButtonItem+ZKAdd.m in Sources */,
+				4BD626AA1F78AF3700A7F616 /* UIColor+ZKAdd.m in Sources */,
 				4B817C811F4FC12C006D22DF /* NSRunLoop+ZKAdd.m in Sources */,
 				A4F69F3477A935285620AC3031C5C848 /* FBSnapshotTestController.m in Sources */,
 				4B817C851F4FC12C006D22DF /* NSURL+ZKAdd.m in Sources */,
