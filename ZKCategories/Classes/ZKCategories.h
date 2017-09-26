@@ -24,6 +24,7 @@
 #import <ZKCategories/NSRunLoop+ZKAdd.h>
 #import <ZKCategories/ZKCGUtilities.h>
 #import <ZKCategories/NSDecimalNumber+ZKAdd.h>
+#import <ZKCategories/UIColor+ZKAdd.h>
 #else
 #import "NSObject+ZKAdd.h"
 #import "NSDictionary+ZKAdd.h"
@@ -40,4 +41,5 @@
 #import "NSRunLoop+ZKAdd.h"
 #import "ZKCGUtilities.h"
 #import "NSDecimalNumber+ZKAdd.h"
+#import "UIColor+ZKAdd.h"
 #endif
