@@ -19,6 +19,7 @@
 #import "NSString+ZKAdd.h"
 #import "NSURL+ZKAdd.h"
 #import "UIBarButtonItem+ZKAdd.h"
+#import "UIColor+ZKAdd.h"
 #import "UIImagePickerController+ZKAdd.h"
 #import "UINavigationController+ZKAdd.h"
 #import "UITableView+ZKAdd.h"
