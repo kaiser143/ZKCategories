@@ -8,7 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+#ifndef _ZKCategories_
+#define _ZKCategories_
+
 #if __has_include(<ZKCategories/ZKCategories.h>)
+
     #import <ZKCategories/NSObject+ZKAdd.h>
     #import <ZKCategories/NSDictionary+ZKAdd.h>
     #import <ZKCategories/NSDate+ZKAdd.h>
@@ -25,7 +29,9 @@
     #import <ZKCategories/UIWindow+ZKAdd.h>
     #import <ZKCategories/ZKCGUtilities.h>
     #import <ZKCategories/UIColor+ZKAdd.h>
+
 #else
+
     #import "NSObject+ZKAdd.h"
     #import "NSDictionary+ZKAdd.h"
     #import "NSDate+ZKAdd.h"
@@ -42,4 +48,7 @@
     #import "UIWindow+ZKAdd.h"
     #import "ZKCGUtilities.h"
     #import "UIColor+ZKAdd.h"
-#endif
+
+#endif  /* __has_inclue */
+
+#endif  /* _ZKCategories_ */
