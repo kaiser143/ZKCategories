@@ -24,7 +24,7 @@
     #import <ZKCategories/UITableView+ZKAdd.h>
     #import <ZKCategories/UIWindow+ZKAdd.h>
     #import <ZKCategories/ZKCGUtilities.h>
-    #import <ZKCategories/UIColor+ZKAdd.h>
+//    #import <ZKCategories/UIColor+ZKAdd.h>
 #else
     #import "NSObject+ZKAdd.h"
     #import "NSDictionary+ZKAdd.h"
