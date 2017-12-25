@@ -37,4 +37,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+
+@interface NSURL (ZKComparing)
+
+/**
+ Compares the receiver with another URL
+ @param URL another URL
+ @returns `YES` if the receiver is equivalent with the passed URL
+ */
+- (BOOL)isEqualToURL:(NSURL *)URL;
+
+@end
+
 NS_ASSUME_NONNULL_END

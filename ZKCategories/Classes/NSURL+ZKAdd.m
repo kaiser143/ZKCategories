@@ -76,3 +76,27 @@
 }
 
 @end
+
+@implementation NSURL (ZKComparing)
+
+- (BOOL)isEqualToURL:(NSURL *)URL {
+    // scheme must be same
+    if (![[self scheme] isEqualToString:[URL scheme]]) {
+        return NO;
+    }
+    
+    // host must be same
+    if (![[self host] isEqualToString:[URL host]]) {
+        return NO;
+    }
+    
+    // path must be same
+    if (![[self path] isEqualToString:[URL path]]) {
+        return NO;
+    }
+    
+    return YES;
+}
+
+@end
+
