@@ -27,8 +27,9 @@
     #import <ZKCategories/UIView+ZKAdd.h>
     #import <ZKCategories/UITableView+ZKAdd.h>
     #import <ZKCategories/UIWindow+ZKAdd.h>
-    #import <ZKCategories/ZKCGUtilities.h>
     #import <ZKCategories/UIColor+ZKAdd.h>
+    #import <ZKCategories/UIResponder+ZKAdd.h>
+    #import <ZKCategories/ZKUIConstants.h>
 
 #else
 
@@ -46,8 +47,9 @@
     #import "UIView+ZKAdd.h"
     #import "UITableView+ZKAdd.h"
     #import "UIWindow+ZKAdd.h"
-    #import "ZKCGUtilities.h"
     #import "UIColor+ZKAdd.h"
+    #import "UIResponder+ZKAdd.h"
+    #import "ZKUIConstants.h"
 
 #endif  /* __has_inclue */
 
