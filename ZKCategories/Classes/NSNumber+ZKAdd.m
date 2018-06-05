@@ -33,6 +33,14 @@
     return returnValue;
 }
 
+- (NSString *)stringWithDecimals:(NSInteger)decimals {
+    NSNumberFormatter *formatter = [NSNumberFormatter new];
+    formatter.locale = [NSLocale currentLocale];
+    formatter.maximumFractionDigits = decimals;
+    formatter.minimumFractionDigits = decimals;
+    return [formatter stringFromNumber:self];
+}
+
 - (NSString *)roundBankerValue {
     NSString *stringValue;
     

@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSNumber *)numberWithValue:(CGFloat)value;
 
+- (NSString *)stringWithDecimals:(NSInteger)decimals;
+
 @end
 
 NS_ASSUME_NONNULL_END
