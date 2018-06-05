@@ -14,7 +14,7 @@
  @param category A content size category constant string.
  @returns A float constant font size difference.
  */
-__unused static CGFloat SLKPointSizeDifferenceForCategory(NSString *category)
+__unused static CGFloat ZKPointSizeDifferenceForCategory(NSString *category)
 {
     if ([category isEqualToString:UIContentSizeCategoryExtraSmall])                         return -3.0;
     if ([category isEqualToString:UIContentSizeCategorySmall])                              return -2.0;
