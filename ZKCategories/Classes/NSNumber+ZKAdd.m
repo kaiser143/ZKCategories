@@ -38,6 +38,7 @@
     formatter.locale = [NSLocale currentLocale];
     formatter.maximumFractionDigits = decimals;
     formatter.minimumFractionDigits = decimals;
+    formatter.minimumIntegerDigits = 1;
     return [formatter stringFromNumber:self];
 }
 
