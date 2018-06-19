@@ -45,4 +45,16 @@
     return parameterString;
 }
 
+- (NSDictionary *)dictionaryByAddingEntriesFromDictionary:(NSDictionary *)dictionary {
+    NSMutableDictionary *result = [self mutableCopy];
+    [result addEntriesFromDictionary:dictionary];
+    return result;
+}
+
+- (NSDictionary *)dictionaryByRemovingValuesForKeys:(NSArray *)keys {
+    NSMutableDictionary *result = [self mutableCopy];
+    [result removeObjectsForKeys:keys];
+    return result;
+}
+
 @end
