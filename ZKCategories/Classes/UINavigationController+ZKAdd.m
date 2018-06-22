@@ -10,7 +10,7 @@
 
 @implementation UINavigationController (ZKAdd)
 
-- (UIViewController *) viewControllerForClass:(Class)cls {
+- (UIViewController *)viewControllerForClass:(Class)cls {
     for (UIViewController *each in self.viewControllers) {
         if ([each isKindOfClass:cls] == YES) {
             return each;
@@ -20,13 +20,16 @@
     return nil;
 }
 
-- (NSArray *) popToViewControllerClass:(Class)aClass animated:(BOOL)animated {
+- (NSArray *)popToViewControllerClass:(Class)aClass animated:(BOOL)animated {
     UIViewController *controller = [self viewControllerForClass:aClass];
+    if (!controller) {
+        return nil;
+    }
     
     return [self popToViewController:controller animated:animated];
 }
 
-- (UIViewController *) popThenPushViewController:(UIViewController *)viewController animated:(BOOL)animated {
+- (UIViewController *)popThenPushViewController:(UIViewController *)viewController animated:(BOOL)animated {
     UIViewController *controller = [self popViewControllerAnimated:NO];
     
     [self pushViewController:viewController animated:animated];
