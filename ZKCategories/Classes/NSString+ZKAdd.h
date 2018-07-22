@@ -66,6 +66,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSURL *)URL;
 - (nullable NSURL *)URLRelativeToURL:(nullable NSURL *)baseURL;
 
+- (BOOL)contains:(nonnull NSString *)substring;
+- (BOOL)startWith:(nonnull NSString *)substring;
+- (BOOL)endWith:(nonnull NSString *)substring;
+- (NSUInteger)indexOf:(nonnull NSString *)substring;
+- (NSArray *)split:(nonnull NSString *)token;
+
 @end
 
 
