@@ -66,6 +66,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSURL *)URL;
 - (nullable NSURL *)URLRelativeToURL:(nullable NSURL *)baseURL;
 
+#pragma mark - Java API
+
 - (BOOL)contains:(nonnull NSString *)substring;
 - (BOOL)startWith:(nonnull NSString *)substring;
 - (BOOL)endWith:(nonnull NSString *)substring;

@@ -26,6 +26,8 @@
 		3D76DBCA84B5A9C72F1C39E3DCB7D682 /* UINavigationController+ZKAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FDCF9D68E6EA465DE49EA7BD4BB10EA /* UINavigationController+ZKAdd.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3EEFF00D09CDA8CD27108DE8299C24CC /* NSRunLoop+ZKAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = A241537CD82DEE4ED4A801B13B7A8693 /* NSRunLoop+ZKAdd.m */; };
 		421CDD701AEE0F2458A84200366CDD0F /* UIImage+Snapshot.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B161931541BFE46DFEA2092EDDDA815 /* UIImage+Snapshot.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		4B27AEC42126EF9100948C01 /* NSArray+ZKAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B27AEC22126EF9100948C01 /* NSArray+ZKAdd.h */; };
+		4B27AEC52126EF9100948C01 /* NSArray+ZKAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B27AEC32126EF9100948C01 /* NSArray+ZKAdd.m */; };
 		4BC8A48620AED63B0052CEDF /* UIResponder+ZKAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC8A48420AED63B0052CEDF /* UIResponder+ZKAdd.h */; };
 		4BC8A48720AED63B0052CEDF /* UIResponder+ZKAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC8A48520AED63B0052CEDF /* UIResponder+ZKAdd.m */; };
 		4D1C92CB4ADFF0820902B9485DA31B97 /* Pods-ZKCategories_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = D1DB3786681610DB2FC0CA8FD572A474 /* Pods-ZKCategories_Tests-dummy.m */; };
@@ -111,6 +113,8 @@
 		454BC962EC1C4DED7779A8F9EC025553 /* ZKCategories.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = ZKCategories.xcconfig; sourceTree = "<group>"; };
 		4901A3B1763D641BF34A716C85EEAA8B /* ZKCategories-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ZKCategories-prefix.pch"; sourceTree = "<group>"; };
 		4A1F75D7FCDDF81DFAA6705D78997B02 /* Pods-ZKCategories_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ZKCategories_Tests-resources.sh"; sourceTree = "<group>"; };
+		4B27AEC22126EF9100948C01 /* NSArray+ZKAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+ZKAdd.h"; path = "ZKCategories/Classes/NSArray+ZKAdd.h"; sourceTree = "<group>"; };
+		4B27AEC32126EF9100948C01 /* NSArray+ZKAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+ZKAdd.m"; path = "ZKCategories/Classes/NSArray+ZKAdd.m"; sourceTree = "<group>"; };
 		4BC8A47F20AED4F70052CEDF /* ZKUIConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ZKUIConstants.h; path = ZKCategories/Classes/ZKUIConstants.h; sourceTree = "<group>"; };
 		4BC8A48420AED63B0052CEDF /* UIResponder+ZKAdd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIResponder+ZKAdd.h"; path = "ZKCategories/Classes/UIResponder+ZKAdd.h"; sourceTree = "<group>"; };
 		4BC8A48520AED63B0052CEDF /* UIResponder+ZKAdd.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIResponder+ZKAdd.m"; path = "ZKCategories/Classes/UIResponder+ZKAdd.m"; sourceTree = "<group>"; };
@@ -351,6 +355,8 @@
 		BF52FE3CCF9A6A0D026D290F2CC1480A /* ZKCategories */ = {
 			isa = PBXGroup;
 			children = (
+				4B27AEC22126EF9100948C01 /* NSArray+ZKAdd.h */,
+				4B27AEC32126EF9100948C01 /* NSArray+ZKAdd.m */,
 				9C1F7CD1E76F2B7DF9F693C07FC0042F /* NSDate+ZKAdd.h */,
 				867D70A54E718D7643F04C22411DEC90 /* NSDate+ZKAdd.m */,
 				4F3BF6DD8BAFC00AB62D9F4D07927CFE /* NSDecimalNumber+ZKAdd.h */,
@@ -465,6 +471,7 @@
 			files = (
 				B758FB09FE2C06C1B8E36A71A9D76D41 /* FBSnapshotTestCase-umbrella.h in Headers */,
 				9673CF780F48C8E4EC2A331717B1F67C /* FBSnapshotTestCase.h in Headers */,
+				4B27AEC42126EF9100948C01 /* NSArray+ZKAdd.h in Headers */,
 				BFCE460CC33E8872B7156D4166340178 /* FBSnapshotTestCasePlatform.h in Headers */,
 				2F485B69F51E4F723A38410F31F08550 /* FBSnapshotTestController.h in Headers */,
 				BC952FC04FC963C1294DCD619C9B6B3B /* UIApplication+StrictKeyWindow.h in Headers */,
@@ -648,6 +655,7 @@
 				69DA8B003216466C60F029CBD79897F1 /* UIImage+Compare.m in Sources */,
 				4BC8A48720AED63B0052CEDF /* UIResponder+ZKAdd.m in Sources */,
 				35DD05FD595A6FE7F5A0692D12E319DC /* UIImage+Diff.m in Sources */,
+				4B27AEC52126EF9100948C01 /* NSArray+ZKAdd.m in Sources */,
 				756564ABAF2892FE7140C92A1CDDCF65 /* UIImage+Snapshot.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
