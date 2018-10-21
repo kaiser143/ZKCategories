@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+typedef void(^ZKNSObjectDelayBlock)(BOOL cancel);
+
 @interface NSObject (ZKAdd)
 
 // URL Parameter Strings
@@ -16,13 +18,10 @@
 - (id)safePerform:(SEL)selector;
 - (id)safePerform:(SEL)selector withObject:(id)object;
 
-+ (id)performBlock:(void (^)(void))block afterDelay:(NSTimeInterval)delay;
-+ (id)performBlock:(void (^)(id arg))block withObject:(id)anObject afterDelay:(NSTimeInterval)delay;
-- (id)performBlock:(void (^)(void))block afterDelay:(NSTimeInterval)delay;
-- (id)performBlock:(void (^)(id arg))block withObject:(id)anObject afterDelay:(NSTimeInterval)delay;
++ (ZKNSObjectDelayBlock)performBlock:(void(^)(void))block afterDelay:(NSTimeInterval)delay;
 
-+ (void)cancelBlock:(id)block;
-+ (void)cancelPreviousPerformBlock:(id)aWrappingBlockHandle __attribute__ ((deprecated));
++ (void)cancelBlock:(ZKNSObjectDelayBlock)block;
++ (void)cancelPreviousPerformBlock:(ZKNSObjectDelayBlock)aWrappingBlockHandle __attribute__ ((deprecated));
 
 @end
 
