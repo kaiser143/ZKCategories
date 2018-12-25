@@ -23,6 +23,7 @@
     #import <ZKCategories/NSDecimalNumber+ZKAdd.h>
     #import <ZKCategories/NSArray+ZKAdd.h>
     #import <ZKCategories/UIBarButtonItem+ZKAdd.h>
+    #import <ZKCategories/UIViewController+ZKAdd.h>
     #import <ZKCategories/UIImagePickerController+ZKAdd.h>
     #import <ZKCategories/UINavigationController+ZKAdd.h>
     #import <ZKCategories/UIView+ZKAdd.h>
@@ -45,6 +46,7 @@
     #import "NSDecimalNumber+ZKAdd.h"
     #import "NSArray+ZKAdd.h"
     #import "UIBarButtonItem+ZKAdd.h"
+    #import "UIViewController+ZKAdd.h"
     #import "UIImagePickerController+ZKAdd.h"
     #import "UINavigationController+ZKAdd.h"
     #import "UIView+ZKAdd.h"
