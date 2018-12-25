@@ -74,6 +74,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSUInteger)indexOf:(nonnull NSString *)substring;
 - (NSArray *)split:(nonnull NSString *)token;
 
+/*!
+ *    @brief    %1.0f Bytes", @"%1.1f KB", @"%1.1f MB", @"%1.1f GB", @"%1.1f TB
+ */
++ (NSString *)stringByFormattingBytes:(long long)bytes;
+
+
 @end
 
 
