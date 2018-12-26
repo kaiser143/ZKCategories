@@ -119,6 +119,7 @@
 		4A1F75D7FCDDF81DFAA6705D78997B02 /* Pods-ZKCategories_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ZKCategories_Tests-resources.sh"; sourceTree = "<group>"; };
 		4B12520921D26928000CBA5D /* UIViewController+ZKAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+ZKAdd.h"; path = "ZKCategories/Classes/UIViewController+ZKAdd.h"; sourceTree = "<group>"; };
 		4B12520A21D26928000CBA5D /* UIViewController+ZKAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+ZKAdd.m"; path = "ZKCategories/Classes/UIViewController+ZKAdd.m"; sourceTree = "<group>"; };
+		4B12521121D317BF000CBA5D /* ZKCategoriesMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ZKCategoriesMacro.h; path = ZKCategories/Classes/ZKCategoriesMacro.h; sourceTree = "<group>"; };
 		4B27AEC22126EF9100948C01 /* NSArray+ZKAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+ZKAdd.h"; path = "ZKCategories/Classes/NSArray+ZKAdd.h"; sourceTree = "<group>"; };
 		4B27AEC32126EF9100948C01 /* NSArray+ZKAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+ZKAdd.m"; path = "ZKCategories/Classes/NSArray+ZKAdd.m"; sourceTree = "<group>"; };
 		4B39E27921BBCB9E00006546 /* UIImage+ZKAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+ZKAdd.h"; path = "ZKCategories/Classes/UIImage+ZKAdd.h"; sourceTree = "<group>"; };
@@ -405,6 +406,7 @@
 				4BC8A48520AED63B0052CEDF /* UIResponder+ZKAdd.m */,
 				4B39E27921BBCB9E00006546 /* UIImage+ZKAdd.h */,
 				4B39E27A21BBCB9E00006546 /* UIImage+ZKAdd.m */,
+				4B12521121D317BF000CBA5D /* ZKCategoriesMacro.h */,
 				0D7D1612CA3BB906DE41B8F45125EB1B /* Support Files */,
 			);
 			name = ZKCategories;

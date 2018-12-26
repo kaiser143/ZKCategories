@@ -33,6 +33,7 @@
     #import <ZKCategories/UIImage+ZKAdd.h>
     #import <ZKCategories/UIResponder+ZKAdd.h>
     #import <ZKCategories/ZKUIConstants.h>
+    #import <ZKCategories/ZKCategoriesMacro.h>
 
 #else
 
@@ -56,6 +57,7 @@
     #import "UIImage+ZKAdd.h"
     #import "UIResponder+ZKAdd.h"
     #import "ZKUIConstants.h"
+    #import "ZKCategoriesMacro.h"
 
 #endif  /* __has_inclue */
 
