@@ -1,9 +1,9 @@
 //
 //  UINavigationController+ZKAdd.m
-//  Pods
+//  ZKCategories(https://github.com/kaiser143/ZKCategories.git)
 //
 //  Created by Kaiser on 2017/6/28.
-//
+//  Copyright © 2017年 Kaiser. All rights reserved.
 //
 
 #import "UINavigationController+ZKAdd.h"

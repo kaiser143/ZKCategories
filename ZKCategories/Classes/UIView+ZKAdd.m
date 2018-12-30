@@ -3,7 +3,7 @@
 //  shandiansong
 //
 //  Created by Kaiser on 2016/10/12.
-//  Copyright © 2016年 zhiqiyun. All rights reserved.
+//  Copyright © 2016年 Kaiser. All rights reserved.
 //
 
 #import "UIView+ZKAdd.h"
@@ -97,6 +97,7 @@ static char kZKActionHandlerLongPressGestureKey;
 @implementation UIView (ZKDebug)
 
 - (void)methodCalledNotFromMainThread:(NSString *)methodName {
+    NSLog(@"-[%@ %@] being called on background queue. Break on %s to find out where", NSStringFromClass([self class]), methodName, __PRETTY_FUNCTION__);
 }
 
 - (void)_setNeedsLayout_MainThreadCheck {

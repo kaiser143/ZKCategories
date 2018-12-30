@@ -1,9 +1,9 @@
 //
 //  NSObject+ZKAdd.m
-//  Pods
+//  ZKCategories(https://github.com/kaiser143/ZKCategories.git)
 //
 //  Created by Kaiser on 2017/1/11.
-//
+//  Copyright © 2017年 Kaiser. All rights reserved.
 //
 
 #import "NSObject+ZKAdd.h"

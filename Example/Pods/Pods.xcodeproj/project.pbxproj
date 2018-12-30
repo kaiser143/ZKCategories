@@ -30,6 +30,8 @@
 		4B12520C21D26929000CBA5D /* UIViewController+ZKAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B12520A21D26928000CBA5D /* UIViewController+ZKAdd.m */; };
 		4B2089FA21D8DA50000A91DF /* UIImageView+ZKAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B2089F821D8DA50000A91DF /* UIImageView+ZKAdd.h */; };
 		4B2089FB21D8DA50000A91DF /* UIImageView+ZKAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B2089F921D8DA50000A91DF /* UIImageView+ZKAdd.m */; };
+		4B208A0221D90B7A000A91DF /* NSError+ZKAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B208A0021D90B7A000A91DF /* NSError+ZKAdd.h */; };
+		4B208A0321D90B7A000A91DF /* NSError+ZKAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B208A0121D90B7A000A91DF /* NSError+ZKAdd.m */; };
 		4B27AEC42126EF9100948C01 /* NSArray+ZKAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B27AEC22126EF9100948C01 /* NSArray+ZKAdd.h */; };
 		4B27AEC52126EF9100948C01 /* NSArray+ZKAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B27AEC32126EF9100948C01 /* NSArray+ZKAdd.m */; };
 		4B39E27B21BBCB9F00006546 /* UIImage+ZKAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B39E27921BBCB9E00006546 /* UIImage+ZKAdd.h */; };
@@ -124,6 +126,8 @@
 		4B12521121D317BF000CBA5D /* ZKCategoriesMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ZKCategoriesMacro.h; path = ZKCategories/Classes/ZKCategoriesMacro.h; sourceTree = "<group>"; };
 		4B2089F821D8DA50000A91DF /* UIImageView+ZKAdd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIImageView+ZKAdd.h"; path = "ZKCategories/Classes/UIImageView+ZKAdd.h"; sourceTree = "<group>"; };
 		4B2089F921D8DA50000A91DF /* UIImageView+ZKAdd.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+ZKAdd.m"; path = "ZKCategories/Classes/UIImageView+ZKAdd.m"; sourceTree = "<group>"; };
+		4B208A0021D90B7A000A91DF /* NSError+ZKAdd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSError+ZKAdd.h"; path = "ZKCategories/Classes/NSError+ZKAdd.h"; sourceTree = "<group>"; };
+		4B208A0121D90B7A000A91DF /* NSError+ZKAdd.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "NSError+ZKAdd.m"; path = "ZKCategories/Classes/NSError+ZKAdd.m"; sourceTree = "<group>"; };
 		4B27AEC22126EF9100948C01 /* NSArray+ZKAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+ZKAdd.h"; path = "ZKCategories/Classes/NSArray+ZKAdd.h"; sourceTree = "<group>"; };
 		4B27AEC32126EF9100948C01 /* NSArray+ZKAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+ZKAdd.m"; path = "ZKCategories/Classes/NSArray+ZKAdd.m"; sourceTree = "<group>"; };
 		4B39E27921BBCB9E00006546 /* UIImage+ZKAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+ZKAdd.h"; path = "ZKCategories/Classes/UIImage+ZKAdd.h"; sourceTree = "<group>"; };
@@ -413,6 +417,8 @@
 				4B2089F821D8DA50000A91DF /* UIImageView+ZKAdd.h */,
 				4B2089F921D8DA50000A91DF /* UIImageView+ZKAdd.m */,
 				4B12521121D317BF000CBA5D /* ZKCategoriesMacro.h */,
+				4B208A0021D90B7A000A91DF /* NSError+ZKAdd.h */,
+				4B208A0121D90B7A000A91DF /* NSError+ZKAdd.m */,
 				0D7D1612CA3BB906DE41B8F45125EB1B /* Support Files */,
 			);
 			name = ZKCategories;
@@ -498,6 +504,7 @@
 				4BC8A48620AED63B0052CEDF /* UIResponder+ZKAdd.h in Headers */,
 				4B2089FA21D8DA50000A91DF /* UIImageView+ZKAdd.h in Headers */,
 				CAFA5E486BCE117A7D8C0FBF9DA6666B /* UIImage+Compare.h in Headers */,
+				4B208A0221D90B7A000A91DF /* NSError+ZKAdd.h in Headers */,
 				4B12520B21D26929000CBA5D /* UIViewController+ZKAdd.h in Headers */,
 				4B39E27B21BBCB9F00006546 /* UIImage+ZKAdd.h in Headers */,
 				051A816D6DD0CAE13496DDCFE0829167 /* UIImage+Diff.h in Headers */,
@@ -682,6 +689,7 @@
 				35DD05FD595A6FE7F5A0692D12E319DC /* UIImage+Diff.m in Sources */,
 				4B27AEC52126EF9100948C01 /* NSArray+ZKAdd.m in Sources */,
 				4B12520C21D26929000CBA5D /* UIViewController+ZKAdd.m in Sources */,
+				4B208A0321D90B7A000A91DF /* NSError+ZKAdd.m in Sources */,
 				756564ABAF2892FE7140C92A1CDDCF65 /* UIImage+Snapshot.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

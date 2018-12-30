@@ -1,8 +1,9 @@
 //
 //  UIResponder+ZKAdd.h
-//  FBSnapshotTestCase
+//  ZKCategories(https://github.com/kaiser143/ZKCategories.git)
 //
 //  Created by Kaiser on 2018/5/18.
+//  Copyright © 2018年 Kaiser. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

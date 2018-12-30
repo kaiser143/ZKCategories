@@ -1,8 +1,9 @@
 //
 //  UIColor+ZKAdd.h
-//  FBSnapshotTestCase
+//  ZKCategories(https://github.com/kaiser143/ZKCategories.git)
 //
-//  Created by zhangkai on 2017/9/25.
+//  Created by Kaiser on 2017/9/25.
+//  Copyright © 2017年 Kaiser. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

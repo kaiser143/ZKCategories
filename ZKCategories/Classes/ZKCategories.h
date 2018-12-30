@@ -1,9 +1,9 @@
 //
 //  ZKCategories.h
-//  Pods
+//  ZKCategories(https://github.com/kaiser143/ZKCategories.git)
 //
 //  Created by Kaiser on 2016/12/14.
-//
+//  Copyright © 2016年 Kaiser. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -22,6 +22,7 @@
     #import <ZKCategories/NSRunLoop+ZKAdd.h>
     #import <ZKCategories/NSDecimalNumber+ZKAdd.h>
     #import <ZKCategories/NSArray+ZKAdd.h>
+    #import <ZKCategories/NSError+ZKAdd.h>
     #import <ZKCategories/UIBarButtonItem+ZKAdd.h>
     #import <ZKCategories/UIViewController+ZKAdd.h>
     #import <ZKCategories/UIImagePickerController+ZKAdd.h>
@@ -47,6 +48,7 @@
     #import "NSRunLoop+ZKAdd.h"
     #import "NSDecimalNumber+ZKAdd.h"
     #import "NSArray+ZKAdd.h"
+    #import "NSError+ZKAdd.h"
     #import "UIBarButtonItem+ZKAdd.h"
     #import "UIViewController+ZKAdd.h"
     #import "UIImagePickerController+ZKAdd.h"
