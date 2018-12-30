@@ -183,7 +183,7 @@ const char kProcessedImage;
 }
 
 - (BOOL)isRounding {
-    objc_getAssociatedObject(self, _cmd);
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
 }
 
 - (void)setRounding:(BOOL)rounding {
