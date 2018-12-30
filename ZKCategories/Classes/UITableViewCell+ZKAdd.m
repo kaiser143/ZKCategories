@@ -8,7 +8,7 @@
 
 #import "UITableViewCell+ZKAdd.h"
 #import "UIView+ZKAdd.h"
-#import <objc/runtime.h>
+#import "NSObject+ZKAdd.h"
 
 @interface UITableViewCell ()
 
@@ -17,9 +17,7 @@
 @implementation UITableViewCell (ZKAdd)
 
 + (void)load {
-    Method originalMethod = class_getInstanceMethod(self, @selector(initWithStyle:reuseIdentifier:));
-    Method swizzledMethod = class_getInstanceMethod(self, @selector(zk_initWithStyle:reuseIdentifier:));
-    method_exchangeImplementations(originalMethod, swizzledMethod);
+    [self swizzleMethod:@selector(initWithStyle:reuseIdentifier:) withMethod:@selector(zk_initWithStyle:reuseIdentifier:)];
 }
 
 - (instancetype)zk_initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {

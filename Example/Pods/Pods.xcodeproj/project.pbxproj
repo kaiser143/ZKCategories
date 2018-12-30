@@ -28,6 +28,8 @@
 		421CDD701AEE0F2458A84200366CDD0F /* UIImage+Snapshot.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B161931541BFE46DFEA2092EDDDA815 /* UIImage+Snapshot.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		4B12520B21D26929000CBA5D /* UIViewController+ZKAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B12520921D26928000CBA5D /* UIViewController+ZKAdd.h */; };
 		4B12520C21D26929000CBA5D /* UIViewController+ZKAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B12520A21D26928000CBA5D /* UIViewController+ZKAdd.m */; };
+		4B2089FA21D8DA50000A91DF /* UIImageView+ZKAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B2089F821D8DA50000A91DF /* UIImageView+ZKAdd.h */; };
+		4B2089FB21D8DA50000A91DF /* UIImageView+ZKAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B2089F921D8DA50000A91DF /* UIImageView+ZKAdd.m */; };
 		4B27AEC42126EF9100948C01 /* NSArray+ZKAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B27AEC22126EF9100948C01 /* NSArray+ZKAdd.h */; };
 		4B27AEC52126EF9100948C01 /* NSArray+ZKAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B27AEC32126EF9100948C01 /* NSArray+ZKAdd.m */; };
 		4B39E27B21BBCB9F00006546 /* UIImage+ZKAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B39E27921BBCB9E00006546 /* UIImage+ZKAdd.h */; };
@@ -120,6 +122,8 @@
 		4B12520921D26928000CBA5D /* UIViewController+ZKAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+ZKAdd.h"; path = "ZKCategories/Classes/UIViewController+ZKAdd.h"; sourceTree = "<group>"; };
 		4B12520A21D26928000CBA5D /* UIViewController+ZKAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+ZKAdd.m"; path = "ZKCategories/Classes/UIViewController+ZKAdd.m"; sourceTree = "<group>"; };
 		4B12521121D317BF000CBA5D /* ZKCategoriesMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ZKCategoriesMacro.h; path = ZKCategories/Classes/ZKCategoriesMacro.h; sourceTree = "<group>"; };
+		4B2089F821D8DA50000A91DF /* UIImageView+ZKAdd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIImageView+ZKAdd.h"; path = "ZKCategories/Classes/UIImageView+ZKAdd.h"; sourceTree = "<group>"; };
+		4B2089F921D8DA50000A91DF /* UIImageView+ZKAdd.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+ZKAdd.m"; path = "ZKCategories/Classes/UIImageView+ZKAdd.m"; sourceTree = "<group>"; };
 		4B27AEC22126EF9100948C01 /* NSArray+ZKAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+ZKAdd.h"; path = "ZKCategories/Classes/NSArray+ZKAdd.h"; sourceTree = "<group>"; };
 		4B27AEC32126EF9100948C01 /* NSArray+ZKAdd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+ZKAdd.m"; path = "ZKCategories/Classes/NSArray+ZKAdd.m"; sourceTree = "<group>"; };
 		4B39E27921BBCB9E00006546 /* UIImage+ZKAdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+ZKAdd.h"; path = "ZKCategories/Classes/UIImage+ZKAdd.h"; sourceTree = "<group>"; };
@@ -406,6 +410,8 @@
 				4BC8A48520AED63B0052CEDF /* UIResponder+ZKAdd.m */,
 				4B39E27921BBCB9E00006546 /* UIImage+ZKAdd.h */,
 				4B39E27A21BBCB9E00006546 /* UIImage+ZKAdd.m */,
+				4B2089F821D8DA50000A91DF /* UIImageView+ZKAdd.h */,
+				4B2089F921D8DA50000A91DF /* UIImageView+ZKAdd.m */,
 				4B12521121D317BF000CBA5D /* ZKCategoriesMacro.h */,
 				0D7D1612CA3BB906DE41B8F45125EB1B /* Support Files */,
 			);
@@ -490,6 +496,7 @@
 				2F485B69F51E4F723A38410F31F08550 /* FBSnapshotTestController.h in Headers */,
 				BC952FC04FC963C1294DCD619C9B6B3B /* UIApplication+StrictKeyWindow.h in Headers */,
 				4BC8A48620AED63B0052CEDF /* UIResponder+ZKAdd.h in Headers */,
+				4B2089FA21D8DA50000A91DF /* UIImageView+ZKAdd.h in Headers */,
 				CAFA5E486BCE117A7D8C0FBF9DA6666B /* UIImage+Compare.h in Headers */,
 				4B12520B21D26929000CBA5D /* UIViewController+ZKAdd.h in Headers */,
 				4B39E27B21BBCB9F00006546 /* UIImage+ZKAdd.h in Headers */,
@@ -669,6 +676,7 @@
 				4B39E27C21BBCB9F00006546 /* UIImage+ZKAdd.m in Sources */,
 				1AB7934C16CE49DE196FFC7BE7278287 /* SwiftSupport.swift in Sources */,
 				094973D2D2F1E3B2E772F93C8147C6B9 /* UIApplication+StrictKeyWindow.m in Sources */,
+				4B2089FB21D8DA50000A91DF /* UIImageView+ZKAdd.m in Sources */,
 				69DA8B003216466C60F029CBD79897F1 /* UIImage+Compare.m in Sources */,
 				4BC8A48720AED63B0052CEDF /* UIResponder+ZKAdd.m in Sources */,
 				35DD05FD595A6FE7F5A0692D12E319DC /* UIImage+Diff.m in Sources */,

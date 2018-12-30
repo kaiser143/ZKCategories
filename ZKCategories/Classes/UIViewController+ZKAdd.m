@@ -7,6 +7,7 @@
 
 #import "UIViewController+ZKAdd.h"
 #import <objc/runtime.h>
+#import "NSObject+ZKAdd.h"
 
 static void * const kWillShowBlockKey   = (void*)&kWillShowBlockKey;
 static void * const kWillHideBlockKey   = (void*)&kWillHideBlockKey;
@@ -17,80 +18,72 @@ static void * const kNotificationsOnKey = (void*)&kNotificationsOnKey;
 @implementation UIViewController (ZKAdd)
 
 + (void)load {
-    [self bht_swizzleViewWillApper];
-    [self bht_swizzleViewDidDisapper];
+    [self swizzleMethod:@selector(viewWillAppear:) withMethod:@selector(__viewWillAppear:)];
+    [self swizzleMethod:@selector(viewDidDisappear:) withMethod:@selector(__viewDidDisappear:)];
 }
 
-+ (void)bht_swizzleViewWillApper {
-    Method original, swizz;
-    
-    original = class_getInstanceMethod([self class], @selector(viewWillAppear:));
-    swizz = class_getInstanceMethod([self class], @selector(bht_viewWillAppear:));
-    
-    method_exchangeImplementations(original, swizz);
+- (void)__viewWillAppear:(BOOL)animated {
+    [self __registerForKeyboardNotifications];
+    [self __viewWillAppear:animated];
 }
 
-- (void)bht_viewWillAppear:(BOOL)animated {
-    [self bht_registerForKeyboardNotifications];
-    [self bht_viewWillAppear:animated];
+- (void)__viewDidDisappear:(BOOL)animated {
+    [self __unregisterForKeyboardNotifications];
+    [self __viewDidDisappear:animated];
 }
 
-+ (void)bht_swizzleViewDidDisapper {
-    Method original, swizz;
-    
-    original = class_getInstanceMethod([self class], @selector(viewDidDisappear:));
-    swizz = class_getInstanceMethod([self class], @selector(bht_viewDidDisappear:));
-    method_exchangeImplementations(original, swizz);
-}
-
-- (void)bht_viewDidDisappear:(BOOL)animated {
-    [self bht_unregisterForKeyboardNotifications];
-    [self bht_viewDidDisappear:animated];
-}
-
-- (void)bht_setWillShowAnimationBlock:(ZKKeyboardFrameAnimationBlock)willShowBlock {
+- (void)__setWillShowAnimationBlock:(ZKKeyboardFrameAnimationBlock)willShowBlock {
     objc_setAssociatedObject(self, kWillShowBlockKey, willShowBlock, OBJC_ASSOCIATION_COPY);
 }
 
-- (ZKKeyboardFrameAnimationBlock)bht_willShowAnimationBlock {
+- (ZKKeyboardFrameAnimationBlock)__willShowAnimationBlock {
     return (ZKKeyboardFrameAnimationBlock)objc_getAssociatedObject(self, kWillShowBlockKey);
 }
 
-- (void)bht_setWillHideAnimationBlock:(ZKKeyboardFrameAnimationBlock)willHideBlock {
+- (void)__setWillHideAnimationBlock:(ZKKeyboardFrameAnimationBlock)willHideBlock {
     objc_setAssociatedObject(self, kWillHideBlockKey, willHideBlock, OBJC_ASSOCIATION_COPY);
 }
 
-- (ZKKeyboardFrameAnimationBlock)bht_willHideAnimationBlock {
+- (ZKKeyboardFrameAnimationBlock)__willHideAnimationBlock {
     return (ZKKeyboardFrameAnimationBlock)objc_getAssociatedObject(self, kWillHideBlockKey);
 }
 
-- (void)bht_setDidShowActionBlock:(ZKKeyboardFrameAnimationBlock)didShowBlock {
+- (void)__setDidShowActionBlock:(ZKKeyboardFrameAnimationBlock)didShowBlock {
     objc_setAssociatedObject(self, kDidShowBlockKey, didShowBlock, OBJC_ASSOCIATION_COPY);
 }
 
-- (ZKKeyboardFrameAnimationBlock)bht_didShowActionBlock {
+- (ZKKeyboardFrameAnimationBlock)__didShowActionBlock {
     return (ZKKeyboardFrameAnimationBlock)objc_getAssociatedObject(self, kDidShowBlockKey);
 }
 
-- (void)bht_setDidHideActionBlock:(ZKKeyboardFrameAnimationBlock)didHideBlock {
+- (void)__setDidHideActionBlock:(ZKKeyboardFrameAnimationBlock)didHideBlock {
     objc_setAssociatedObject(self, kDidHideBlockKey, didHideBlock, OBJC_ASSOCIATION_COPY);
 }
 
-- (ZKKeyboardFrameAnimationBlock)bht_didHideActionBlock {
+- (ZKKeyboardFrameAnimationBlock)__didHideActionBlock {
     return (ZKKeyboardFrameAnimationBlock)objc_getAssociatedObject(self, kDidHideBlockKey);
 }
 
-- (void)bht_setNotificationsOn:(BOOL)notificationsOn {
+- (void)__setNotificationsOn:(BOOL)notificationsOn {
     objc_setAssociatedObject(self, kNotificationsOnKey, @(notificationsOn), OBJC_ASSOCIATION_RETAIN);
 }
 
-- (BOOL)bht_areNotificationsOn {
+- (BOOL)__areNotificationsOn {
     return [(NSNumber *)objc_getAssociatedObject(self, kNotificationsOnKey) boolValue];
 }
 
+- (void)setKeyboardStatus:(ZKKeyboardStatus)keyboardStatus {
+    objc_setAssociatedObject(self, _cmd, @(keyboardStatus), OBJC_ASSOCIATION_RETAIN);
+}
+
+- (ZKKeyboardStatus)keyboardStatus {
+    ZKKeyboardStatus status = [objc_getAssociatedObject(self, @selector(setKeyboardStatus:)) unsignedIntegerValue];
+    return status;
+}
+
 - (void)setKeyboardWillShowAnimationBlock:(ZKKeyboardFrameAnimationBlock)showBlock {
-    if ([self bht_areNotificationsOn]) {
-        ZKKeyboardFrameAnimationBlock prevWillShowBlock = [self bht_willShowAnimationBlock];
+    if ([self __areNotificationsOn]) {
+        ZKKeyboardFrameAnimationBlock prevWillShowBlock = [self __willShowAnimationBlock];
         
         if (!showBlock && prevWillShowBlock)
             [self unregisterWillShowNotification];
@@ -98,12 +91,12 @@ static void * const kNotificationsOnKey = (void*)&kNotificationsOnKey;
             [self registerWillShowNotification];
     }
     
-    [self bht_setWillShowAnimationBlock:showBlock];
+    [self __setWillShowAnimationBlock:showBlock];
 }
 
 - (void)setKeyboardWillHideAnimationBlock:(ZKKeyboardFrameAnimationBlock)hideBlock {
-    if ([self bht_areNotificationsOn]) {
-        ZKKeyboardFrameAnimationBlock prevWillHideBlock = [self bht_willHideAnimationBlock];
+    if ([self __areNotificationsOn]) {
+        ZKKeyboardFrameAnimationBlock prevWillHideBlock = [self __willHideAnimationBlock];
         
         if (!hideBlock && prevWillHideBlock)
             [self unregisterWillHideNotification];
@@ -111,12 +104,12 @@ static void * const kNotificationsOnKey = (void*)&kNotificationsOnKey;
             [self registerWillHideNotification];
     }
     
-    [self bht_setWillHideAnimationBlock:hideBlock];
+    [self __setWillHideAnimationBlock:hideBlock];
 }
 
 - (void)setKeyboardDidShowActionBlock:(ZKKeyboardFrameAnimationBlock)didShowBlock {
-    if ([self bht_areNotificationsOn]) {
-        ZKKeyboardFrameAnimationBlock prevDidShowBlock = [self bht_didShowActionBlock];
+    if ([self __areNotificationsOn]) {
+        ZKKeyboardFrameAnimationBlock prevDidShowBlock = [self __didShowActionBlock];
         
         if (!didShowBlock && prevDidShowBlock)
             [self unregisterDidShowNotification];
@@ -124,12 +117,12 @@ static void * const kNotificationsOnKey = (void*)&kNotificationsOnKey;
             [self registerDidShowNotification];
     }
     
-    [self bht_setDidShowActionBlock:didShowBlock];
+    [self __setDidShowActionBlock:didShowBlock];
 }
 
 - (void)setKeyboardDidHideActionBlock:(ZKKeyboardFrameAnimationBlock)didHideBlock {
-    if ([self bht_areNotificationsOn]) {
-        ZKKeyboardFrameAnimationBlock prevDidHideBlock = [self bht_didHideActionBlock];
+    if ([self __areNotificationsOn]) {
+        ZKKeyboardFrameAnimationBlock prevDidHideBlock = [self __didHideActionBlock];
         
         if (!didHideBlock && prevDidHideBlock)
             [self unregisterDidHideNotification];
@@ -137,56 +130,56 @@ static void * const kNotificationsOnKey = (void*)&kNotificationsOnKey;
             [self registerDidHideNotification];
     }
     
-    [self bht_setDidHideActionBlock:didHideBlock];
+    [self __setDidHideActionBlock:didHideBlock];
 }
 
 #pragma mark - registering notifications
 
-- (void)bht_registerForKeyboardNotifications {
-    [self bht_setNotificationsOn:YES];
+- (void)__registerForKeyboardNotifications {
+    [self __setNotificationsOn:YES];
     
-    if ([self bht_willShowAnimationBlock])
+    if ([self __willShowAnimationBlock])
         [self registerWillShowNotification];
     
-    if ([self bht_willHideAnimationBlock])
+    if ([self __willHideAnimationBlock])
         [self registerWillHideNotification];
     
-    if ([self bht_didShowActionBlock])
+    if ([self __didShowActionBlock])
         [self registerDidShowNotification];
     
-    if ([self bht_didHideActionBlock])
+    if ([self __didHideActionBlock])
         [self registerDidHideNotification];
 }
 
 - (void)registerWillShowNotification {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(bht_keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(__keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 }
 
 - (void)registerWillHideNotification {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(bht_keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(__keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)registerDidShowNotification {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(bht_keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(__keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
 }
 
 - (void)registerDidHideNotification {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(bht_keyboardDidHide:) name:UIKeyboardDidHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(__keyboardDidHide:) name:UIKeyboardDidHideNotification object:nil];
 }
 
-- (void)bht_unregisterForKeyboardNotifications {
-    [self bht_setNotificationsOn:NO];
+- (void)__unregisterForKeyboardNotifications {
+    [self __setNotificationsOn:NO];
     
-    if ([self bht_willShowAnimationBlock])
+    if ([self __willShowAnimationBlock])
         [self unregisterWillShowNotification];
     
-    if ([self bht_willHideAnimationBlock])
+    if ([self __willHideAnimationBlock])
         [self unregisterWillHideNotification];
     
-    if ([self bht_didShowActionBlock])
+    if ([self __didShowActionBlock])
         [self unregisterDidShowNotification];
     
-    if ([self bht_didHideActionBlock])
+    if ([self __didHideActionBlock])
         [self unregisterDidHideNotification];
 }
 
@@ -209,27 +202,27 @@ static void * const kNotificationsOnKey = (void*)&kNotificationsOnKey;
 
 #pragma mark - notification callbacks
 
-- (void)bht_keyboardWillShow:(NSNotification *)notification {
-    [self bht_performAnimationBlock:[self bht_willShowAnimationBlock]
+- (void)__keyboardWillShow:(NSNotification *)notification {
+    [self __performAnimationBlock:[self __willShowAnimationBlock]
                    withNotification:notification];
 }
 
-- (void)bht_keyboardWillHide:(NSNotification *)notification {
-    [self bht_performAnimationBlock:[self bht_willHideAnimationBlock]
+- (void)__keyboardWillHide:(NSNotification *)notification {
+    [self __performAnimationBlock:[self __willHideAnimationBlock]
                    withNotification:notification];
 }
 
-- (void)bht_keyboardDidShow:(NSNotification *)notification {
-    [self bht_performAnimationBlock:[self bht_didShowActionBlock]
+- (void)__keyboardDidShow:(NSNotification *)notification {
+    [self __performAnimationBlock:[self __didShowActionBlock]
                    withNotification:notification];
 }
 
-- (void)bht_keyboardDidHide:(NSNotification *)notification {
-    [self bht_performAnimationBlock:[self bht_didHideActionBlock]
+- (void)__keyboardDidHide:(NSNotification *)notification {
+    [self __performAnimationBlock:[self __didHideActionBlock]
                    withNotification:notification];
 }
 
-- (void)bht_performAnimationBlock:(ZKKeyboardFrameAnimationBlock)animationBlock withNotification:(NSNotification *)notification {
+- (void)__performAnimationBlock:(ZKKeyboardFrameAnimationBlock)animationBlock withNotification:(NSNotification *)notification {
     if (!animationBlock)
         return;
     
@@ -238,12 +231,45 @@ static void * const kNotificationsOnKey = (void*)&kNotificationsOnKey;
     NSTimeInterval animationDuration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     NSInteger curve                  = [[info objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue] << 16;
     CGRect keyboardFrame             = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    ZKKeyboardStatus status          = [self __keyboardStatusForNotification:notification];
+    
+    if (!(status != ZKKeyboardStatusDidHide && [self __isIllogicalKeyboardStatus:status])) {
+        self.keyboardStatus = status;
+    }
     
     [UIView animateWithDuration:animationDuration
                           delay:0.0
-                        options:curve
+                        options:curve|UIViewAnimationOptionLayoutSubviews|UIViewAnimationOptionBeginFromCurrentState
                      animations:^{ animationBlock(keyboardFrame); }
                      completion:nil];
+}
+
+- (ZKKeyboardStatus)__keyboardStatusForNotification:(NSNotification *)notification {
+    NSString *name = notification.name;
+    
+    if ([name isEqualToString:UIKeyboardWillShowNotification]) {
+        return ZKKeyboardStatusWillShow;
+    }
+    if ([name isEqualToString:UIKeyboardDidShowNotification]) {
+        return ZKKeyboardStatusDidShow;
+    }
+    if ([name isEqualToString:UIKeyboardWillHideNotification]) {
+        return ZKKeyboardStatusWillHide;
+    }
+    if ([name isEqualToString:UIKeyboardDidHideNotification]) {
+        return ZKKeyboardStatusDidHide;
+    }
+    return -1;
+}
+
+- (BOOL)__isIllogicalKeyboardStatus:(ZKKeyboardStatus)newStatus {
+    if ((self.keyboardStatus == ZKKeyboardStatusDidHide && newStatus == ZKKeyboardStatusWillShow) ||
+        (self.keyboardStatus == ZKKeyboardStatusWillShow && newStatus == ZKKeyboardStatusDidShow) ||
+        (self.keyboardStatus == ZKKeyboardStatusDidShow && newStatus == ZKKeyboardStatusWillHide) ||
+        (self.keyboardStatus == ZKKeyboardStatusWillHide && newStatus == ZKKeyboardStatusDidHide)) {
+        return NO;
+    }
+    return YES;
 }
 
 @end

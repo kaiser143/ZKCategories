@@ -9,7 +9,7 @@
 #define ZKCategoriesMacro_h
 
 /*!
- *    @brief    系统隐藏方法
+ *    @brief    系统隐藏方法, 返回字段为测试代码所耗费的时间  单位 纳秒
  *    @param    count 循环次数， block 中写入待测试的代码
  */
 extern uint64_t dispatch_benchmark(size_t count, void(^block)(void));

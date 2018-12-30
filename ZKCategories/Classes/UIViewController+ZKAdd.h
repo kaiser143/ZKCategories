@@ -9,9 +9,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSUInteger, ZKKeyboardStatus) {
+    ZKKeyboardStatusDidHide,
+    ZKKeyboardStatusWillShow,
+    ZKKeyboardStatusDidShow,
+    ZKKeyboardStatusWillHide
+};
+
 typedef void(^ZKKeyboardFrameAnimationBlock)(CGRect keyboardFrame);
 
 @interface UIViewController (KeyboardNotifications)
+
+@property (nonatomic, readonly) ZKKeyboardStatus keyboardStatus;
 
 #pragma mark - Keyboard
 

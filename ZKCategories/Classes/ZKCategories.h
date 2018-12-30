@@ -31,6 +31,7 @@
     #import <ZKCategories/UIWindow+ZKAdd.h>
     #import <ZKCategories/UIColor+ZKAdd.h>
     #import <ZKCategories/UIImage+ZKAdd.h>
+    #import <ZKCategories/UIImageView+ZKAdd.h>
     #import <ZKCategories/UIResponder+ZKAdd.h>
     #import <ZKCategories/ZKUIConstants.h>
     #import <ZKCategories/ZKCategoriesMacro.h>
@@ -55,6 +56,7 @@
     #import "UIWindow+ZKAdd.h"
     #import "UIColor+ZKAdd.h"
     #import "UIImage+ZKAdd.h"
+    #import "UIImageView+ZKAdd.h"
     #import "UIResponder+ZKAdd.h"
     #import "ZKUIConstants.h"
     #import "ZKCategoriesMacro.h"
