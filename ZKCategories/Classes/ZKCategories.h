@@ -36,7 +36,17 @@
     #import <ZKCategories/UIResponder+ZKAdd.h>
     #import <ZKCategories/ZKUIConstants.h>
     #import <ZKCategories/ZKCategoriesMacro.h>
-
+    #import <ZKCategories/NSTimer+ZKAdd.h>
+    #import <ZKCategories/NSUserDefaults+ZKAdd.h>
+    #import <ZKCategories/UIControl+ZKAdd.h>
+    #import <ZKCategories/UITextField+ZKAdd.h>
+    #import <ZKCategories/UITextView+ZKAdd.h>
+    #import <ZKCategories/UIScreen+ZKAdd.h>
+    #import <ZKCategories/UIScrollView+ZKAdd.h>
+    #import <ZKCategories/ZKCGUtilities+ZKAdd.h>
+    #import <ZKCategories/UIGestureRecognizer+ZKAdd.h>
+    #import <ZKCategories/UIDevice+ZKAdd.h>
+    #import <ZKCategories/UIApplication+ZKAdd.h>
 #else
 
     #import "NSObject+ZKAdd.h"
@@ -62,6 +72,17 @@
     #import "UIResponder+ZKAdd.h"
     #import "ZKUIConstants.h"
     #import "ZKCategoriesMacro.h"
+    #import "NSTimer+ZKAdd.h"
+    #import "NSUserDefaults+ZKAdd.h"
+    #import "UIControl+ZKAdd.h"
+    #import "UITextField+ZKAdd.h"
+    #import "UITextView+ZKAdd.h"
+    #import "UIScreen+ZKAdd.h"
+    #import "UIScrollView+ZKAdd.h"
+    #import "ZKCGUtilities+ZKAdd.h"
+    #import "UIGestureRecognizer+ZKAdd.h"
+    #import "UIDevice+ZKAdd.h"
+    #import "UIApplication+ZKAdd.h"
 
 #endif  /* __has_inclue */
 

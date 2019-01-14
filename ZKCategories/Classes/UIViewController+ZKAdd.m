@@ -19,57 +19,57 @@ static void * const kNotificationsOnKey = (void*)&kNotificationsOnKey;
 @implementation UIViewController (ZKAdd)
 
 + (void)load {
-    [self swizzleMethod:@selector(viewWillAppear:) withMethod:@selector(__viewWillAppear:)];
-    [self swizzleMethod:@selector(viewDidDisappear:) withMethod:@selector(__viewDidDisappear:)];
+    [self swizzleMethod:@selector(viewWillAppear:) withMethod:@selector(kai_viewWillAppear:)];
+    [self swizzleMethod:@selector(viewDidDisappear:) withMethod:@selector(kai_viewDidDisappear:)];
 }
 
-- (void)__viewWillAppear:(BOOL)animated {
-    [self __registerForKeyboardNotifications];
-    [self __viewWillAppear:animated];
+- (void)kai_viewWillAppear:(BOOL)animated {
+    [self kai_registerForKeyboardNotifications];
+    [self kai_viewWillAppear:animated];
 }
 
-- (void)__viewDidDisappear:(BOOL)animated {
-    [self __unregisterForKeyboardNotifications];
-    [self __viewDidDisappear:animated];
+- (void)kai_viewDidDisappear:(BOOL)animated {
+    [self kai_unregisterForKeyboardNotifications];
+    [self kai_viewDidDisappear:animated];
 }
 
-- (void)__setWillShowAnimationBlock:(ZKKeyboardFrameAnimationBlock)willShowBlock {
+- (void)kai_setWillShowAnimationBlock:(ZKKeyboardFrameAnimationBlock)willShowBlock {
     objc_setAssociatedObject(self, kWillShowBlockKey, willShowBlock, OBJC_ASSOCIATION_COPY);
 }
 
-- (ZKKeyboardFrameAnimationBlock)__willShowAnimationBlock {
+- (ZKKeyboardFrameAnimationBlock)kai_willShowAnimationBlock {
     return (ZKKeyboardFrameAnimationBlock)objc_getAssociatedObject(self, kWillShowBlockKey);
 }
 
-- (void)__setWillHideAnimationBlock:(ZKKeyboardFrameAnimationBlock)willHideBlock {
+- (void)kai_setWillHideAnimationBlock:(ZKKeyboardFrameAnimationBlock)willHideBlock {
     objc_setAssociatedObject(self, kWillHideBlockKey, willHideBlock, OBJC_ASSOCIATION_COPY);
 }
 
-- (ZKKeyboardFrameAnimationBlock)__willHideAnimationBlock {
+- (ZKKeyboardFrameAnimationBlock)kai_willHideAnimationBlock {
     return (ZKKeyboardFrameAnimationBlock)objc_getAssociatedObject(self, kWillHideBlockKey);
 }
 
-- (void)__setDidShowActionBlock:(ZKKeyboardFrameAnimationBlock)didShowBlock {
+- (void)kai_setDidShowActionBlock:(ZKKeyboardFrameAnimationBlock)didShowBlock {
     objc_setAssociatedObject(self, kDidShowBlockKey, didShowBlock, OBJC_ASSOCIATION_COPY);
 }
 
-- (ZKKeyboardFrameAnimationBlock)__didShowActionBlock {
+- (ZKKeyboardFrameAnimationBlock)kai_didShowActionBlock {
     return (ZKKeyboardFrameAnimationBlock)objc_getAssociatedObject(self, kDidShowBlockKey);
 }
 
-- (void)__setDidHideActionBlock:(ZKKeyboardFrameAnimationBlock)didHideBlock {
+- (void)kai_setDidHideActionBlock:(ZKKeyboardFrameAnimationBlock)didHideBlock {
     objc_setAssociatedObject(self, kDidHideBlockKey, didHideBlock, OBJC_ASSOCIATION_COPY);
 }
 
-- (ZKKeyboardFrameAnimationBlock)__didHideActionBlock {
+- (ZKKeyboardFrameAnimationBlock)kai_didHideActionBlock {
     return (ZKKeyboardFrameAnimationBlock)objc_getAssociatedObject(self, kDidHideBlockKey);
 }
 
-- (void)__setNotificationsOn:(BOOL)notificationsOn {
+- (void)kai_setNotificationsOn:(BOOL)notificationsOn {
     objc_setAssociatedObject(self, kNotificationsOnKey, @(notificationsOn), OBJC_ASSOCIATION_RETAIN);
 }
 
-- (BOOL)__areNotificationsOn {
+- (BOOL)kai_areNotificationsOn {
     return [(NSNumber *)objc_getAssociatedObject(self, kNotificationsOnKey) boolValue];
 }
 
@@ -83,8 +83,8 @@ static void * const kNotificationsOnKey = (void*)&kNotificationsOnKey;
 }
 
 - (void)setKeyboardWillShowAnimationBlock:(ZKKeyboardFrameAnimationBlock)showBlock {
-    if ([self __areNotificationsOn]) {
-        ZKKeyboardFrameAnimationBlock prevWillShowBlock = [self __willShowAnimationBlock];
+    if ([self kai_areNotificationsOn]) {
+        ZKKeyboardFrameAnimationBlock prevWillShowBlock = [self kai_willShowAnimationBlock];
         
         if (!showBlock && prevWillShowBlock)
             [self unregisterWillShowNotification];
@@ -92,12 +92,12 @@ static void * const kNotificationsOnKey = (void*)&kNotificationsOnKey;
             [self registerWillShowNotification];
     }
     
-    [self __setWillShowAnimationBlock:showBlock];
+    [self kai_setWillShowAnimationBlock:showBlock];
 }
 
 - (void)setKeyboardWillHideAnimationBlock:(ZKKeyboardFrameAnimationBlock)hideBlock {
-    if ([self __areNotificationsOn]) {
-        ZKKeyboardFrameAnimationBlock prevWillHideBlock = [self __willHideAnimationBlock];
+    if ([self kai_areNotificationsOn]) {
+        ZKKeyboardFrameAnimationBlock prevWillHideBlock = [self kai_willHideAnimationBlock];
         
         if (!hideBlock && prevWillHideBlock)
             [self unregisterWillHideNotification];
@@ -105,12 +105,12 @@ static void * const kNotificationsOnKey = (void*)&kNotificationsOnKey;
             [self registerWillHideNotification];
     }
     
-    [self __setWillHideAnimationBlock:hideBlock];
+    [self kai_setWillHideAnimationBlock:hideBlock];
 }
 
 - (void)setKeyboardDidShowActionBlock:(ZKKeyboardFrameAnimationBlock)didShowBlock {
-    if ([self __areNotificationsOn]) {
-        ZKKeyboardFrameAnimationBlock prevDidShowBlock = [self __didShowActionBlock];
+    if ([self kai_areNotificationsOn]) {
+        ZKKeyboardFrameAnimationBlock prevDidShowBlock = [self kai_didShowActionBlock];
         
         if (!didShowBlock && prevDidShowBlock)
             [self unregisterDidShowNotification];
@@ -118,12 +118,12 @@ static void * const kNotificationsOnKey = (void*)&kNotificationsOnKey;
             [self registerDidShowNotification];
     }
     
-    [self __setDidShowActionBlock:didShowBlock];
+    [self kai_setDidShowActionBlock:didShowBlock];
 }
 
 - (void)setKeyboardDidHideActionBlock:(ZKKeyboardFrameAnimationBlock)didHideBlock {
-    if ([self __areNotificationsOn]) {
-        ZKKeyboardFrameAnimationBlock prevDidHideBlock = [self __didHideActionBlock];
+    if ([self kai_areNotificationsOn]) {
+        ZKKeyboardFrameAnimationBlock prevDidHideBlock = [self kai_didHideActionBlock];
         
         if (!didHideBlock && prevDidHideBlock)
             [self unregisterDidHideNotification];
@@ -131,56 +131,56 @@ static void * const kNotificationsOnKey = (void*)&kNotificationsOnKey;
             [self registerDidHideNotification];
     }
     
-    [self __setDidHideActionBlock:didHideBlock];
+    [self kai_setDidHideActionBlock:didHideBlock];
 }
 
 #pragma mark - registering notifications
 
-- (void)__registerForKeyboardNotifications {
-    [self __setNotificationsOn:YES];
+- (void)kai_registerForKeyboardNotifications {
+    [self kai_setNotificationsOn:YES];
     
-    if ([self __willShowAnimationBlock])
+    if ([self kai_willShowAnimationBlock])
         [self registerWillShowNotification];
     
-    if ([self __willHideAnimationBlock])
+    if ([self kai_willHideAnimationBlock])
         [self registerWillHideNotification];
     
-    if ([self __didShowActionBlock])
+    if ([self kai_didShowActionBlock])
         [self registerDidShowNotification];
     
-    if ([self __didHideActionBlock])
+    if ([self kai_didHideActionBlock])
         [self registerDidHideNotification];
 }
 
 - (void)registerWillShowNotification {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(__keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(kai_keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 }
 
 - (void)registerWillHideNotification {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(__keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(kai_keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)registerDidShowNotification {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(__keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(kai_keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
 }
 
 - (void)registerDidHideNotification {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(__keyboardDidHide:) name:UIKeyboardDidHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(kai_keyboardDidHide:) name:UIKeyboardDidHideNotification object:nil];
 }
 
-- (void)__unregisterForKeyboardNotifications {
-    [self __setNotificationsOn:NO];
+- (void)kai_unregisterForKeyboardNotifications {
+    [self kai_setNotificationsOn:NO];
     
-    if ([self __willShowAnimationBlock])
+    if ([self kai_willShowAnimationBlock])
         [self unregisterWillShowNotification];
     
-    if ([self __willHideAnimationBlock])
+    if ([self kai_willHideAnimationBlock])
         [self unregisterWillHideNotification];
     
-    if ([self __didShowActionBlock])
+    if ([self kai_didShowActionBlock])
         [self unregisterDidShowNotification];
     
-    if ([self __didHideActionBlock])
+    if ([self kai_didHideActionBlock])
         [self unregisterDidHideNotification];
 }
 
@@ -203,27 +203,27 @@ static void * const kNotificationsOnKey = (void*)&kNotificationsOnKey;
 
 #pragma mark - notification callbacks
 
-- (void)__keyboardWillShow:(NSNotification *)notification {
-    [self __performAnimationBlock:[self __willShowAnimationBlock]
+- (void)kai_keyboardWillShow:(NSNotification *)notification {
+    [self kai_performAnimationBlock:[self kai_willShowAnimationBlock]
                    withNotification:notification];
 }
 
-- (void)__keyboardWillHide:(NSNotification *)notification {
-    [self __performAnimationBlock:[self __willHideAnimationBlock]
+- (void)kai_keyboardWillHide:(NSNotification *)notification {
+    [self kai_performAnimationBlock:[self kai_willHideAnimationBlock]
                    withNotification:notification];
 }
 
-- (void)__keyboardDidShow:(NSNotification *)notification {
-    [self __performAnimationBlock:[self __didShowActionBlock]
+- (void)kai_keyboardDidShow:(NSNotification *)notification {
+    [self kai_performAnimationBlock:[self kai_didShowActionBlock]
                    withNotification:notification];
 }
 
-- (void)__keyboardDidHide:(NSNotification *)notification {
-    [self __performAnimationBlock:[self __didHideActionBlock]
+- (void)kai_keyboardDidHide:(NSNotification *)notification {
+    [self kai_performAnimationBlock:[self kai_didHideActionBlock]
                    withNotification:notification];
 }
 
-- (void)__performAnimationBlock:(ZKKeyboardFrameAnimationBlock)animationBlock withNotification:(NSNotification *)notification {
+- (void)kai_performAnimationBlock:(ZKKeyboardFrameAnimationBlock)animationBlock withNotification:(NSNotification *)notification {
     if (!animationBlock)
         return;
     
@@ -232,7 +232,7 @@ static void * const kNotificationsOnKey = (void*)&kNotificationsOnKey;
     NSTimeInterval animationDuration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     NSInteger curve                  = [[info objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue] << 16;
     CGRect keyboardFrame             = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    ZKKeyboardStatus status          = [self __keyboardStatusForNotification:notification];
+    ZKKeyboardStatus status          = [self kai_keyboardStatusForNotification:notification];
     
     if (!(status != ZKKeyboardStatusDidHide && [self __isIllogicalKeyboardStatus:status])) {
         self.keyboardStatus = status;
@@ -245,7 +245,7 @@ static void * const kNotificationsOnKey = (void*)&kNotificationsOnKey;
                      completion:nil];
 }
 
-- (ZKKeyboardStatus)__keyboardStatusForNotification:(NSNotification *)notification {
+- (ZKKeyboardStatus)kai_keyboardStatusForNotification:(NSNotification *)notification {
     NSString *name = notification.name;
     
     if ([name isEqualToString:UIKeyboardWillShowNotification]) {
