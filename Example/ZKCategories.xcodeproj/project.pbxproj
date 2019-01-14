@@ -208,7 +208,6 @@
 				6003F587195388D20070C39A /* Frameworks */,
 				6003F588195388D20070C39A /* Resources */,
 				4988A955F6014B670E4BCB12 /* [CP] Embed Pods Frameworks */,
-				7F0006FA374E56AF89370CCD /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -228,7 +227,6 @@
 				6003F5AB195388D20070C39A /* Frameworks */,
 				6003F5AC195388D20070C39A /* Resources */,
 				BD9AB719455CE558AD4F6D8D /* [CP] Embed Pods Frameworks */,
-				1766DAD4F7CE88C13822866C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -297,21 +295,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1766DAD4F7CE88C13822866C /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ZKCategories_Tests/Pods-ZKCategories_Tests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		4988A955F6014B670E4BCB12 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -328,21 +311,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ZKCategories_Example/Pods-ZKCategories_Example-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7F0006FA374E56AF89370CCD /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ZKCategories_Example/Pods-ZKCategories_Example-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8B41097A4725957A6B62A17D /* [CP] Check Pods Manifest.lock */ = {

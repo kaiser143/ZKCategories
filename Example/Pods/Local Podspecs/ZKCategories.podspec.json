@@ -1,6 +1,6 @@
 {
   "name": "ZKCategories",
-  "version": "0.1.2",
+  "version": "0.1.18",
   "summary": "A short description of ZKCategories.",
   "description": "TODO: Add long description of the pod here.",
   "homepage": "https://github.com/kaiser143/ZKCategories",
@@ -13,10 +13,11 @@
   },
   "source": {
     "git": "https://github.com/kaiser143/ZKCategories.git",
-    "tag": "0.1.2"
+    "tag": "0.1.18"
   },
   "platforms": {
     "ios": "7.0"
   },
-  "source_files": "ZKCategories/Classes/**/*"
+  "source_files": "ZKCategories/Classes/**/*",
+  "libraries": "z"
 }
