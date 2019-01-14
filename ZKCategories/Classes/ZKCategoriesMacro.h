@@ -6,6 +6,10 @@
 //  Copyright © 2018年 Kaiser. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
+#import <sys/time.h>
+#import <pthread.h>
+
 #ifndef ZKCategoriesMacro_h
 #define ZKCategoriesMacro_h
 

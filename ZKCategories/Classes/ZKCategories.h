@@ -43,7 +43,7 @@
     #import <ZKCategories/UITextView+ZKAdd.h>
     #import <ZKCategories/UIScreen+ZKAdd.h>
     #import <ZKCategories/UIScrollView+ZKAdd.h>
-    #import <ZKCategories/ZKCGUtilities+ZKAdd.h>
+    #import <ZKCategories/ZKCGUtilities.h>
     #import <ZKCategories/UIGestureRecognizer+ZKAdd.h>
     #import <ZKCategories/UIDevice+ZKAdd.h>
     #import <ZKCategories/UIApplication+ZKAdd.h>
@@ -79,7 +79,7 @@
     #import "UITextView+ZKAdd.h"
     #import "UIScreen+ZKAdd.h"
     #import "UIScrollView+ZKAdd.h"
-    #import "ZKCGUtilities+ZKAdd.h"
+    #import "ZKCGUtilities.h"
     #import "UIGestureRecognizer+ZKAdd.h"
     #import "UIDevice+ZKAdd.h"
     #import "UIApplication+ZKAdd.h"
