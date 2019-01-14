@@ -47,7 +47,7 @@ ZK_EXTERN_C_BEGIN
  More info: http://developer.apple.com/library/mac/#qa/qa2006/qa1490.html .
  *******************************************************************************
  Example:
- YYSYNTH_DUMMY_CLASS(NSString_YYAdd)
+ YYSYNTH_DUMMY_CLASS(NSString_ZKAdd)
  */
 #ifndef ZKSYNTH_DUMMY_CLASS
 #define ZKSYNTH_DUMMY_CLASS(_name_) \

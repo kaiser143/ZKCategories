@@ -24,11 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSData *)compressBySizeWithMaxLength:(NSUInteger)maxLength;
 
-/**
- Provide some commen method for `UIImage`.
- Image process is based on CoreGraphic and vImage.
- */
-@interface UIImage (YYAdd)
 
 #pragma mark - Create image
 ///=============================================================================

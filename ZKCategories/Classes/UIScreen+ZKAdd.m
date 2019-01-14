@@ -10,7 +10,7 @@
 #import "ZKCategoriesMacro.h"
 #import "UIDevice+ZKAdd.h"
 
-ZKSYNTH_DUMMY_CLASS(UIScreen_YYAdd);
+ZKSYNTH_DUMMY_CLASS(UIScreen_ZKAdd);
 
 
 @implementation UIScreen (ZKAdd)
