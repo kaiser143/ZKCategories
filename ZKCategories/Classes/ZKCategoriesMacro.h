@@ -51,7 +51,7 @@ ZK_EXTERN_C_BEGIN
  More info: http://developer.apple.com/library/mac/#qa/qa2006/qa1490.html .
  *******************************************************************************
  Example:
- YYSYNTH_DUMMY_CLASS(NSString_ZKAdd)
+ ZKSYNTH_DUMMY_CLASS(NSString_ZKAdd)
  */
 #ifndef ZKSYNTH_DUMMY_CLASS
 #define ZKSYNTH_DUMMY_CLASS(_name_) \
@@ -74,7 +74,7 @@ ZK_EXTERN_C_BEGIN
  
  #import <objc/runtime.h>
  @implementation NSObject (MyAdd)
- YYSYNTH_DYNAMIC_PROPERTY_OBJECT(myColor, setMyColor, RETAIN, UIColor *)
+ ZKSYNTH_DYNAMIC_PROPERTY_OBJECT(myColor, setMyColor, RETAIN, UIColor *)
  @end
  */
 #ifndef ZKSYNTH_DYNAMIC_PROPERTY_OBJECT
@@ -103,7 +103,7 @@ return objc_getAssociatedObject(self, @selector(_setter_:)); \
  
  #import <objc/runtime.h>
  @implementation NSObject (MyAdd)
- YYSYNTH_DYNAMIC_PROPERTY_CTYPE(myPoint, setMyPoint, CGPoint)
+ ZKSYNTH_DYNAMIC_PROPERTY_CTYPE(myPoint, setMyPoint, CGPoint)
  @end
  */
 #ifndef ZKSYNTH_DYNAMIC_PROPERTY_CTYPE
@@ -202,7 +202,7 @@ static inline CFTypeRef ZKCFAutorelease(CFTypeRef CF_RELEASES_ARGUMENT arg) {
  @param ^complete  code time cost (millisecond)
  
  Usage:
- YYBenchmark(^{
+ ZKBenchmark(^{
  // code
  }, ^(double ms) {
  NSLog("time cost: %.2f ms",ms);

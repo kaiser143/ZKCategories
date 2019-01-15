@@ -51,19 +51,19 @@ static const int block_key;
 - (void)addActionBlock:(void (^)(id sender))block {
     _ZKUIGestureRecognizerBlockTarget *target = [[_ZKUIGestureRecognizerBlockTarget alloc] initWithBlock:block];
     [self addTarget:target action:@selector(invoke:)];
-    NSMutableArray *targets = [self _yy_allUIGestureRecognizerBlockTargets];
+    NSMutableArray *targets = [self kai_allUIGestureRecognizerBlockTargets];
     [targets addObject:target];
 }
 
 - (void)removeAllActionBlocks{
-    NSMutableArray *targets = [self _yy_allUIGestureRecognizerBlockTargets];
+    NSMutableArray *targets = [self kai_allUIGestureRecognizerBlockTargets];
     [targets enumerateObjectsUsingBlock:^(id target, NSUInteger idx, BOOL *stop) {
         [self removeTarget:target action:@selector(invoke:)];
     }];
     [targets removeAllObjects];
 }
 
-- (NSMutableArray *)_yy_allUIGestureRecognizerBlockTargets {
+- (NSMutableArray *)kai_allUIGestureRecognizerBlockTargets {
     NSMutableArray *targets = objc_getAssociatedObject(self, &block_key);
     if (!targets) {
         targets = [NSMutableArray array];

@@ -11,7 +11,7 @@
 
 #define CLAMP_COLOR_VALUE(v) (v) = (v) < 0 ? 0 : (v) > 1 ? 1 : (v)
 
-void YY_RGB2HSL(CGFloat r, CGFloat g, CGFloat b,
+void ZK_RGB2HSL(CGFloat r, CGFloat g, CGFloat b,
                 CGFloat *h, CGFloat *s, CGFloat *l) {
     CLAMP_COLOR_VALUE(r);
     CLAMP_COLOR_VALUE(g);
@@ -35,7 +35,7 @@ void YY_RGB2HSL(CGFloat r, CGFloat g, CGFloat b,
     if (*h < 0) *h += 1;
 }
 
-void YY_HSL2RGB(CGFloat h, CGFloat s, CGFloat l,
+void ZK_HSL2RGB(CGFloat h, CGFloat s, CGFloat l,
                 CGFloat *r, CGFloat *g, CGFloat *b) {
     CLAMP_COLOR_VALUE(h);
     CLAMP_COLOR_VALUE(s);
@@ -74,7 +74,7 @@ void YY_HSL2RGB(CGFloat h, CGFloat s, CGFloat l,
     }
 }
 
-void YY_RGB2HSB(CGFloat r, CGFloat g, CGFloat b,
+void ZK_RGB2HSB(CGFloat r, CGFloat g, CGFloat b,
                 CGFloat *h, CGFloat *s, CGFloat *v) {
     CLAMP_COLOR_VALUE(r);
     CLAMP_COLOR_VALUE(g);
@@ -98,7 +98,7 @@ void YY_RGB2HSB(CGFloat r, CGFloat g, CGFloat b,
     if (*h < 0) *h += 1;
 }
 
-void YY_HSB2RGB(CGFloat h, CGFloat s, CGFloat v,
+void ZK_HSB2RGB(CGFloat h, CGFloat s, CGFloat v,
                 CGFloat *r, CGFloat *g, CGFloat *b) {
     CLAMP_COLOR_VALUE(h);
     CLAMP_COLOR_VALUE(s);
@@ -127,7 +127,7 @@ void YY_HSB2RGB(CGFloat h, CGFloat s, CGFloat v,
     }
 }
 
-void YY_RGB2CMYK(CGFloat r, CGFloat g, CGFloat b,
+void ZK_RGB2CMYK(CGFloat r, CGFloat g, CGFloat b,
                  CGFloat *c, CGFloat *m, CGFloat *y, CGFloat *k) {
     CLAMP_COLOR_VALUE(r);
     CLAMP_COLOR_VALUE(g);
@@ -147,7 +147,7 @@ void YY_RGB2CMYK(CGFloat r, CGFloat g, CGFloat b,
     }
 }
 
-void YY_CMYK2RGB(CGFloat c, CGFloat m, CGFloat y, CGFloat k,
+void ZK_CMYK2RGB(CGFloat c, CGFloat m, CGFloat y, CGFloat k,
                  CGFloat *r, CGFloat *g, CGFloat *b) {
     CLAMP_COLOR_VALUE(c);
     CLAMP_COLOR_VALUE(m);
@@ -159,7 +159,7 @@ void YY_CMYK2RGB(CGFloat c, CGFloat m, CGFloat y, CGFloat k,
     *b = (1 - y) * (1 - k);
 }
 
-void YY_HSB2HSL(CGFloat h, CGFloat s, CGFloat b,
+void ZK_HSB2HSL(CGFloat h, CGFloat s, CGFloat b,
                 CGFloat *hh, CGFloat *ss, CGFloat *ll) {
     CLAMP_COLOR_VALUE(h);
     CLAMP_COLOR_VALUE(s);
@@ -174,7 +174,7 @@ void YY_HSB2HSL(CGFloat h, CGFloat s, CGFloat b,
     }
 }
 
-void YY_HSL2HSB(CGFloat h, CGFloat s, CGFloat l,
+void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l,
                 CGFloat *hh, CGFloat *ss, CGFloat *bb) {
     CLAMP_COLOR_VALUE(h);
     CLAMP_COLOR_VALUE(s);
@@ -205,7 +205,7 @@ void YY_HSL2HSB(CGFloat h, CGFloat s, CGFloat l,
                 lightness:(CGFloat)lightness
                     alpha:(CGFloat)alpha {
     CGFloat r, g, b;
-    YY_HSL2RGB(hue, saturation, lightness, &r, &g, &b);
+    ZK_HSL2RGB(hue, saturation, lightness, &r, &g, &b);
     return [UIColor colorWithRed:r green:g blue:b alpha:alpha];
 }
 + (UIColor *)colorWithCyan:(CGFloat)cyan
@@ -214,7 +214,7 @@ void YY_HSL2HSB(CGFloat h, CGFloat s, CGFloat l,
                      black:(CGFloat)black
                      alpha:(CGFloat)alpha {
     CGFloat r, g, b;
-    YY_CMYK2RGB(cyan, magenta, yellow, black, &r, &g, &b);
+    ZK_CMYK2RGB(cyan, magenta, yellow, black, &r, &g, &b);
     return [UIColor colorWithRed:r green:g blue:b alpha:alpha];
 }
 
@@ -375,7 +375,7 @@ static BOOL hexStrToRGBA(NSString *str,
     if (![self getRed:&r green:&g blue:&b alpha:&a]) {
         return NO;
     }
-    YY_RGB2HSL(r, g, b, hue, saturation, lightness);
+    ZK_RGB2HSL(r, g, b, hue, saturation, lightness);
     *alpha = a;
     return YES;
 }
@@ -389,7 +389,7 @@ static BOOL hexStrToRGBA(NSString *str,
     if (![self getRed:&r green:&g blue:&b alpha:&a]) {
         return NO;
     }
-    YY_RGB2CMYK(r, g, b, cyan, magenta, yellow, black);
+    ZK_RGB2CMYK(r, g, b, cyan, magenta, yellow, black);
     *alpha = a;
     return YES;
 }

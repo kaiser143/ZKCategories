@@ -143,10 +143,10 @@ typedef struct {
     uint64_t pdp_ip_out;
     uint64_t awdl_in;
     uint64_t awdl_out;
-} yy_net_interface_counter;
+} kai_net_interface_counter;
 
 
-static uint64_t yy_net_counter_add(uint64_t counter, uint64_t bytes) {
+static uint64_t kai_net_counter_add(uint64_t counter, uint64_t bytes) {
     if (bytes < (counter % 0xFFFFFFFF)) {
         counter += 0xFFFFFFFF - (counter % 0xFFFFFFFF);
         counter += bytes;
@@ -156,7 +156,7 @@ static uint64_t yy_net_counter_add(uint64_t counter, uint64_t bytes) {
     return counter;
 }
 
-static uint64_t yy_net_counter_get_by_type(yy_net_interface_counter *counter, ZKNetworkTrafficType type) {
+static uint64_t kai_net_counter_get_by_type(kai_net_interface_counter *counter, ZKNetworkTrafficType type) {
     uint64_t bytes = 0;
     if (type & ZKNetworkTrafficTypeWWANSent) bytes += counter->pdp_ip_out;
     if (type & ZKNetworkTrafficTypeWWANReceived) bytes += counter->pdp_ip_in;
@@ -167,7 +167,7 @@ static uint64_t yy_net_counter_get_by_type(yy_net_interface_counter *counter, ZK
     return bytes;
 }
 
-static yy_net_interface_counter yy_get_net_interface_counter() {
+static kai_net_interface_counter kai_get_net_interface_counter() {
     static dispatch_semaphore_t lock;
     static NSMutableDictionary *sharedInCounters;
     static NSMutableDictionary *sharedOutCounters;
@@ -178,7 +178,7 @@ static yy_net_interface_counter yy_get_net_interface_counter() {
         lock = dispatch_semaphore_create(1);
     });
     
-    yy_net_interface_counter counter = {0};
+    kai_net_interface_counter counter = {0};
     struct ifaddrs *addrs;
     const struct ifaddrs *cursor;
     if (getifaddrs(&addrs) == 0) {
@@ -190,11 +190,11 @@ static yy_net_interface_counter yy_get_net_interface_counter() {
                 NSString *name = cursor->ifa_name ? [NSString stringWithUTF8String:cursor->ifa_name] : nil;
                 if (name) {
                     uint64_t counter_in = ((NSNumber *)sharedInCounters[name]).unsignedLongLongValue;
-                    counter_in = yy_net_counter_add(counter_in, data->ifi_ibytes);
+                    counter_in = kai_net_counter_add(counter_in, data->ifi_ibytes);
                     sharedInCounters[name] = @(counter_in);
                     
                     uint64_t counter_out = ((NSNumber *)sharedOutCounters[name]).unsignedLongLongValue;
-                    counter_out = yy_net_counter_add(counter_out, data->ifi_obytes);
+                    counter_out = kai_net_counter_add(counter_out, data->ifi_obytes);
                     sharedOutCounters[name] = @(counter_out);
                     
                     if ([name hasPrefix:@"en"]) {
@@ -219,8 +219,8 @@ static yy_net_interface_counter yy_get_net_interface_counter() {
 }
 
 - (uint64_t)getNetworkTrafficBytes:(ZKNetworkTrafficType)types {
-    yy_net_interface_counter counter = yy_get_net_interface_counter();
-    return yy_net_counter_get_by_type(&counter, types);
+    kai_net_interface_counter counter = kai_get_net_interface_counter();
+    return kai_net_counter_get_by_type(&counter, types);
 }
 
 - (NSString *)machineModel {

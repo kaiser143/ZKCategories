@@ -199,11 +199,11 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
 }
 
 + (UIImage *)imageWithPDF:(id)dataOrPath {
-    return [self _yy_imageWithPDF:dataOrPath resize:NO size:CGSizeZero];
+    return [self kai_imageWithPDF:dataOrPath resize:NO size:CGSizeZero];
 }
 
 + (UIImage *)imageWithPDF:(id)dataOrPath size:(CGSize)size {
-    return [self _yy_imageWithPDF:dataOrPath resize:YES size:size];
+    return [self kai_imageWithPDF:dataOrPath resize:YES size:size];
 }
 
 + (UIImage *)imageWithEmoji:(NSString *)emoji size:(CGFloat)size {
@@ -234,7 +234,7 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
     return image;
 }
 
-+ (UIImage *)_yy_imageWithPDF:(id)dataOrPath resize:(BOOL)resize size:(CGSize)size {
++ (UIImage *)kai_imageWithPDF:(id)dataOrPath resize:(BOOL)resize size:(CGSize)size {
     CGPDFDocumentRef pdf = NULL;
     if ([dataOrPath isKindOfClass:[NSData class]]) {
         CGDataProviderRef provider = CGDataProviderCreateWithCFData((__bridge CFDataRef)dataOrPath);
@@ -478,7 +478,7 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
     return img;
 }
 
-- (UIImage *)_yy_flipHorizontal:(BOOL)horizontal vertical:(BOOL)vertical {
+- (UIImage *)kai_flipHorizontal:(BOOL)horizontal vertical:(BOOL)vertical {
     if (!self.CGImage) return nil;
     size_t width = (size_t)CGImageGetWidth(self.CGImage);
     size_t height = (size_t)CGImageGetHeight(self.CGImage);
@@ -518,15 +518,15 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
 }
 
 - (UIImage *)imageByRotate180 {
-    return [self _yy_flipHorizontal:YES vertical:YES];
+    return [self kai_flipHorizontal:YES vertical:YES];
 }
 
 - (UIImage *)imageByFlipVertical {
-    return [self _yy_flipHorizontal:NO vertical:YES];
+    return [self kai_flipHorizontal:NO vertical:YES];
 }
 
 - (UIImage *)imageByFlipHorizontal {
-    return [self _yy_flipHorizontal:YES vertical:NO];
+    return [self kai_flipHorizontal:YES vertical:NO];
 }
 
 - (UIImage *)imageByTintColor:(UIColor *)color {
@@ -608,7 +608,7 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
     BOOL opaque = NO;
     
     if (!hasBlur && !hasSaturation) {
-        return [self _yy_mergeImageRef:imageRef tintColor:tintColor tintBlendMode:tintBlendMode maskImage:maskImage opaque:opaque];
+        return [self kai_mergeImageRef:imageRef tintColor:tintColor tintBlendMode:tintBlendMode maskImage:maskImage opaque:opaque];
     }
     
     vImage_Buffer effect = { 0 }, scratch = { 0 };
@@ -712,13 +712,13 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
     UIImage *outputImage = nil;
     if (hasNewFunc) {
         CGImageRef effectCGImage = NULL;
-        effectCGImage = vImageCreateCGImageFromBuffer(input, &format, &_yy_cleanupBuffer, NULL, kvImageNoAllocate, NULL);
+        effectCGImage = vImageCreateCGImageFromBuffer(input, &format, &kai_cleanupBuffer, NULL, kvImageNoAllocate, NULL);
         if (effectCGImage == NULL) {
             effectCGImage = vImageCreateCGImageFromBuffer(input, &format, NULL, NULL, kvImageNoFlags, NULL);
             free(input->data);
         }
         free(output->data);
-        outputImage = [self _yy_mergeImageRef:effectCGImage tintColor:tintColor tintBlendMode:tintBlendMode maskImage:maskImage opaque:opaque];
+        outputImage = [self kai_mergeImageRef:effectCGImage tintColor:tintColor tintBlendMode:tintBlendMode maskImage:maskImage opaque:opaque];
         CGImageRelease(effectCGImage);
     } else {
         CGImageRef effectCGImage;
@@ -728,18 +728,18 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
         if (input == &effect) effectImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         effectCGImage = effectImage.CGImage;
-        outputImage = [self _yy_mergeImageRef:effectCGImage tintColor:tintColor tintBlendMode:tintBlendMode maskImage:maskImage opaque:opaque];
+        outputImage = [self kai_mergeImageRef:effectCGImage tintColor:tintColor tintBlendMode:tintBlendMode maskImage:maskImage opaque:opaque];
     }
     return outputImage;
 }
 
 // Helper function to handle deferred cleanup of a buffer.
-static void _yy_cleanupBuffer(void *userData, void *buf_data) {
+static void kai_cleanupBuffer(void *userData, void *buf_data) {
     free(buf_data);
 }
 
 // Helper function to add tint and mask.
-- (UIImage *)_yy_mergeImageRef:(CGImageRef)effectCGImage
+- (UIImage *)kai_mergeImageRef:(CGImageRef)effectCGImage
                      tintColor:(UIColor *)tintColor
                  tintBlendMode:(CGBlendMode)tintBlendMode
                      maskImage:(UIImage *)maskImage

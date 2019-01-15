@@ -306,22 +306,22 @@ static inline UIEdgeInsets UIEdgeInsetPixelCeil(UIEdgeInsets insets) {
 
 // main screen's scale
 #ifndef kScreenScale
-#define kScreenScale YYScreenScale()
+#define kScreenScale ZKScreenScale()
 #endif
 
 // main screen's size (portrait)
 #ifndef kScreenSize
-#define kScreenSize YYScreenSize()
+#define kScreenSize ZKScreenSize()
 #endif
 
 // main screen's width (portrait)
 #ifndef kScreenWidth
-#define kScreenWidth YYScreenSize().width
+#define kScreenWidth ZKScreenSize().width
 #endif
 
 // main screen's height (portrait)
 #ifndef kScreenHeight
-#define kScreenHeight YYScreenSize().height
+#define kScreenHeight ZKScreenSize().height
 #endif
 
 NS_ASSUME_NONNULL_END
