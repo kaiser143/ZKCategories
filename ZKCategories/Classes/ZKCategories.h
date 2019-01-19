@@ -47,6 +47,9 @@
     #import <ZKCategories/UIGestureRecognizer+ZKAdd.h>
     #import <ZKCategories/UIDevice+ZKAdd.h>
     #import <ZKCategories/UIApplication+ZKAdd.h>
+    #import <ZKCategories/NSNotificationCenter+ZKAdd.h>
+    #import <ZKCategories/UIButton+ZKAdd.h>
+    #import <ZKCategories/UINavigationBar+ZKAdd.h>
 #else
 
     #import "NSObject+ZKAdd.h"
@@ -83,6 +86,9 @@
     #import "UIGestureRecognizer+ZKAdd.h"
     #import "UIDevice+ZKAdd.h"
     #import "UIApplication+ZKAdd.h"
+    #import "NSNotificationCenter+ZKAdd.h"
+    #import "UIButton+ZKAdd.h"
+    #import "UINavigationBar+ZKAdd.h"
 
 #endif  /* __has_inclue */
 

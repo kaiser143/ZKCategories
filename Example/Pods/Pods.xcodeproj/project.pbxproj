@@ -36,6 +36,12 @@
 		47E349734275C18BC7AF41C6917EC3EC /* NSData+ZKAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = F08D83053A47CCACD88B1201F92F4F47 /* NSData+ZKAdd.m */; };
 		49E53625272B49DA80C7B62525B9DC98 /* UIViewController+ZKAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 145D7910B37A6F061129EDA5FC3FBAAB /* UIViewController+ZKAdd.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4A7FC3D338289ADDA3685EC0FFC71E04 /* UIScreen+ZKAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = FE9B39E43E4929F5FE28D66FB0E0BCCE /* UIScreen+ZKAdd.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4BE98C7B21F39BBF00E5A69D /* NSNotificationCenter+ZKAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE98C7921F39BBE00E5A69D /* NSNotificationCenter+ZKAdd.h */; };
+		4BE98C7C21F39BBF00E5A69D /* NSNotificationCenter+ZKAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE98C7A21F39BBF00E5A69D /* NSNotificationCenter+ZKAdd.m */; };
+		4BE98C7F21F39D2600E5A69D /* UIButton+ZKAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE98C7D21F39D2600E5A69D /* UIButton+ZKAdd.h */; };
+		4BE98C8021F39D2600E5A69D /* UIButton+ZKAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE98C7E21F39D2600E5A69D /* UIButton+ZKAdd.m */; };
+		4BE98C8321F39E7500E5A69D /* UINavigationBar+ZKAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE98C8121F39E7500E5A69D /* UINavigationBar+ZKAdd.h */; };
+		4BE98C8421F39E7500E5A69D /* UINavigationBar+ZKAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE98C8221F39E7500E5A69D /* UINavigationBar+ZKAdd.m */; };
 		4C022C88B9E8D527B1426B5281756EDE /* UIImage+Compare.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B5E22F9517F21D3A0251F88FCAB281E /* UIImage+Compare.m */; };
 		4CF5865BAF828AB9A7C56F3A1B1C856F /* FBSnapshotTestCase-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = A11D5B54955E3381F067364E427B571A /* FBSnapshotTestCase-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4D600539FC2E29EA7E28A2DA8A8B328C /* FBSnapshotTestCasePlatform.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E3DB4D092B985E76E227F7F313C6981 /* FBSnapshotTestCasePlatform.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -147,7 +153,7 @@
 		1DFF55E7AB27CFCE3D8254794A8B0EB1 /* UIWindow+ZKAdd.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIWindow+ZKAdd.h"; path = "ZKCategories/Classes/UIWindow+ZKAdd.h"; sourceTree = "<group>"; };
 		20A46DBA764ECC5685D239AEC10A79F5 /* NSNumber+ZKAdd.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSNumber+ZKAdd.m"; path = "ZKCategories/Classes/NSNumber+ZKAdd.m"; sourceTree = "<group>"; };
 		23B618CD41D22F0F5B9D7F18F26F28BB /* Pods-ZKCategories_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ZKCategories_Tests-resources.sh"; sourceTree = "<group>"; };
-		29C6F71A1295725FE06CDF03CC9B7C29 /* ZKCategories.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; path = ZKCategories.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		29C6F71A1295725FE06CDF03CC9B7C29 /* ZKCategories.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; path = ZKCategories.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		2AD639DB008C69F8E1E3FEE19CFDB988 /* ZKCategories.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = ZKCategories.modulemap; sourceTree = "<group>"; };
 		2BEFD8335C2696FAC2EFFF171D29C20B /* UIControl+ZKAdd.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIControl+ZKAdd.h"; path = "ZKCategories/Classes/UIControl+ZKAdd.h"; sourceTree = "<group>"; };
 		2D1A4A80CAA8F4D969AAAF2AF3A7E0E4 /* Pods-ZKCategories_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-ZKCategories_Tests-dummy.m"; sourceTree = "<group>"; };
@@ -171,15 +177,21 @@
 		436835B6192FA921CAD551DF2DF749A2 /* Pods-ZKCategories_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-ZKCategories_Tests.modulemap"; sourceTree = "<group>"; };
 		4792533D7EE0F440EE722DA4999E845C /* FBSnapshotTestCase-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "FBSnapshotTestCase-dummy.m"; sourceTree = "<group>"; };
 		4AE2512CD34D46D6D900822D88B0F5B6 /* NSObject+ZKAdd.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSObject+ZKAdd.m"; path = "ZKCategories/Classes/NSObject+ZKAdd.m"; sourceTree = "<group>"; };
+		4BE98C7921F39BBE00E5A69D /* NSNotificationCenter+ZKAdd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSNotificationCenter+ZKAdd.h"; path = "ZKCategories/Classes/NSNotificationCenter+ZKAdd.h"; sourceTree = "<group>"; };
+		4BE98C7A21F39BBF00E5A69D /* NSNotificationCenter+ZKAdd.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "NSNotificationCenter+ZKAdd.m"; path = "ZKCategories/Classes/NSNotificationCenter+ZKAdd.m"; sourceTree = "<group>"; };
+		4BE98C7D21F39D2600E5A69D /* UIButton+ZKAdd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIButton+ZKAdd.h"; path = "ZKCategories/Classes/UIButton+ZKAdd.h"; sourceTree = "<group>"; };
+		4BE98C7E21F39D2600E5A69D /* UIButton+ZKAdd.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIButton+ZKAdd.m"; path = "ZKCategories/Classes/UIButton+ZKAdd.m"; sourceTree = "<group>"; };
+		4BE98C8121F39E7500E5A69D /* UINavigationBar+ZKAdd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UINavigationBar+ZKAdd.h"; path = "ZKCategories/Classes/UINavigationBar+ZKAdd.h"; sourceTree = "<group>"; };
+		4BE98C8221F39E7500E5A69D /* UINavigationBar+ZKAdd.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UINavigationBar+ZKAdd.m"; path = "ZKCategories/Classes/UINavigationBar+ZKAdd.m"; sourceTree = "<group>"; };
 		4CCF8FB06D0D8E2640C57D460AB67AF6 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		4F45B4934DACFCCD7EDC6EA664F25FFB /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		4F45B4934DACFCCD7EDC6EA664F25FFB /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		5050C2CAB838712BFB7C0B65F5D21E1C /* UIColor+ZKAdd.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIColor+ZKAdd.h"; path = "ZKCategories/Classes/UIColor+ZKAdd.h"; sourceTree = "<group>"; };
 		555A2C7825DCED29D664FCC29FD8FDA3 /* UIImageView+ZKAdd.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+ZKAdd.m"; path = "ZKCategories/Classes/UIImageView+ZKAdd.m"; sourceTree = "<group>"; };
 		58A2557E7CE20AACCD1B28B1CD1F920D /* FBSnapshotTestCasePlatform.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FBSnapshotTestCasePlatform.m; path = FBSnapshotTestCase/FBSnapshotTestCasePlatform.m; sourceTree = "<group>"; };
 		58B6AF46D7244E150C45A762F803B90C /* UITableView+ZKAdd.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UITableView+ZKAdd.m"; path = "ZKCategories/Classes/UITableView+ZKAdd.m"; sourceTree = "<group>"; };
-		5AC4DACB6DEC7D608F7D94BB0D453577 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		5AC4DACB6DEC7D608F7D94BB0D453577 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		5E68E0D22A6EF460DF82D89FB0BDCA30 /* Pods-ZKCategories_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-ZKCategories_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
-		5F4A25359350F249BBACE4DE0C2F9BE4 /* FBSnapshotTestCase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = FBSnapshotTestCase.framework; path = FBSnapshotTestCase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F4A25359350F249BBACE4DE0C2F9BE4 /* FBSnapshotTestCase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSnapshotTestCase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		60C9D9133606F63DFB326C6843E7722A /* UIScrollView+ZKAdd.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIScrollView+ZKAdd.h"; path = "ZKCategories/Classes/UIScrollView+ZKAdd.h"; sourceTree = "<group>"; };
 		60E0FF9789C67D6DF152AA1B01ED0425 /* Pods-ZKCategories_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ZKCategories_Tests-frameworks.sh"; sourceTree = "<group>"; };
 		64739C45CFCF0F566EA120FFD3B3F210 /* UIGestureRecognizer+ZKAdd.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIGestureRecognizer+ZKAdd.m"; path = "ZKCategories/Classes/UIGestureRecognizer+ZKAdd.m"; sourceTree = "<group>"; };
@@ -210,7 +222,7 @@
 		8A4F7E57202BF3FF631B4DAE63F3C447 /* Pods-ZKCategories_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-ZKCategories_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		8F102BCD0B246984BB74DAC3BD95FA7E /* NSNumber+ZKAdd.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSNumber+ZKAdd.h"; path = "ZKCategories/Classes/NSNumber+ZKAdd.h"; sourceTree = "<group>"; };
 		8FA3015C698D93D7D81D94A832680FE6 /* NSError+ZKAdd.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSError+ZKAdd.m"; path = "ZKCategories/Classes/NSError+ZKAdd.m"; sourceTree = "<group>"; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9490A8D696901C631B352F0CEDAE8997 /* NSString+ZKAdd.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSString+ZKAdd.h"; path = "ZKCategories/Classes/NSString+ZKAdd.h"; sourceTree = "<group>"; };
 		959C315CCBD4D0C1438D11B7FBE93B82 /* UITextView+ZKAdd.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UITextView+ZKAdd.h"; path = "ZKCategories/Classes/UITextView+ZKAdd.h"; sourceTree = "<group>"; };
 		96515EAD95BE1033019804D86DEFAC36 /* UITextField+ZKAdd.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UITextField+ZKAdd.h"; path = "ZKCategories/Classes/UITextField+ZKAdd.h"; sourceTree = "<group>"; };
@@ -231,7 +243,7 @@
 		B9CEF7D6C5E08AB80E58DABC75D882BC /* UIImage+Diff.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Diff.m"; path = "FBSnapshotTestCase/Categories/UIImage+Diff.m"; sourceTree = "<group>"; };
 		BE42E048DF78CD6503A177E0F33F02C5 /* Pods-ZKCategories_Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ZKCategories_Example-resources.sh"; sourceTree = "<group>"; };
 		BF09DB62DFE8DBFCE1E790196529A8AA /* Pods-ZKCategories_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-ZKCategories_Example-dummy.m"; sourceTree = "<group>"; };
-		C1407C7EAE4189C6947941351DF75559 /* Pods_ZKCategories_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_ZKCategories_Tests.framework; path = "Pods-ZKCategories_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1407C7EAE4189C6947941351DF75559 /* Pods_ZKCategories_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZKCategories_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2379EEB1B2E42B0DADE15CB60E65F85 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
 		C2DA2E24DB6465ABAFED4063880D583B /* NSRunLoop+ZKAdd.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSRunLoop+ZKAdd.m"; path = "ZKCategories/Classes/NSRunLoop+ZKAdd.m"; sourceTree = "<group>"; };
 		C324514B079FF996D76EE3E0665E3B6E /* NSArray+ZKAdd.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSArray+ZKAdd.h"; path = "ZKCategories/Classes/NSArray+ZKAdd.h"; sourceTree = "<group>"; };
@@ -241,13 +253,13 @@
 		D1AE00C70B695A0B69549871BB6B55E3 /* NSDecimalNumber+ZKAdd.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSDecimalNumber+ZKAdd.m"; path = "ZKCategories/Classes/NSDecimalNumber+ZKAdd.m"; sourceTree = "<group>"; };
 		D614534D7D08C13271AC1251F977FA03 /* NSString+ZKAdd.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSString+ZKAdd.m"; path = "ZKCategories/Classes/NSString+ZKAdd.m"; sourceTree = "<group>"; };
 		D6B1912F4F2C35F2F69C4178ACA516B5 /* UITextView+ZKAdd.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UITextView+ZKAdd.m"; path = "ZKCategories/Classes/UITextView+ZKAdd.m"; sourceTree = "<group>"; };
-		D75A10BBDE4D9D34306199B01E14B601 /* ZKCategories.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = ZKCategories.framework; path = ZKCategories.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D75A10BBDE4D9D34306199B01E14B601 /* ZKCategories.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZKCategories.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D97545C39C4A5EE2631DD9FFECE76A40 /* SwiftSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SwiftSupport.swift; path = FBSnapshotTestCase/SwiftSupport.swift; sourceTree = "<group>"; };
 		DAF1C6D354B8CEE0D8C28C1CE67AAC87 /* UIDevice+ZKAdd.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIDevice+ZKAdd.h"; path = "ZKCategories/Classes/UIDevice+ZKAdd.h"; sourceTree = "<group>"; };
 		DE89475EA8F238D460344F217C2D3676 /* ZKCategories-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "ZKCategories-dummy.m"; sourceTree = "<group>"; };
 		DEF3DE5A3882BA5168F05F3E1FA60320 /* UIView+ZKAdd.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+ZKAdd.h"; path = "ZKCategories/Classes/UIView+ZKAdd.h"; sourceTree = "<group>"; };
 		E0E602855A8BA0867A9F8648165FD091 /* NSDate+ZKAdd.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSDate+ZKAdd.m"; path = "ZKCategories/Classes/NSDate+ZKAdd.m"; sourceTree = "<group>"; };
-		E2CD292E6161ED1748190F9BBE34B7AF /* Pods_ZKCategories_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_ZKCategories_Example.framework; path = "Pods-ZKCategories_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E2CD292E6161ED1748190F9BBE34B7AF /* Pods_ZKCategories_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZKCategories_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E30F8296800F24DA614EC575DB7ADA8E /* NSArray+ZKAdd.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSArray+ZKAdd.m"; path = "ZKCategories/Classes/NSArray+ZKAdd.m"; sourceTree = "<group>"; };
 		E37899BD4B349060AA147E2A3721D3A2 /* FBSnapshotTestCase.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FBSnapshotTestCase.h; path = FBSnapshotTestCase/FBSnapshotTestCase.h; sourceTree = "<group>"; };
 		E89003CB2DFDD0AD99CA4305899A619C /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -329,7 +341,6 @@
 				3288FCB8E15F6401DE6220AE5CA1D27B /* Support Files */,
 				99E46DD4AB2256791F111C718CB0EEF8 /* SwiftSupport */,
 			);
-			name = FBSnapshotTestCase;
 			path = FBSnapshotTestCase;
 			sourceTree = "<group>";
 		};
@@ -513,6 +524,12 @@
 				FEA368DC847C5742B09648259CCD7AA0 /* UIViewController+ZKAdd.m */,
 				1DFF55E7AB27CFCE3D8254794A8B0EB1 /* UIWindow+ZKAdd.h */,
 				F712189DECBE91EF33AD3D8238B35A1E /* UIWindow+ZKAdd.m */,
+				4BE98C7921F39BBE00E5A69D /* NSNotificationCenter+ZKAdd.h */,
+				4BE98C7A21F39BBF00E5A69D /* NSNotificationCenter+ZKAdd.m */,
+				4BE98C7D21F39D2600E5A69D /* UIButton+ZKAdd.h */,
+				4BE98C7E21F39D2600E5A69D /* UIButton+ZKAdd.m */,
+				4BE98C8121F39E7500E5A69D /* UINavigationBar+ZKAdd.h */,
+				4BE98C8221F39E7500E5A69D /* UINavigationBar+ZKAdd.m */,
 				3C77FD336C2E7D00E916007686AE43E9 /* ZKCategories.h */,
 				647BF7ED909E572F52CEA1B68F15B50B /* ZKCategoriesMacro.h */,
 				FD5622D1B12F18C0096E1EF616F69D4C /* ZKCGUtilities.h */,
@@ -637,9 +654,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				4CF5865BAF828AB9A7C56F3A1B1C856F /* FBSnapshotTestCase-umbrella.h in Headers */,
+				4BE98C7B21F39BBF00E5A69D /* NSNotificationCenter+ZKAdd.h in Headers */,
+				4BE98C8321F39E7500E5A69D /* UINavigationBar+ZKAdd.h in Headers */,
 				B08725BB938AA3AACCA3C8C818FA4CF6 /* FBSnapshotTestCase.h in Headers */,
 				4D600539FC2E29EA7E28A2DA8A8B328C /* FBSnapshotTestCasePlatform.h in Headers */,
 				59FD5FAEFCF13CD39358A6F36C50BED8 /* FBSnapshotTestController.h in Headers */,
+				4BE98C7F21F39D2600E5A69D /* UIButton+ZKAdd.h in Headers */,
 				BCDA265400AF5BCF21074C5AF1FD09A8 /* UIApplication+StrictKeyWindow.h in Headers */,
 				63EA4B9CBBAB30A69C2D73693019FDC5 /* UIImage+Compare.h in Headers */,
 				73247510D7AD93E5FDBA474B353BF919 /* UIImage+Diff.h in Headers */,
@@ -792,9 +812,12 @@
 			files = (
 				459F58959A5C947E77A424BF94098D08 /* FBSnapshotTestCase-dummy.m in Sources */,
 				6EC17B6986CC7F9EBDF0521AE86F371B /* FBSnapshotTestCase.m in Sources */,
+				4BE98C8421F39E7500E5A69D /* UINavigationBar+ZKAdd.m in Sources */,
 				6B71ACB6D56B970D0B2AD8EE2B79D96F /* FBSnapshotTestCasePlatform.m in Sources */,
+				4BE98C8021F39D2600E5A69D /* UIButton+ZKAdd.m in Sources */,
 				E2E2BC984CCC1978CB9E22B72258C641 /* FBSnapshotTestController.m in Sources */,
 				163DC390363C339936B3114C72FE6716 /* SwiftSupport.swift in Sources */,
+				4BE98C7C21F39BBF00E5A69D /* NSNotificationCenter+ZKAdd.m in Sources */,
 				AFF108D6E8D891F7B8148CA0158B2A23 /* UIApplication+StrictKeyWindow.m in Sources */,
 				4C022C88B9E8D527B1426B5281756EDE /* UIImage+Compare.m in Sources */,
 				E4877E179010E4E588B6E9E61B047B60 /* UIImage+Diff.m in Sources */,
@@ -1261,8 +1284,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 4.2;
 				SYMROOT = "${SRCROOT}/../build";
 			};
