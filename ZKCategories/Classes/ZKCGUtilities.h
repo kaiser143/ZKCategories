@@ -304,6 +304,55 @@ static inline UIEdgeInsets UIEdgeInsetPixelCeil(UIEdgeInsets insets) {
     return insets;
 }
 
+/** 设置投影 **/
+static inline void kai_view_shadow(UIView *view, UIColor *color, CGSize offset, CGFloat opacity, CGFloat radius) {
+    view.layer.shadowColor = color.CGColor;
+    view.layer.shadowOffset = offset;
+    view.layer.shadowOpacity = opacity;
+    view.layer.shadowRadius = radius;
+}
+
+/** view 圆角 */
+static inline void kai_view_radius(UIView *view, CGFloat radius) {
+    [view.layer setCornerRadius:radius];
+    [view.layer setMasksToBounds:YES];
+}
+
+/** view 边框 */
+static inline void kai_view_border(UIView *view, CGFloat width, UIColor *color) {
+    [view.layer setBorderWidth:(width)];
+    [view.layer setBorderColor:[color CGColor]];
+}
+
+/** view 圆角 边框 */
+static inline void kai_view_border_radius(UIView *view, CGFloat radius, CGFloat width, UIColor *color) {
+    kai_view_radius(view, radius);
+    kai_view_border(view, width, color);
+}
+
+/**
+ view 单个圆角
+ 
+ @param view 试图
+ @param angle 某个圆角
+ * UIRectCornerTopLeft
+ * UIRectCornerTopRight
+ * UIRectCornerBottomLeft
+ * UIRectCornerBottomRight
+ * UIRectCornerAllCorners
+ @param radius 圆角度
+ */
+static inline void kai_view_singleFillet(UIView *view, UIRectCorner angle, CGFloat radius) {
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:view.bounds
+                                                   byRoundingCorners:angle
+                                                         cornerRadii:CGSizeMake(radius, radius)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = view.bounds;
+    maskLayer.path = maskPath.CGPath;
+    view.layer.mask = maskLayer;
+}
+
+
 // main screen's scale
 #ifndef kScreenScale
 #define kScreenScale ZKScreenScale()
