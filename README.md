@@ -17,7 +17,7 @@ ZKCategories is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'ZKCategories', :git => 'https://github.com/kaiser143/ZKCategories.git', :tag => '0.1.25'
+pod 'ZKCategories', :git => 'https://github.com/kaiser143/ZKCategories.git', :tag => '0.1.26'
 ```
 
 ## Author
@@ -27,3 +27,5 @@ Kaiser, deyang143@126.com
 ## License
 
 ZKCategories is available under the MIT license. See the LICENSE file for more info.
+
+
