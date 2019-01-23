@@ -35,7 +35,7 @@
 }
 
 - (NSString *)_kai_description {
-    return [self.description stringByReplaceUnicode];
+    return [[self _kai_description] stringByReplaceUnicode];
 }
 
 - (NSString *)_kai_descriptionWithLocale:(nullable id)locale {
