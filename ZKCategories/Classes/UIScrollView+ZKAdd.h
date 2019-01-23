@@ -9,10 +9,31 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSUInteger, ZKScrollDirection) {
+    ZKScrollDirectionUndefine,
+    ZKScrollDirectionUp,
+    ZKScrollDirectionDown,
+    ZKScrollDirectionLeft,
+    ZKScrollDirectionRight,
+};
+
 /**
  Provides extensions for `UIScrollView`.
  */
 @interface UIScrollView (ZKAdd)
+
+@property (nonatomic, assign) CGFloat contentInsetTop;
+@property (nonatomic, assign) CGFloat contentInsetBottom;
+@property (nonatomic, assign) CGFloat contentInsetLeft;
+@property (nonatomic, assign) CGFloat contentInsetRight;
+
+@property (nonatomic, assign) CGFloat contentOffsetX;
+@property (nonatomic, assign) CGFloat contentOffsetY;
+
+@property (nonatomic, assign) CGFloat contentSizeWidth;
+@property (nonatomic, assign) CGFloat contentSizeHeight;
+
+- (ZKScrollDirection)scrollDirection;
 
 /**
  Scroll content to top with animation.

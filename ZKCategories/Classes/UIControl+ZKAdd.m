@@ -36,13 +36,25 @@
 
 @end
 
+
+@interface UIControl ()
+
+/// 是否执行点UI方法，YES: 不允许点击  NO:允许点击
+@property (nonatomic, assign, getter=isIgnoreEvent) BOOL ignoreEvent;
+
+@end
+
 @implementation UIControl (ZKAdd)
+
++ (void)load {
+    [self swizzleMethod:@selector(sendAction:to:forEvent:) withMethod:@selector(kai_sendAction:to:forEvent:)];
+}
 
 - (void)removeAllTargets {
     [[self allTargets] enumerateObjectsUsingBlock: ^(id object, BOOL *stop) {
         [self removeTarget:object action:NULL forControlEvents:UIControlEventAllEvents];
     }];
-    [[self _kai_allUIControlBlockTargets] removeAllObjects];
+    [[self kai_allUIControlBlockTargets] removeAllObjects];
 }
 
 - (void)setTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents {
@@ -64,7 +76,7 @@
     _ZKUIControlBlockTarget *target = [[_ZKUIControlBlockTarget alloc]
                                        initWithBlock:block events:controlEvents];
     [self addTarget:target action:@selector(invoke:) forControlEvents:controlEvents];
-    NSMutableArray *targets = [self _kai_allUIControlBlockTargets];
+    NSMutableArray *targets = [self kai_allUIControlBlockTargets];
     [targets addObject:target];
 }
 
@@ -77,7 +89,7 @@
 - (void)removeAllBlocksForControlEvents:(UIControlEvents)controlEvents {
     if (!controlEvents) return;
     
-    NSMutableArray *targets = [self _kai_allUIControlBlockTargets];
+    NSMutableArray *targets = [self kai_allUIControlBlockTargets];
     NSMutableArray *removes = [NSMutableArray array];
     for (_ZKUIControlBlockTarget *target in targets) {
         if (target.events & controlEvents) {
@@ -95,13 +107,61 @@
     [targets removeObjectsInArray:removes];
 }
 
-- (NSMutableArray *)_kai_allUIControlBlockTargets {
+- (NSMutableArray *)kai_allUIControlBlockTargets {
     NSMutableArray *targets = [self associatedValueForKey:_cmd];
     if (!targets) {
         targets = [NSMutableArray array];
         [self setAssociateValue:targets withKey:_cmd];
     }
     return targets;
+}
+
+- (void)setTimeInterval:(NSTimeInterval)timeInterval {
+    [self setAssociateValue:@(timeInterval) withKey:@selector(timeInterval)];
+}
+
+- (NSTimeInterval)timeInterval {
+    NSNumber *interval = [self associatedValueForKey:_cmd];
+    return interval ? interval.doubleValue : 0.5;
+}
+
+- (void)setIgnore:(BOOL)ignore {
+    [self setAssociateValue:@(ignore) withKey:@selector(isIgnore)];
+}
+
+- (BOOL)isIgnore {
+    return [[self associatedValueForKey:_cmd] boolValue];
+}
+
+- (void)setIgnoreEvent:(BOOL)ignoreEvent {
+    [self setAssociateValue:@(ignoreEvent) withKey:@selector(isIgnoreEvent)];
+}
+
+- (BOOL)isIgnoreEvent {
+    return [[self associatedValueForKey:_cmd] boolValue];
+}
+
+- (void)kai_sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event {
+    if (self.isIgnore) {
+        [self kai_sendAction:action to:target forEvent:event];
+        return;
+    }
+    
+    NSString *controlName = NSStringFromClass(self.class);
+    if ([controlName isEqualToString:@"UIButton"] || [controlName isEqualToString:@"UINavigationButton"]) {
+        if (self.isIgnoreEvent) {
+            return;
+        } else if (self.timeInterval > 0) {
+            [self performSelector:@selector(resetState) withObject:nil afterDelay:self.timeInterval];
+        }
+    }
+    // 此处 methodA和methodB方法IMP互换了，实际上执行 sendAction；所以不会死循环
+    self.ignoreEvent = YES;
+    [self kai_sendAction:action to:target forEvent:event];
+}
+
+- (void)resetState {
+    self.ignoreEvent = NO;
 }
 
 @end

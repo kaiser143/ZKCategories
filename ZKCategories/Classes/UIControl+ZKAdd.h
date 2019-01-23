@@ -67,6 +67,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)removeAllBlocksForControlEvents:(UIControlEvents)controlEvents;
 
+/// 设置点击时间间隔，默认时间间隔0.5
+@property (nonatomic, assign) NSTimeInterval timeInterval;
+
+/// 是否忽略时间间隔
+@property (nonatomic, assign, getter=isIgnore) BOOL ignore;
+
 @end
 
 NS_ASSUME_NONNULL_END
