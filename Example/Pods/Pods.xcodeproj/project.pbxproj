@@ -44,8 +44,6 @@
 		4BE98C8421F39E7500E5A69D /* UINavigationBar+ZKAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE98C8221F39E7500E5A69D /* UINavigationBar+ZKAdd.m */; };
 		4BE98C9821F830B300E5A69D /* ZKUnicode.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE98C9621F830B300E5A69D /* ZKUnicode.h */; };
 		4BE98C9921F830B300E5A69D /* ZKUnicode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE98C9721F830B300E5A69D /* ZKUnicode.m */; };
-		4BE98CA021F8455300E5A69D /* UINavigationItem+ZKAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE98C9E21F8455300E5A69D /* UINavigationItem+ZKAdd.h */; };
-		4BE98CA121F8455300E5A69D /* UINavigationItem+ZKAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE98C9F21F8455300E5A69D /* UINavigationItem+ZKAdd.m */; };
 		4BE98CA421F8497400E5A69D /* UILabel+ZKAdd.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE98CA221F8497400E5A69D /* UILabel+ZKAdd.h */; };
 		4BE98CA521F8497400E5A69D /* UILabel+ZKAdd.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE98CA321F8497400E5A69D /* UILabel+ZKAdd.m */; };
 		4C022C88B9E8D527B1426B5281756EDE /* UIImage+Compare.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B5E22F9517F21D3A0251F88FCAB281E /* UIImage+Compare.m */; };
@@ -191,8 +189,6 @@
 		4BE98C8221F39E7500E5A69D /* UINavigationBar+ZKAdd.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UINavigationBar+ZKAdd.m"; path = "ZKCategories/Classes/UINavigationBar+ZKAdd.m"; sourceTree = "<group>"; };
 		4BE98C9621F830B300E5A69D /* ZKUnicode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ZKUnicode.h; path = ZKCategories/Classes/ZKUnicode.h; sourceTree = "<group>"; };
 		4BE98C9721F830B300E5A69D /* ZKUnicode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ZKUnicode.m; path = ZKCategories/Classes/ZKUnicode.m; sourceTree = "<group>"; };
-		4BE98C9E21F8455300E5A69D /* UINavigationItem+ZKAdd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UINavigationItem+ZKAdd.h"; path = "ZKCategories/Classes/UINavigationItem+ZKAdd.h"; sourceTree = "<group>"; };
-		4BE98C9F21F8455300E5A69D /* UINavigationItem+ZKAdd.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UINavigationItem+ZKAdd.m"; path = "ZKCategories/Classes/UINavigationItem+ZKAdd.m"; sourceTree = "<group>"; };
 		4BE98CA221F8497400E5A69D /* UILabel+ZKAdd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UILabel+ZKAdd.h"; path = "ZKCategories/Classes/UILabel+ZKAdd.h"; sourceTree = "<group>"; };
 		4BE98CA321F8497400E5A69D /* UILabel+ZKAdd.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UILabel+ZKAdd.m"; path = "ZKCategories/Classes/UILabel+ZKAdd.m"; sourceTree = "<group>"; };
 		4CCF8FB06D0D8E2640C57D460AB67AF6 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -542,8 +538,6 @@
 				4BE98C7E21F39D2600E5A69D /* UIButton+ZKAdd.m */,
 				4BE98C8121F39E7500E5A69D /* UINavigationBar+ZKAdd.h */,
 				4BE98C8221F39E7500E5A69D /* UINavigationBar+ZKAdd.m */,
-				4BE98C9E21F8455300E5A69D /* UINavigationItem+ZKAdd.h */,
-				4BE98C9F21F8455300E5A69D /* UINavigationItem+ZKAdd.m */,
 				4BE98CA221F8497400E5A69D /* UILabel+ZKAdd.h */,
 				4BE98CA321F8497400E5A69D /* UILabel+ZKAdd.m */,
 				3C77FD336C2E7D00E916007686AE43E9 /* ZKCategories.h */,
@@ -674,7 +668,6 @@
 				4CF5865BAF828AB9A7C56F3A1B1C856F /* FBSnapshotTestCase-umbrella.h in Headers */,
 				4BE98C7B21F39BBF00E5A69D /* NSNotificationCenter+ZKAdd.h in Headers */,
 				4BE98C8321F39E7500E5A69D /* UINavigationBar+ZKAdd.h in Headers */,
-				4BE98CA021F8455300E5A69D /* UINavigationItem+ZKAdd.h in Headers */,
 				B08725BB938AA3AACCA3C8C818FA4CF6 /* FBSnapshotTestCase.h in Headers */,
 				4D600539FC2E29EA7E28A2DA8A8B328C /* FBSnapshotTestCasePlatform.h in Headers */,
 				4BE98C9821F830B300E5A69D /* ZKUnicode.h in Headers */,
@@ -837,7 +830,6 @@
 				6EC17B6986CC7F9EBDF0521AE86F371B /* FBSnapshotTestCase.m in Sources */,
 				4BE98C8421F39E7500E5A69D /* UINavigationBar+ZKAdd.m in Sources */,
 				6B71ACB6D56B970D0B2AD8EE2B79D96F /* FBSnapshotTestCasePlatform.m in Sources */,
-				4BE98CA121F8455300E5A69D /* UINavigationItem+ZKAdd.m in Sources */,
 				4BE98C8021F39D2600E5A69D /* UIButton+ZKAdd.m in Sources */,
 				E2E2BC984CCC1978CB9E22B72258C641 /* FBSnapshotTestController.m in Sources */,
 				163DC390363C339936B3114C72FE6716 /* SwiftSupport.swift in Sources */,
