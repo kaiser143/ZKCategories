@@ -167,6 +167,21 @@
     return [NSString stringWithFormat:units[[units count]-1], value/10.0];
 }
 
+- (NSInteger)byteLength {
+    NSInteger strlength = 0;
+    char *p = (char *)[self cStringUsingEncoding:NSUnicodeStringEncoding];
+    for (int i = 0; i < [self lengthOfBytesUsingEncoding:NSUnicodeStringEncoding]; i++) {
+        if (*p) {
+            p++;
+            strlength++;
+        } else {
+            p++;
+        }
+    }
+    
+    return (strlength + 1) / 2;
+}
+
 - (NSString *)md2String {
     return [[self dataUsingEncoding:NSUTF8StringEncoding] md2String];
 }

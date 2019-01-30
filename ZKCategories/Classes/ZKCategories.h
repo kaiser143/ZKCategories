@@ -52,6 +52,7 @@
     #import <ZKCategories/UINavigationBar+ZKAdd.h>
     #import <ZKCategories/ZKUnicode.h>
     #import <ZKCategories/UILabel+ZKAdd.h>
+    #import <ZKCategories/NSData+ZKAdd.h>
 #else
 
     #import "NSObject+ZKAdd.h"
@@ -93,6 +94,7 @@
     #import "UINavigationBar+ZKAdd.h"
     #import "ZKUnicode.h"
     #import "UILabel+ZKAdd.h"
+    #import "NSData+ZKAdd.h"
 
 #endif  /* __has_inclue */
 

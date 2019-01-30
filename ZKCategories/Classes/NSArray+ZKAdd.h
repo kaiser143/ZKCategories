@@ -111,5 +111,36 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+
+@interface NSMutableArray (SafeAccess)
+
+- (void)addObj:(id)i;
+
+- (void)addString:(NSString *)i;
+
+- (void)addBool:(BOOL)i;
+
+- (void)addInt:(int)i;
+
+- (void)addInteger:(NSInteger)i;
+
+- (void)addUnsignedInteger:(NSUInteger)i;
+
+- (void)addCGFloat:(CGFloat)f;
+
+- (void)addChar:(char)c;
+
+- (void)addFloat:(float)i;
+
+- (void)addPoint:(CGPoint)o;
+
+- (void)addSize:(CGSize)o;
+
+- (void)addRect:(CGRect)o;
+
+- (void)addRange:(NSRange)range;
+
+@end
+
 NS_ASSUME_NONNULL_END
 

@@ -79,6 +79,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSString *)stringByFormattingBytes:(long long)bytes;
 
+/*!
+ *  @brief    字符串字节长度
+ */
+- (NSInteger)byteLength;
+
+
 #pragma mark - :. Hash
 ///=============================================================================
 /// @name Hash

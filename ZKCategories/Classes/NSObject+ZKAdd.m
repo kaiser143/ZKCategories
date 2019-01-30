@@ -126,6 +126,30 @@ static inline dispatch_time_t dTimeDelay(NSTimeInterval time) {
     [self cancelBlock:aWrappingBlockHandle];
 }
 
+- (void)setStringProperty:(NSString *)stringProperty {
+    [self setAssociateValue:stringProperty withKey:@selector(stringProperty)];
+}
+
+- (NSString *)stringProperty {
+    return [self associatedValueForKey:_cmd];
+}
+
+- (void)setIntegerProperty:(NSInteger)integerProperty {
+    [self setAssociateValue:@(integerProperty) withKey:@selector(integerProperty)];
+}
+
+- (NSInteger)integerProperty {
+    return [[self associatedValueForKey:_cmd] integerValue];
+}
+
+- (void)setExtra:(id)extra {
+    [self setAssociateValue:extra withKey:@selector(extra)];
+}
+
+- (id)extra {
+    return [self associatedValueForKey:_cmd];
+}
+
 @end
 
 

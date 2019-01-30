@@ -25,6 +25,15 @@ typedef void(^ZKNSObjectDelayBlock)(BOOL cancel);
 + (void)cancelBlock:(ZKNSObjectDelayBlock)block;
 + (void)cancelPreviousPerformBlock:(ZKNSObjectDelayBlock)aWrappingBlockHandle __attribute__ ((deprecated));
 
+/// catgory runtime实现get set方法增加一个字符串属性
+@property (nonatomic, strong) NSString *stringProperty;
+
+/// catgory runtime实现get set方法增加一个NSInteger属性
+@property (nonatomic, assign) NSInteger integerProperty;
+
+/// catgory runtime实现get set方法增加一个id属性
+@property (nonatomic, strong) id extra;
+
 @end
 
 
