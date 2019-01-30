@@ -7,6 +7,7 @@
 //
 
 #import "ZKViewController.h"
+#import "ZKCategories.h"
 
 @interface ZKViewController ()
 
@@ -18,6 +19,32 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    
+    self.view.backgroundColor = UIColor.randomColor;
+    
+    static NSInteger i = 0;
+    if (i == 0) {
+        UIButton *next = [UIButton buttonWithType:UIButtonTypeCustom];
+        next.top = 100;
+        next.centerX = self.view.centerX;
+        next.size = CGSizeMake(50, 50);
+        kai_view_border_radius(next, 8.f, 1, [UIColor colorWithHexString:@"#eeeeee"]);
+        [next setTitle:@"下一页" forState:UIControlStateNormal];
+        [self.view addSubview:next];
+        
+        @weakify(self);
+        [next addBlockForControlEvents:UIControlEventTouchUpInside
+                                 block:^(id  _Nonnull sender) {
+                                     @strongify(self);
+                                     [self.navigationController pushViewController:ZKViewController.new animated:YES];
+                                 }];
+    } else {
+        UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
+        scrollView.contentSize = CGSizeMake(2*kScreenSize.width, 2*kScreenSize.height);
+        [self.view addSubview:scrollView];
+    }
+    
+    i++;
 }
 
 - (void)didReceiveMemoryWarning

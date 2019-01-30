@@ -8,6 +8,7 @@
 
 #import "UIScrollView+ZKAdd.h"
 #import "ZKCategoriesMacro.h"
+#import "NSObject+ZKAdd.h"
 
 ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 
@@ -150,3 +151,4 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 }
 
 @end
+
