@@ -7,6 +7,53 @@
 //
 
 #import "UINavigationController+ZKAdd.h"
+#import "NSObject+ZKAdd.h"
+
+@interface _KAIFullscreenPopGestureRecognizerDelegate : NSObject <UIGestureRecognizerDelegate>
+
+@property (nonatomic, weak) UINavigationController *navigationController;
+
+@end
+
+@implementation _KAIFullscreenPopGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)gestureRecognizer {
+    // Ignore when no view controller is pushed into the navigation stack.
+    if (self.navigationController.viewControllers.count <= 1) {
+        return NO;
+    }
+    
+    // Ignore when the active view controller doesn't allow interactive pop.
+    UIViewController *topViewController = self.navigationController.viewControllers.lastObject;
+    if (topViewController.kai_interactivePopDisabled) {
+        return NO;
+    }
+    
+    // Ignore when the beginning location is beyond max allowed initial distance to left edge.
+    CGPoint beginningLocation = [gestureRecognizer locationInView:gestureRecognizer.view];
+    CGFloat maxAllowedInitialDistance = topViewController.kai_interactivePopMaxAllowedInitialDistanceToLeftEdge;
+    if (maxAllowedInitialDistance > 0 && beginningLocation.x > maxAllowedInitialDistance) {
+        return NO;
+    }
+    
+    // Ignore pan gesture when the navigation controller is currently in transition.
+    if ([[self.navigationController valueForKey:@"_isTransitioning"] boolValue]) {
+        return NO;
+    }
+    
+    // Prevent calling the handler when the gesture begins in an opposite direction.
+    CGPoint translation = [gestureRecognizer translationInView:gestureRecognizer.view];
+    BOOL isLeftToRight = [UIApplication sharedApplication].userInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionLeftToRight;
+    CGFloat multiplier = isLeftToRight ? 1 : - 1;
+    if ((translation.x * multiplier) <= 0) {
+        return NO;
+    }
+    
+    return YES;
+}
+
+@end
+
 
 @implementation UINavigationController (ZKAdd)
 
@@ -35,6 +82,188 @@
     [self pushViewController:viewController animated:animated];
     
     return controller;
+}
+
+@end
+
+typedef void (^_KAIViewControllerWillAppearInjectBlock)(UIViewController *viewController, BOOL animated);
+
+@interface UIViewController (KAIFullscreenPopGesturePrivate)
+
+@property (nonatomic, copy) _KAIViewControllerWillAppearInjectBlock kai_willAppearInjectBlock;
+
+@end
+
+@implementation UIViewController (KAIFullscreenPopGesturePrivate)
+
++ (void)load {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self swizzleMethod:@selector(viewWillAppear:) withMethod:@selector(kai_viewWillAppear:)];
+        [self swizzleMethod:@selector(viewWillDisappear:) withMethod:@selector(kai_viewWillDisappear:)];
+    });
+}
+
+- (void)kai_viewWillAppear:(BOOL)animated {
+    // Forward to primary implementation.
+    [self kai_viewWillAppear:animated];
+    
+    if (self.kai_willAppearInjectBlock) {
+        self.kai_willAppearInjectBlock(self, animated);
+    }
+}
+
+- (void)kai_viewWillDisappear:(BOOL)animated {
+    // Forward to primary implementation.
+    [self kai_viewWillDisappear:animated];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        UIViewController *viewController = self.navigationController.viewControllers.lastObject;
+        if (viewController && !viewController.kai_prefersNavigationBarHidden) {
+            [self.navigationController setNavigationBarHidden:NO animated:NO];
+        }
+    });
+}
+
+- (_KAIViewControllerWillAppearInjectBlock)kai_willAppearInjectBlock {
+    return [self associatedValueForKey:_cmd];
+}
+
+- (void)setKai_willAppearInjectBlock:(_KAIViewControllerWillAppearInjectBlock)block {
+    [self setAssociateValue:block withKey:@selector(kai_willAppearInjectBlock)];
+}
+
+@end
+
+@implementation UINavigationController (KAIFullscreenPopGesture)
+
++ (void)load {
+    // Inject "-pushViewController:animated:"
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self swizzleMethod:@selector(pushViewController:animated:) withMethod:@selector(kai_pushViewController:animated:)];
+    });
+}
+
+- (void)kai_pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    if (![self.interactivePopGestureRecognizer.view.gestureRecognizers containsObject:self.kai_fullscreenPopGestureRecognizer]) {
+        
+        // Add our own gesture recognizer to where the onboard screen edge pan gesture recognizer is attached to.
+        [self.interactivePopGestureRecognizer.view addGestureRecognizer:self.kai_fullscreenPopGestureRecognizer];
+        
+        // Forward the gesture events to the private handler of the onboard gesture recognizer.
+        NSArray *internalTargets = [self.interactivePopGestureRecognizer valueForKey:@"targets"];
+        id internalTarget = [internalTargets.firstObject valueForKey:@"target"];
+        SEL internalAction = NSSelectorFromString(@"handleNavigationTransition:");
+        self.kai_fullscreenPopGestureRecognizer.delegate = self.kai_popGestureRecognizerDelegate;
+        [self.kai_fullscreenPopGestureRecognizer addTarget:internalTarget action:internalAction];
+        
+        // Disable the onboard gesture recognizer.
+        self.interactivePopGestureRecognizer.enabled = NO;
+    }
+    
+    // Handle perferred navigation bar appearance.
+    [self kai_setupViewControllerBasedNavigationBarAppearanceIfNeeded:viewController];
+    
+    // Forward to primary implementation.
+    if (![self.viewControllers containsObject:viewController]) {
+        [self kai_pushViewController:viewController animated:animated];
+    }
+}
+
+- (void)kai_setupViewControllerBasedNavigationBarAppearanceIfNeeded:(UIViewController *)appearingViewController {
+    if (!self.kai_viewControllerBasedNavigationBarAppearanceEnabled) {
+        return;
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    _KAIViewControllerWillAppearInjectBlock block = ^(UIViewController *viewController, BOOL animated) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (strongSelf) {
+            [strongSelf setNavigationBarHidden:viewController.kai_prefersNavigationBarHidden animated:animated];
+        }
+    };
+    
+    // Setup will appear inject block to appearing view controller.
+    // Setup disappearing view controller as well, because not every view controller is added into
+    // stack by pushing, maybe by "-setViewControllers:".
+    appearingViewController.kai_willAppearInjectBlock = block;
+    UIViewController *disappearingViewController = self.viewControllers.lastObject;
+    if (disappearingViewController && !disappearingViewController.kai_willAppearInjectBlock) {
+        disappearingViewController.kai_willAppearInjectBlock = block;
+    }
+}
+
+- (_KAIFullscreenPopGestureRecognizerDelegate *)kai_popGestureRecognizerDelegate {
+    _KAIFullscreenPopGestureRecognizerDelegate *delegate = [self associatedValueForKey:_cmd];
+    
+    if (!delegate) {
+        delegate = [[_KAIFullscreenPopGestureRecognizerDelegate alloc] init];
+        delegate.navigationController = self;
+        
+        [self setAssociateValue:delegate withKey:_cmd];
+    }
+    return delegate;
+}
+
+- (UIPanGestureRecognizer *)kai_fullscreenPopGestureRecognizer {
+    UIPanGestureRecognizer *panGestureRecognizer = [self associatedValueForKey:_cmd];
+    
+    if (!panGestureRecognizer) {
+        panGestureRecognizer = [[UIPanGestureRecognizer alloc] init];
+        panGestureRecognizer.maximumNumberOfTouches = 1;
+        
+        [self setAssociateValue:panGestureRecognizer withKey:_cmd];
+    }
+    return panGestureRecognizer;
+}
+
+- (BOOL)kai_viewControllerBasedNavigationBarAppearanceEnabled {
+    NSNumber *number = [self associatedValueForKey:_cmd];
+    if (number) {
+        return number.boolValue;
+    }
+    self.kai_viewControllerBasedNavigationBarAppearanceEnabled = YES;
+    return YES;
+}
+
+- (void)setKai_viewControllerBasedNavigationBarAppearanceEnabled:(BOOL)enabled {
+    SEL key = @selector(kai_viewControllerBasedNavigationBarAppearanceEnabled);
+    [self setAssociateValue:@(enabled) withKey:key];
+}
+
+@end
+
+@implementation UIViewController (KAIFullscreenPopGesture)
+
+- (BOOL)kai_interactivePopDisabled {
+    return [[self associatedValueForKey:_cmd] boolValue];
+}
+
+- (void)setKai_interactivePopDisabled:(BOOL)disabled {
+    [self setAssociateValue:@(disabled) withKey:@selector(kai_interactivePopDisabled)];
+}
+
+- (BOOL)kai_prefersNavigationBarHidden {
+    return [[self associatedValueForKey:_cmd] boolValue];
+}
+
+- (void)setKai_prefersNavigationBarHidden:(BOOL)hidden {
+    [self setAssociateValue:@(hidden) withKey:@selector(kai_prefersNavigationBarHidden)];
+}
+
+
+- (CGFloat)kai_interactivePopMaxAllowedInitialDistanceToLeftEdge {
+#if CGFLOAT_IS_DOUBLE
+    return [[self associatedValueForKey:_cmd] doubleValue];
+#else
+    return [[self associatedValueForKey:_cmd] floatValue];
+#endif
+}
+
+- (void)setKai_interactivePopMaxAllowedInitialDistanceToLeftEdge:(CGFloat)distance {
+    SEL key = @selector(kai_interactivePopMaxAllowedInitialDistanceToLeftEdge);
+    [self setAssociateValue:@(MAX(0, distance)) withKey:key];
 }
 
 @end
