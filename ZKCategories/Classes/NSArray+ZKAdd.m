@@ -125,7 +125,7 @@
 
 #pragma mark - :. SafeAccess
 
-- (id)objectAtIndex:(NSUInteger)index {
+- (id)objectOrNilAtIndex:(NSUInteger)index {
     if (index < self.count) {
         return self[ index ];
     } else {
@@ -134,7 +134,7 @@
 }
 
 - (NSString *)stringAtIndex:(NSUInteger)index {
-    id value = [self objectAtIndex:index];
+    id value = [self objectOrNilAtIndex:index];
     if (value == nil || value == [NSNull null]) {
         return @"";
     }
@@ -150,7 +150,7 @@
 
 
 - (NSNumber *)numberAtIndex:(NSUInteger)index {
-    id value = [self objectAtIndex:index];
+    id value = [self objectOrNilAtIndex:index];
     if ([value isKindOfClass:[NSNumber class]]) {
         return (NSNumber *)value;
     }
@@ -163,7 +163,7 @@
 }
 
 - (NSDecimalNumber *)decimalNumberAtIndex:(NSUInteger)index {
-    id value = [self objectAtIndex:index];
+    id value = [self objectOrNilAtIndex:index];
     
     if ([value isKindOfClass:[NSDecimalNumber class]]) {
         return value;
@@ -178,7 +178,7 @@
 }
 
 - (NSArray *)arrayAtIndex:(NSUInteger)index {
-    id value = [self objectAtIndex:index];
+    id value = [self objectOrNilAtIndex:index];
     if (value == nil || value == [NSNull null]) {
         return nil;
     }
@@ -190,7 +190,7 @@
 
 
 - (NSDictionary *)dictionaryAtIndex:(NSUInteger)index {
-    id value = [self objectAtIndex:index];
+    id value = [self objectOrNilAtIndex:index];
     if (value == nil || value == [NSNull null]) {
         return nil;
     }
@@ -201,7 +201,7 @@
 }
 
 - (NSInteger)integerAtIndex:(NSUInteger)index {
-    id value = [self objectAtIndex:index];
+    id value = [self objectOrNilAtIndex:index];
     if (value == nil || value == [NSNull null]) {
         return 0;
     }
@@ -212,7 +212,7 @@
 }
 
 - (NSUInteger)unsignedIntegerAtIndex:(NSUInteger)index {
-    id value = [self objectAtIndex:index];
+    id value = [self objectOrNilAtIndex:index];
     if (value == nil || value == [NSNull null]) {
         return 0;
     }
@@ -223,7 +223,7 @@
 }
 
 - (BOOL)boolAtIndex:(NSUInteger)index {
-    id value = [self objectAtIndex:index];
+    id value = [self objectOrNilAtIndex:index];
     
     if (value == nil || value == [NSNull null]) {
         return NO;
@@ -238,7 +238,7 @@
 }
 
 - (int16_t)int16AtIndex:(NSUInteger)index {
-    id value = [self objectAtIndex:index];
+    id value = [self objectOrNilAtIndex:index];
     
     if (value == nil || value == [NSNull null]) {
         return 0;
@@ -253,7 +253,7 @@
 }
 
 - (int32_t)int32AtIndex:(NSUInteger)index {
-    id value = [self objectAtIndex:index];
+    id value = [self objectOrNilAtIndex:index];
     
     if (value == nil || value == [NSNull null]) {
         return 0;
@@ -265,7 +265,7 @@
 }
 
 - (int64_t)int64AtIndex:(NSUInteger)index {
-    id value = [self objectAtIndex:index];
+    id value = [self objectOrNilAtIndex:index];
     
     if (value == nil || value == [NSNull null]) {
         return 0;
@@ -277,7 +277,7 @@
 }
 
 - (char)charAtIndex:(NSUInteger)index {
-    id value = [self objectAtIndex:index];
+    id value = [self objectOrNilAtIndex:index];
     
     if (value == nil || value == [NSNull null]) {
         return 0;
@@ -289,7 +289,7 @@
 }
 
 - (short)shortAtIndex:(NSUInteger)index {
-    id value = [self objectAtIndex:index];
+    id value = [self objectOrNilAtIndex:index];
     
     if (value == nil || value == [NSNull null]) {
         return 0;
@@ -304,7 +304,7 @@
 }
 
 - (float)floatAtIndex:(NSUInteger)index {
-    id value = [self objectAtIndex:index];
+    id value = [self objectOrNilAtIndex:index];
     
     if (value == nil || value == [NSNull null]) {
         return 0;
@@ -315,7 +315,7 @@
     return 0;
 }
 - (double)doubleAtIndex:(NSUInteger)index {
-    id value = [self objectAtIndex:index];
+    id value = [self objectOrNilAtIndex:index];
     
     if (value == nil || value == [NSNull null]) {
         return 0;
@@ -329,7 +329,7 @@
 - (NSDate *)dateAtIndex:(NSUInteger)index dateFormat:(NSString *)dateFormat {
     NSDateFormatter *formater = [[NSDateFormatter alloc] init];
     formater.dateFormat = dateFormat;
-    id value = [self objectAtIndex:index];
+    id value = [self objectOrNilAtIndex:index];
     
     if (value == nil || value == [NSNull null]) {
         return nil;
@@ -343,7 +343,7 @@
 
 //CG
 - (CGFloat)CGFloatAtIndex:(NSUInteger)index {
-    id value = [self objectAtIndex:index];
+    id value = [self objectOrNilAtIndex:index];
     
     CGFloat f = [value doubleValue];
     
@@ -351,7 +351,7 @@
 }
 
 - (CGPoint)pointAtIndex:(NSUInteger)index {
-    id value = [self objectAtIndex:index];
+    id value = [self objectOrNilAtIndex:index];
     
     CGPoint point = CGPointFromString(value);
     
@@ -359,7 +359,7 @@
 }
 
 - (CGSize)sizeAtIndex:(NSUInteger)index {
-    id value = [self objectAtIndex:index];
+    id value = [self objectOrNilAtIndex:index];
     
     CGSize size = CGSizeFromString(value);
     
@@ -367,7 +367,7 @@
 }
 
 - (CGRect)rectAtIndex:(NSUInteger)index {
-    id value = [self objectAtIndex:index];
+    id value = [self objectOrNilAtIndex:index];
     
     CGRect rect = CGRectFromString(value);
     

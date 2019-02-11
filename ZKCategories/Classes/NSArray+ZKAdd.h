@@ -67,7 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - :. SafeAccess
 
-- (id)objectAtIndex:(NSUInteger)index;
+- (id)objectOrNilAtIndex:(NSUInteger)index;
 
 - (NSString *)stringAtIndex:(NSUInteger)index;
 
