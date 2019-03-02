@@ -32,10 +32,10 @@
         [next setTitle:@"下一页" forState:UIControlStateNormal];
         [self.view addSubview:next];
         
-        @weakify(self);
+        @weakify(self, next);
         [next addBlockForControlEvents:UIControlEventTouchUpInside
                                  block:^(id  _Nonnull sender) {
-                                     @strongify(self);
+                                     @strongify(self, next);
                                      [self.navigationController pushViewController:ZKViewController.new animated:YES];
                                  }];
     } else {
