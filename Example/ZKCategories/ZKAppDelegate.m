@@ -7,12 +7,16 @@
 //
 
 #import "ZKAppDelegate.h"
+#import "ZKCategories.h"
 
 @implementation ZKAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    self.window.backgroundColor = UIColor.yellowColor;
+    
+    [self setUpNavigationBarAppearance:UIColorHex(ffffff)];
     return YES;
 }
 
@@ -41,6 +45,29 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (void)setUpNavigationBarAppearance:(UIColor *)color
+{
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
+        [[UINavigationBar appearance] setBarTintColor:color];
+//        [[UINavigationBar appearance] setTintColor:appThemeColor];
+        UIImage *backButtonImage = [UIImage imageNamed:@"nav_back"]; // imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        [[UINavigationBar appearance] setBackIndicatorImage:backButtonImage];
+        [[UINavigationBar appearance] setBackIndicatorTransitionMaskImage:backButtonImage];
+    } else {
+        [[UINavigationBar appearance] setTintColor:color];
+    }
+    
+    [[UINavigationBar appearance] setTranslucent:NO];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+    
+    [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                          [UIColor blackColor], NSForegroundColorAttributeName, [UIFont boldSystemFontOfSize:18], NSFontAttributeName, nil]];
+    [[UINavigationBar appearance] setTintColor:UIColorHex(303943)];
+    if (@available(iOS 11.0, *)) {
+        [[UIScrollView appearance] setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentNever];
+    }
 }
 
 @end

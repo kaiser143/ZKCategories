@@ -9,7 +9,7 @@
 #import "ZKViewController.h"
 #import "ZKCategories.h"
 
-@interface ZKViewController ()
+@interface ZKViewController () <UIScrollViewDelegate>
 
 @end
 
@@ -20,7 +20,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    self.view.backgroundColor = UIColor.randomColor;
+    self.view.backgroundColor = UIColor.whiteColor;
     
     static NSInteger i = 0;
     if (i == 0) {
@@ -36,21 +36,69 @@
         [next addBlockForControlEvents:UIControlEventTouchUpInside
                                  block:^(id  _Nonnull sender) {
                                      @strongify(self, next);
-                                     [self.navigationController pushViewController:ZKViewController.new animated:YES];
+                                     [self kai_pushViewController:ZKViewController.new];
                                  }];
     } else {
         UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
-        scrollView.contentSize = CGSizeMake(2*kScreenSize.width, 2*kScreenSize.height);
+        scrollView.backgroundColor = UIColor.randomColor;
+        scrollView.delegate = self;
+        scrollView.contentSize = CGSizeMake(kScreenSize.width, 2*kScreenSize.height);
         [self.view addSubview:scrollView];
     }
     
     i++;
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    UIScrollView *scrollView = (UIScrollView *)[self.view descendantOrSelfWithClass:UIScrollView.class];
+    if (scrollView) [self navigationColor:scrollView.contentOffsetY];
+}
+
+#pragma mark - :. UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self navigationColor:scrollView.contentOffsetY];
+}
+
+- (void)navigationColor:(CGFloat)offsetY {
+    CGFloat y = 88; //device_iPhoneX ? 88 : 64;
+    NSInteger navbarChangePoint = -(+y); //-(self.topBannerView.height + y);
+    
+    if (offsetY > navbarChangePoint) {
+        CGFloat alpha = MIN(1, 1 - ((navbarChangePoint + y - offsetY) / y));
+        NSLog(@"%f", alpha);
+        [self.navigationController.navigationBar setNeedsNavigationBackground:alpha];
+        UIStatusBarStyle style = UIStatusBarStyleLightContent;
+        UIColor *color = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
+        BOOL isShadow = YES;
+        if (alpha == 1) {
+            style = UIStatusBarStyleDefault;
+            color = UIColorHex(F1F3F5);
+            isShadow = NO;
+        }
+        
+        [[UIApplication sharedApplication] setStatusBarStyle:style animated:NO];
+//        [self.navigationController.navigationBar setShadowImage:[UIImage new]];
+//        kai_view_shadow(self.navigationController.navigationBar, UIColorHex(303943), CGSizeMake(0, -5), 0.5, 6);
+        //        !self.viewManagerInfosBlock ?: self.viewManagerInfosBlock(@"color", @{ @"color" : color,
+        //                                                                               @"isShadow" : @(isShadow) });
+    } else {
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
+        [self.navigationController.navigationBar setNeedsNavigationBackground:0];
+        self.navigationController.navigationBar.layer.shadowColor = [UIColor clearColor].CGColor;
+        
+        
+        CGFloat statusHeight = 44; //device_iPhoneX ? 44 : 20;
+        if (offsetY < -(/*self.homeCollectionView.contentInsetTop*/0 + statusHeight)) {
+            //            self.navigationController.navigationBar.hidden = YES;
+            //            self.navImageView.hidden = YES;
+        } else if (offsetY >= -(statusHeight)) {
+            //            self.navigationController.navigationBar.hidden = NO;
+            //            self.navImageView.hidden = NO;
+        }
+    }
 }
 
 @end

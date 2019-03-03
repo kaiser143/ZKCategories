@@ -95,7 +95,7 @@
     if (isAlpha) {
         UINavigationController *superNav = (UINavigationController *)[self viewController];
         if (superNav && superNav.topViewController)
-            objc_setAssociatedObject(superNav.topViewController, @"navigationBarAlpha", @(alpha), OBJC_ASSOCIATION_COPY_NONATOMIC);
+            [superNav.topViewController setAssociateCopyValue:@(alpha) withKey:@"navigationBarAlpha"];
     }
 }
 

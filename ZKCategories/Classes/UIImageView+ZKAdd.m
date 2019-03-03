@@ -7,10 +7,8 @@
 //
 
 #import "UIImageView+ZKAdd.h"
-#import <objc/runtime.h>
 #import "NSObject+ZKAdd.h"
-
-const char kProcessedImage;
+#import "NSNumber+ZKAdd.h"
 
 @interface UIImageView ()
 
@@ -60,7 +58,8 @@ const char kProcessedImage;
         UIImage *newImage = change[NSKeyValueChangeNewKey];
         if ([newImage isMemberOfClass:[NSNull class]]) {
             return;
-        } else if ([objc_getAssociatedObject(newImage, &kProcessedImage) intValue] == 1) {
+        }
+        else if ([[self associatedValueForKey:@selector(updateImage:withRadius:withCorner:)] integerValue] == 1) {
             return;
         }
     
@@ -125,7 +124,7 @@ const char kProcessedImage;
     UIImage *processedImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     if (processedImage) {
-        objc_setAssociatedObject(processedImage, &kProcessedImage, @(1), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [self setAssociateValue:@1 withKey:_cmd];
     }
     self.image = processedImage;
 }
@@ -159,51 +158,51 @@ const char kProcessedImage;
 #pragma mark - getters and setters
 
 - (CGFloat)borderWidth {
-    return [objc_getAssociatedObject(self, _cmd) floatValue];
+    return [[self associatedValueForKey:_cmd] floatValue];
 }
 
 - (void)setBorderWidth:(CGFloat)borderWidth {
-    objc_setAssociatedObject(self, @selector(borderWidth), @(borderWidth), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self setAssociateValue:@(borderWidth) withKey:@selector(borderWidth)];
 }
 
 - (UIColor *)borderColor {
-    return objc_getAssociatedObject(self, _cmd);
+    return [self associatedValueForKey:_cmd];
 }
 
 - (void)setBorderColor:(UIColor *)borderColor {
-    objc_setAssociatedObject(self, @selector(borderColor), borderColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self setAssociateValue:borderColor withKey:@selector(borderColor)];
 }
 
 - (BOOL)hadAddObserver {
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
+    return [[self associatedValueForKey:_cmd] boolValue];
 }
 
 - (void)setHadAddObserver:(BOOL)hadAddObserver {
-    objc_setAssociatedObject(self, @selector(hadAddObserver), @(hadAddObserver), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self setAssociateValue:@(hadAddObserver) withKey:@selector(hadAddObserver)];
 }
 
 - (BOOL)isRounding {
-    return [objc_getAssociatedObject(self, _cmd) boolValue];
+    return [[self associatedValueForKey:_cmd] boolValue];
 }
 
 - (void)setRounding:(BOOL)rounding {
-    objc_setAssociatedObject(self, @selector(isRounding), @(rounding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self setAssociateValue:@(rounding) withKey:@selector(isRounding)];
 }
 
 - (UIRectCorner)corner {
-    return [objc_getAssociatedObject(self, _cmd) unsignedLongValue];
+    return [[self associatedValueForKey:_cmd] unsignedLongValue];
 }
 
 - (void)setCorner:(UIRectCorner)corner {
-    objc_setAssociatedObject(self, @selector(corner), @(corner), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self setAssociateValue:@(corner) withKey:@selector(corner)];
 }
 
 - (CGFloat)radius {
-    return [objc_getAssociatedObject(self, _cmd) floatValue];
+    return [[self associatedValueForKey:_cmd] CGFloatValue];
 }
 
 - (void)setRadius:(CGFloat)radius {
-    objc_setAssociatedObject(self, @selector(radius), @(radius), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self setAssociateValue:@(radius) withKey:@selector(radius)];
 }
 
 @end

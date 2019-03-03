@@ -103,7 +103,7 @@ typedef NS_OPTIONS(NSUInteger, ZKNetworkTrafficType) {
      _lastTime = time;
  
  
- @param type traffic types
+ @param types traffic types
  @return bytes counter.
  */
 - (uint64_t)getNetworkTrafficBytes:(ZKNetworkTrafficType)types;

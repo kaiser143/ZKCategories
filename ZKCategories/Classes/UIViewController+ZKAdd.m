@@ -7,14 +7,7 @@
 //
 
 #import "UIViewController+ZKAdd.h"
-#import <objc/runtime.h>
 #import "NSObject+ZKAdd.h"
-
-static void * const kWillShowBlockKey   = (void*)&kWillShowBlockKey;
-static void * const kWillHideBlockKey   = (void*)&kWillHideBlockKey;
-static void * const kDidShowBlockKey    = (void*)&kDidShowBlockKey;
-static void * const kDidHideBlockKey    = (void*)&kDidHideBlockKey;
-static void * const kNotificationsOnKey = (void*)&kNotificationsOnKey;
 
 @implementation UIViewController (ZKAdd)
 
@@ -34,51 +27,51 @@ static void * const kNotificationsOnKey = (void*)&kNotificationsOnKey;
 }
 
 - (void)kai_setWillShowAnimationBlock:(ZKKeyboardFrameAnimationBlock)willShowBlock {
-    objc_setAssociatedObject(self, kWillShowBlockKey, willShowBlock, OBJC_ASSOCIATION_COPY);
+    [self setAssociateCopyValue:willShowBlock withKey:@selector(kai_willShowAnimationBlock)];
 }
 
 - (ZKKeyboardFrameAnimationBlock)kai_willShowAnimationBlock {
-    return (ZKKeyboardFrameAnimationBlock)objc_getAssociatedObject(self, kWillShowBlockKey);
+    return [self associatedValueForKey:_cmd];
 }
 
 - (void)kai_setWillHideAnimationBlock:(ZKKeyboardFrameAnimationBlock)willHideBlock {
-    objc_setAssociatedObject(self, kWillHideBlockKey, willHideBlock, OBJC_ASSOCIATION_COPY);
+    [self setAssociateCopyValue:willHideBlock withKey:@selector(kai_willHideAnimationBlock)];
 }
 
 - (ZKKeyboardFrameAnimationBlock)kai_willHideAnimationBlock {
-    return (ZKKeyboardFrameAnimationBlock)objc_getAssociatedObject(self, kWillHideBlockKey);
+    return [self associatedValueForKey:_cmd];
 }
 
 - (void)kai_setDidShowActionBlock:(ZKKeyboardFrameAnimationBlock)didShowBlock {
-    objc_setAssociatedObject(self, kDidShowBlockKey, didShowBlock, OBJC_ASSOCIATION_COPY);
+    [self setAssociateCopyValue:didShowBlock withKey:@selector(kai_didShowActionBlock)];
 }
 
 - (ZKKeyboardFrameAnimationBlock)kai_didShowActionBlock {
-    return (ZKKeyboardFrameAnimationBlock)objc_getAssociatedObject(self, kDidShowBlockKey);
+    return [self associatedValueForKey:_cmd];
 }
 
 - (void)kai_setDidHideActionBlock:(ZKKeyboardFrameAnimationBlock)didHideBlock {
-    objc_setAssociatedObject(self, kDidHideBlockKey, didHideBlock, OBJC_ASSOCIATION_COPY);
+    [self setAssociateCopyValue:didHideBlock withKey:@selector(kai_didHideActionBlock)];
 }
 
 - (ZKKeyboardFrameAnimationBlock)kai_didHideActionBlock {
-    return (ZKKeyboardFrameAnimationBlock)objc_getAssociatedObject(self, kDidHideBlockKey);
+    return [self associatedValueForKey:_cmd];
 }
 
 - (void)kai_setNotificationsOn:(BOOL)notificationsOn {
-    objc_setAssociatedObject(self, kNotificationsOnKey, @(notificationsOn), OBJC_ASSOCIATION_RETAIN);
+    [self setAssociateValue:@(notificationsOn) withKey:@selector(kai_areNotificationsOn)];
 }
 
 - (BOOL)kai_areNotificationsOn {
-    return [(NSNumber *)objc_getAssociatedObject(self, kNotificationsOnKey) boolValue];
+    return [[self associatedValueForKey:_cmd] boolValue];
 }
 
 - (void)setKeyboardStatus:(ZKKeyboardStatus)keyboardStatus {
-    objc_setAssociatedObject(self, _cmd, @(keyboardStatus), OBJC_ASSOCIATION_RETAIN);
+    [self setAssociateValue:@(keyboardStatus) withKey:@selector(keyboardStatus)];
 }
 
 - (ZKKeyboardStatus)keyboardStatus {
-    ZKKeyboardStatus status = [objc_getAssociatedObject(self, @selector(setKeyboardStatus:)) unsignedIntegerValue];
+    ZKKeyboardStatus status = [[self associatedValueForKey:_cmd] unsignedIntegerValue];
     return status;
 }
 
@@ -271,6 +264,76 @@ static void * const kNotificationsOnKey = (void*)&kNotificationsOnKey;
         return NO;
     }
     return YES;
+}
+
+#pragma mark - :. Back
+
+- (void)backButtonTouched:(void (^)(UIViewController * _Nonnull))backButtonHandler {
+    [self setAssociateCopyValue:backButtonHandler withKey:@selector(backButtonHandler)];
+}
+
+- (void(^)(UIViewController *))backButtonHandler {
+    return [self associatedValueForKey:_cmd];
+}
+
+- (void)kai_pushViewController:(UIViewController *)viewController {
+    [self kai_pushViewController:viewController animated:YES];
+}
+
+- (void)kai_pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    [self kai_pushViewController:viewController backTitle:@"" animated:animated];
+}
+
+- (void)kai_pushViewController:(UIViewController *)viewController backTitle:(NSString *)title animated:(BOOL)animated {
+    self.navigationController.topViewController.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStylePlain target:self action:nil];
+    [self.navigationController pushViewController:viewController animated:animated];
+}
+
+- (void)kai_popViewControllerAnimated {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)kai_popToRootViewControllerAnimated {
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+- (void)kai_presentViewController:(UIViewController *)newViewController {
+    [self kai_presentViewController:newViewController animated:YES];
+}
+
+- (void)kai_presentViewController:(UIViewController *)newViewController animated:(BOOL)animated {
+    if (self.parentViewController)
+        [self.parentViewController presentViewController:newViewController animated:animated completion:nil];
+    else {
+        UIViewController *rootViewController = [[UIApplication sharedApplication].windows firstObject].rootViewController;
+        while (rootViewController.presentedViewController)
+        {
+            rootViewController = rootViewController.presentedViewController;
+        }
+        [rootViewController presentViewController:newViewController animated:animated completion:nil];
+    }
+}
+
+@end
+
+@implementation UINavigationController (ZKAddForNavigation)
+
+- (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item {
+    if ([self.viewControllers count] < [navigationBar.items count])
+        return YES;
+    
+    UIView *barBackIndicatorView = navigationBar.subviews.lastObject;
+    barBackIndicatorView.alpha = 1;
+    
+    UIViewController *vc = [self topViewController];
+    void (^handler)(UIViewController *vc) = [vc backButtonHandler];
+    if (handler) {
+        handler(vc);
+    } else {
+        [self popViewControllerAnimated:YES];
+    }
+    
+    return NO;
 }
 
 @end

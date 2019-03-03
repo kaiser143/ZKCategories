@@ -31,6 +31,24 @@ typedef void(^ZKKeyboardFrameAnimationBlock)(CGRect keyboardFrame);
 - (void)setKeyboardDidShowActionBlock:(ZKKeyboardFrameAnimationBlock)didShowBlock;
 - (void)setKeyboardDidHideActionBlock:(ZKKeyboardFrameAnimationBlock)didHideBlock;
 
+#pragma mark - :. 转场
+
+/// push 操作，返回按钮无文字
+- (void)kai_pushViewController:(UIViewController *)viewController;
+- (void)kai_pushViewController:(UIViewController *)viewController animated:(BOOL)animated;
+- (void)kai_pushViewController:(UIViewController *)viewController backTitle:(NSString *)title animated:(BOOL)animated;
+
+/// pop
+- (void)kai_popViewControllerAnimated;
+- (void)kai_popToRootViewControllerAnimated;
+
+#pragma mark :. presentViewController
+
+- (void)kai_presentViewController:(UIViewController *)newViewController;
+- (void)kai_presentViewController:(UIViewController *)newViewController animated:(BOOL)animated;
+
+- (void)backButtonTouched:(void(^)(UIViewController *viewController))backButtonHandler;
+
 @end
 
 NS_ASSUME_NONNULL_END

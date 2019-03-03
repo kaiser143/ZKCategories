@@ -23,10 +23,10 @@ CGContextRef _Nullable ZKCGContextCreateGrayBitmapContext(CGSize size, CGFloat s
 
 
 /// Get main screen's scale.
-CGFloat ZKScreenScale();
+CGFloat ZKScreenScale(void);
 
 /// Get main screen's size. Height is always larger than width.
-CGSize ZKScreenSize();
+CGSize ZKScreenSize(void);
 
 
 

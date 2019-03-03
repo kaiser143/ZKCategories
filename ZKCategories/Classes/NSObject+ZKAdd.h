@@ -18,7 +18,7 @@ typedef void(^ZKNSObjectDelayBlock)(BOOL cancel);
 - (NSString *)URLParameterStringValue;
 
 - (id)safePerform:(SEL)selector;
-- (id)safePerform:(SEL)selector withObject:(id)object;
+- (id)safePerform:(SEL)selector withObject:(nullable id)object;
 
 + (ZKNSObjectDelayBlock)performBlock:(void(^)(void))block afterDelay:(NSTimeInterval)delay;
 
@@ -101,6 +101,14 @@ typedef void(^ZKNSObjectDelayBlock)(BOOL cancel);
  @param key    The pointer to get value from `self`.
  */
 - (void)setAssociateWeakValue:(nullable id)value withKey:(void *)key;
+
+/**
+ Associate one object to `self`, as if it was a weak property (copy, nonatomic).
+ 
+ @param value  The object to associate.
+ @param key    The pointer to get value from `self`.
+ */
+- (void)setAssociateCopyValue:(nullable id)value withKey:(void *)key;
 
 /**
  Get the associated value from `self`.

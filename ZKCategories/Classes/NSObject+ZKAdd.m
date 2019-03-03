@@ -240,6 +240,10 @@ static char DTRuntimeDeallocBlocks;
     objc_setAssociatedObject(self, key, value, OBJC_ASSOCIATION_ASSIGN);
 }
 
+- (void)setAssociateCopyValue:(id)value withKey:(void *)key {
+    objc_setAssociatedObject(self, key, value, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
 - (void)removeAssociatedValues {
     objc_removeAssociatedObjects(self);
 }

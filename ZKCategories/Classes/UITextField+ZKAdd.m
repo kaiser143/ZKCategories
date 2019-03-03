@@ -10,14 +10,7 @@
 #import "NSObject+ZKAdd.h"
 #import <objc/runtime.h>
 
-static void *const UITextFieldDelegateKey = &UITextFieldDelegateKey;
-static void *const UITextFieldShouldBeginEditingKey = &UITextFieldShouldBeginEditingKey;
-static void *const UITextFieldShouldEndEditingKey = &UITextFieldShouldEndEditingKey;
-static void *const UITextFieldDidBeginEditingKey = &UITextFieldDidBeginEditingKey;
-static void *const UITextFieldDidEndEditingKey = &UITextFieldDidEndEditingKey;
-static void *const UITextFieldShouldChangeCharactersInRangeKey = &UITextFieldShouldChangeCharactersInRangeKey;
-static void *const UITextFieldShouldClearKey = &UITextFieldShouldClearKey;
-static void *const UITextFieldShouldReturnKey = &UITextFieldShouldReturnKey;
+static void *const UITextFieldDelegateKey = (void *)&UITextFieldDelegateKey;
 
 ZKSYNTH_DUMMY_CLASS(UITextField_ZKAdd)
 
@@ -133,66 +126,66 @@ ZKSYNTH_DUMMY_CLASS(UITextField_ZKAdd)
 #pragma mark Block setting/getting methods
 
 - (BOOL(^)(UITextField *))shouldBegindEditingBlock {
-    return [self associatedValueForKey:UITextFieldShouldBeginEditingKey];
+    return [self associatedValueForKey:_cmd];
 }
 
 - (void)setShouldBegindEditingBlock:(BOOL (^)(UITextField *))shouldBegindEditingBlock {
     [self setDelegateIfNoDelegateSet];
-    objc_setAssociatedObject(self, UITextFieldShouldBeginEditingKey, shouldBegindEditingBlock, OBJC_ASSOCIATION_COPY);
+    [self setAssociateCopyValue:shouldBegindEditingBlock withKey:@selector(shouldBegindEditingBlock)];
 }
 
 - (BOOL(^)(UITextField *))shouldEndEditingBlock {
-    return [self associatedValueForKey:UITextFieldShouldEndEditingKey];
+    return [self associatedValueForKey:_cmd];
 }
 
 - (void)setShouldEndEditingBlock:(BOOL (^)(UITextField *))shouldEndEditingBlock {
     [self setDelegateIfNoDelegateSet];
-    objc_setAssociatedObject(self, UITextFieldShouldEndEditingKey, shouldEndEditingBlock, OBJC_ASSOCIATION_COPY);
+    [self setAssociateCopyValue:shouldEndEditingBlock withKey:@selector(shouldEndEditingBlock)];
 }
 
 - (void (^)(UITextField *))didBeginEditingBlock {
-    return [self associatedValueForKey:UITextFieldDidBeginEditingKey];
+    return [self associatedValueForKey:_cmd];
 }
 
 - (void)setDidBeginEditingBlock:(void (^)(UITextField *))didBeginEditingBlock {
     [self setDelegateIfNoDelegateSet];
-    objc_setAssociatedObject(self, UITextFieldDidBeginEditingKey, didBeginEditingBlock, OBJC_ASSOCIATION_COPY);
+    [self setAssociateCopyValue:didBeginEditingBlock withKey:@selector(didBeginEditingBlock)];
 }
 
 - (void (^)(UITextField *))didEndEditingBlock {
-    return [self associatedValueForKey:UITextFieldDidEndEditingKey];
+    return [self associatedValueForKey:_cmd];
 }
 
 - (void)setDidEndEditingBlock:(void (^)(UITextField *))didEndEditingBlock {
     [self setDelegateIfNoDelegateSet];
-    objc_setAssociatedObject(self, UITextFieldDidEndEditingKey, didEndEditingBlock, OBJC_ASSOCIATION_COPY);
+    [self setAssociateCopyValue:didEndEditingBlock withKey:@selector(didEndEditingBlock)];
 }
 
 - (BOOL(^)(UITextField *, NSRange, NSString *))shouldChangeCharactersInRangeBlock {
-    return [self associatedValueForKey:UITextFieldShouldChangeCharactersInRangeKey];
+    return [self associatedValueForKey:_cmd];
 }
 
 - (void)setShouldChangeCharactersInRangeBlock:(BOOL(^)(UITextField *, NSRange, NSString *))shouldChangeCharactersInRangeBlock {
     [self setDelegateIfNoDelegateSet];
-    objc_setAssociatedObject(self, UITextFieldShouldChangeCharactersInRangeKey, shouldChangeCharactersInRangeBlock, OBJC_ASSOCIATION_COPY);
+    [self setAssociateCopyValue:shouldChangeCharactersInRangeBlock withKey:@selector(shouldChangeCharactersInRangeBlock)];
 }
 
 - (BOOL(^)(UITextField *))shouldReturnBlock {
-    return objc_getAssociatedObject(self, UITextFieldShouldReturnKey);
+    return objc_getAssociatedObject(self, _cmd);
 }
 
 - (void)setShouldReturnBlock:(BOOL (^)(UITextField *))shouldReturnBlock {
     [self setDelegateIfNoDelegateSet];
-    objc_setAssociatedObject(self, UITextFieldShouldReturnKey, shouldReturnBlock, OBJC_ASSOCIATION_COPY);
+    [self setAssociateCopyValue:shouldReturnBlock withKey:_cmd];
 }
 
 - (BOOL(^)(UITextField *))shouldClearBlock {
-    return [self associatedValueForKey:UITextFieldShouldClearKey];
+    return [self associatedValueForKey:_cmd];
 }
 
 - (void)setShouldClearBlock:(BOOL(^)(UITextField *textField))shouldClearBlock {
     [self setDelegateIfNoDelegateSet];
-    objc_setAssociatedObject(self, UITextFieldShouldClearKey, shouldClearBlock, OBJC_ASSOCIATION_COPY);
+    [self setAssociateCopyValue:shouldClearBlock withKey:@selector(shouldClearBlock)];
 }
 
 #pragma mark control method

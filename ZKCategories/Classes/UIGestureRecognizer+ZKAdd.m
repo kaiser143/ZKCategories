@@ -8,9 +8,7 @@
 
 #import "UIGestureRecognizer+ZKAdd.h"
 #import "ZKCategoriesMacro.h"
-#import <objc/runtime.h>
-
-static const int block_key;
+#import "NSObject+ZKAdd.h"
 
 @interface _ZKUIGestureRecognizerBlockTarget : NSObject
 
@@ -64,10 +62,10 @@ static const int block_key;
 }
 
 - (NSMutableArray *)kai_allUIGestureRecognizerBlockTargets {
-    NSMutableArray *targets = objc_getAssociatedObject(self, &block_key);
+    NSMutableArray *targets = [self associatedValueForKey:_cmd];
     if (!targets) {
         targets = [NSMutableArray array];
-        objc_setAssociatedObject(self, &block_key, targets, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [self setAssociateValue:targets withKey:_cmd];
     }
     return targets;
 }

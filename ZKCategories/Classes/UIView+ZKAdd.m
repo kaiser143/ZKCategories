@@ -8,7 +8,6 @@
 
 #import "UIView+ZKAdd.h"
 #import "NSObject+ZKAdd.h"
-#import <objc/runtime.h>
 
 @implementation UIView (ZKAdd)
 
@@ -290,30 +289,23 @@
 
 @end
 
-static char kZKActionHandlerTapBlockKey;
-static char kZKActionHandlerTapGestureKey;
-static char kZKActionHandlerLongPressBlockKey;
-static char kZKActionHandlerLongPressGestureKey;
-
 @implementation UIView (ZKActionHandlers)
 
 - (void)setTapActionWithBlock:(void (^)(void))block {
-    UITapGestureRecognizer *gesture = objc_getAssociatedObject(self, &kZKActionHandlerTapGestureKey);
+    UITapGestureRecognizer *gesture = [self associatedValueForKey:_cmd];
     
     if (!gesture) {
-        gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(__handleActionForTapGesture:)];
+        gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_handleActionForTapGesture:)];
         [self addGestureRecognizer:gesture];
-        objc_setAssociatedObject(self, &kZKActionHandlerTapGestureKey, gesture, OBJC_ASSOCIATION_RETAIN);
+        [self setAssociateValue:gesture withKey:_cmd];
     }
     
-    objc_setAssociatedObject(self, &kZKActionHandlerTapBlockKey, block, OBJC_ASSOCIATION_COPY);
+    [self setAssociateCopyValue:block withKey:@selector(_handleActionForTapGesture:)];
 }
 
-- (void)__handleActionForTapGesture:(UITapGestureRecognizer *)gesture {
-    if (gesture.state == UIGestureRecognizerStateRecognized)
-    {
-        void(^action)(void) = objc_getAssociatedObject(self, &kZKActionHandlerTapBlockKey);
-        
+- (void)_handleActionForTapGesture:(UITapGestureRecognizer *)gesture {
+    if (gesture.state == UIGestureRecognizerStateRecognized) {
+        void(^action)(void) = [self associatedValueForKey:_cmd];
         if (action)
         {
             action();
@@ -322,20 +314,20 @@ static char kZKActionHandlerLongPressGestureKey;
 }
 
 - (void)setLongPressActionWithBlock:(void (^)(void))block {
-    UILongPressGestureRecognizer *gesture = objc_getAssociatedObject(self, &kZKActionHandlerLongPressGestureKey);
+    UILongPressGestureRecognizer *gesture = [self associatedValueForKey:_cmd];
     
     if (!gesture) {
-        gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(__handleActionForLongPressGesture:)];
+        gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_handleActionForLongPressGesture:)];
         [self addGestureRecognizer:gesture];
-        objc_setAssociatedObject(self, &kZKActionHandlerLongPressGestureKey, gesture, OBJC_ASSOCIATION_RETAIN);
+        [self setAssociateValue:gesture withKey:_cmd];
     }
     
-    objc_setAssociatedObject(self, &kZKActionHandlerLongPressBlockKey, block, OBJC_ASSOCIATION_COPY);
+    [self setAssociateCopyValue:block withKey:@selector(_handleActionForLongPressGesture:)];
 }
 
-- (void)__handleActionForLongPressGesture:(UITapGestureRecognizer *)gesture {
+- (void)_handleActionForLongPressGesture:(UITapGestureRecognizer *)gesture {
     if (gesture.state == UIGestureRecognizerStateBegan) {
-        void(^action)(void) = objc_getAssociatedObject(self, &kZKActionHandlerLongPressBlockKey);
+        void(^action)(void) = [self associatedValueForKey:_cmd];
         
         if (action) {
             action();

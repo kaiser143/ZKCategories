@@ -56,7 +56,7 @@
     return [NSURL URLWithString:[baseURL stringByAppendingString:string]];
 }
 
-- (NSURL *)URLByAppendingQueryParameters:(NSDictionary *)parameters; {
+- (NSURL *)URLByAppendingQueryParameters:(NSDictionary *)parameters {
     if (!parameters.count) {
         return self;
     }

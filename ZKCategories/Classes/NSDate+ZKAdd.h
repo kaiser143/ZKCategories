@@ -14,11 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 // HTTP Dates
 - (NSString *)HTTPTimeZoneHeaderString;
-- (NSString *)HTTPTimeZoneHeaderStringForTimeZone:(NSTimeZone *)inTimeZone;
+- (NSString *)HTTPTimeZoneHeaderStringForTimeZone:(nullable NSTimeZone *)inTimeZone;
 - (NSString *)ISO8601String;
 - (NSString *)ISO8601StringForLocalTimeZone;
-- (NSString *)ISO8601StringForTimeZone:(NSTimeZone *)inTimeZone;
-- (NSString *)ISO8601StringForTimeZone:(NSTimeZone *)inTimeZone usingFractionalSeconds:(BOOL)inUseFractionalSeconds;
+- (NSString *)ISO8601StringForTimeZone:(nullable NSTimeZone *)inTimeZone;
+- (NSString *)ISO8601StringForTimeZone:(nullable NSTimeZone *)inTimeZone usingFractionalSeconds:(BOOL)inUseFractionalSeconds;
 
 #pragma mark - :. Component Properties
 ///=============================================================================
