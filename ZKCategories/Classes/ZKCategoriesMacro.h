@@ -164,6 +164,10 @@ ZK_EXTERN_C_BEGIN
 #define metamacro_foreach_iter(INDEX, MACRO, ARG) MACRO(INDEX, ARG)
 #endif
 
+#ifndef metamacro_expand_
+#define metamacro_expand_(...) __VA_ARGS__
+#endif
+
 
 #ifndef metamacro_head
 /**
@@ -315,6 +319,17 @@ ZK_EXTERN_C_BEGIN
     metamacro_concat(metamacro_at, N)(__VA_ARGS__)
 #endif
 
+#ifndef metamacro_dec
+/**
+ * Decrements VAL, which must be a number between zero and twenty, inclusive.
+ *
+ * This is primarily useful when dealing with indexes and counts in
+ * metaprogramming.
+ */
+#define metamacro_dec(VAL) \
+    metamacro_at(VAL, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19)
+#endif
+
 #ifndef metamacro_if_eq
 /**
  * If A is equal to B, the next argument list is expanded; otherwise, the
@@ -336,6 +351,54 @@ ZK_EXTERN_C_BEGIN
  */
 #define metamacro_if_eq(A, B) \
     metamacro_concat(metamacro_if_eq, A)(B)
+
+// metamacro_if_eq expansions
+#define metamacro_if_eq0(VALUE) \
+    metamacro_concat(metamacro_if_eq0_, VALUE)
+
+#define metamacro_if_eq0_0(...) __VA_ARGS__ metamacro_consume_
+#define metamacro_if_eq0_1(...) metamacro_expand_
+#define metamacro_if_eq0_2(...) metamacro_expand_
+#define metamacro_if_eq0_3(...) metamacro_expand_
+#define metamacro_if_eq0_4(...) metamacro_expand_
+#define metamacro_if_eq0_5(...) metamacro_expand_
+#define metamacro_if_eq0_6(...) metamacro_expand_
+#define metamacro_if_eq0_7(...) metamacro_expand_
+#define metamacro_if_eq0_8(...) metamacro_expand_
+#define metamacro_if_eq0_9(...) metamacro_expand_
+#define metamacro_if_eq0_10(...) metamacro_expand_
+#define metamacro_if_eq0_11(...) metamacro_expand_
+#define metamacro_if_eq0_12(...) metamacro_expand_
+#define metamacro_if_eq0_13(...) metamacro_expand_
+#define metamacro_if_eq0_14(...) metamacro_expand_
+#define metamacro_if_eq0_15(...) metamacro_expand_
+#define metamacro_if_eq0_16(...) metamacro_expand_
+#define metamacro_if_eq0_17(...) metamacro_expand_
+#define metamacro_if_eq0_18(...) metamacro_expand_
+#define metamacro_if_eq0_19(...) metamacro_expand_
+#define metamacro_if_eq0_20(...) metamacro_expand_
+
+#define metamacro_if_eq1(VALUE) metamacro_if_eq0(metamacro_dec(VALUE))
+#define metamacro_if_eq2(VALUE) metamacro_if_eq1(metamacro_dec(VALUE))
+#define metamacro_if_eq3(VALUE) metamacro_if_eq2(metamacro_dec(VALUE))
+#define metamacro_if_eq4(VALUE) metamacro_if_eq3(metamacro_dec(VALUE))
+#define metamacro_if_eq5(VALUE) metamacro_if_eq4(metamacro_dec(VALUE))
+#define metamacro_if_eq6(VALUE) metamacro_if_eq5(metamacro_dec(VALUE))
+#define metamacro_if_eq7(VALUE) metamacro_if_eq6(metamacro_dec(VALUE))
+#define metamacro_if_eq8(VALUE) metamacro_if_eq7(metamacro_dec(VALUE))
+#define metamacro_if_eq9(VALUE) metamacro_if_eq8(metamacro_dec(VALUE))
+#define metamacro_if_eq10(VALUE) metamacro_if_eq9(metamacro_dec(VALUE))
+#define metamacro_if_eq11(VALUE) metamacro_if_eq10(metamacro_dec(VALUE))
+#define metamacro_if_eq12(VALUE) metamacro_if_eq11(metamacro_dec(VALUE))
+#define metamacro_if_eq13(VALUE) metamacro_if_eq12(metamacro_dec(VALUE))
+#define metamacro_if_eq14(VALUE) metamacro_if_eq13(metamacro_dec(VALUE))
+#define metamacro_if_eq15(VALUE) metamacro_if_eq14(metamacro_dec(VALUE))
+#define metamacro_if_eq16(VALUE) metamacro_if_eq15(metamacro_dec(VALUE))
+#define metamacro_if_eq17(VALUE) metamacro_if_eq16(metamacro_dec(VALUE))
+#define metamacro_if_eq18(VALUE) metamacro_if_eq17(metamacro_dec(VALUE))
+#define metamacro_if_eq19(VALUE) metamacro_if_eq18(metamacro_dec(VALUE))
+#define metamacro_if_eq20(VALUE) metamacro_if_eq19(metamacro_dec(VALUE))
+
 #endif
 
 
@@ -403,8 +466,11 @@ ZK_EXTERN_C_BEGIN
 #define keypath(...) \
     _Pragma("clang diagnostic push") \
     _Pragma("clang diagnostic ignored \"-Warc-repeated-use-of-weak\"") \
-    metamacro_if_eq(1, metamacro_argcount(__VA_ARGS__))(keypath1(__VA_ARGS__))(keypath2(__VA_ARGS__)) \
+    (NO).boolValue ? ((NSString * _Nonnull)nil) : ((NSString * _Nonnull)@(cStringKeypath(__VA_ARGS__))) \
     _Pragma("clang diagnostic pop") \
+
+#define cStringKeypath(...) \
+    metamacro_if_eq(1, metamacro_argcount(__VA_ARGS__))(keypath1(__VA_ARGS__))(keypath2(__VA_ARGS__))
 
 #define keypath1(PATH) \
     (((void)(NO && ((void)PATH, NO)), strchr(# PATH, '.') + 1))

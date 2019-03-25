@@ -11,6 +11,8 @@
 
 @interface ZKViewController () <UIScrollViewDelegate>
 
+@property (nonatomic, strong) NSString *value;
+
 @end
 
 @implementation ZKViewController
@@ -44,6 +46,12 @@
         scrollView.delegate = self;
         scrollView.contentSize = CGSizeMake(kScreenSize.width, 2*kScreenSize.height);
         [self.view addSubview:scrollView];
+        
+        [self backButtonTouched:^(UIViewController * _Nonnull viewController) {
+            NSLog(@"back");
+            
+//            [self kai_popViewControllerAnimated];
+        }];
     }
     
     i++;
@@ -53,7 +61,13 @@
     [super viewWillAppear:animated];
     
     UIScrollView *scrollView = (UIScrollView *)[self.view descendantOrSelfWithClass:UIScrollView.class];
-    if (scrollView) [self navigationColor:scrollView.contentOffsetY];
+//    if (scrollView) [self navigationColor:scrollView.contentOffsetY];
+    
+    /// 设置导航栏背景色
+    if (scrollView) {
+        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithColor:UIColor.redColor] forBarMetrics:UIBarMetricsDefault];
+    } else
+        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithColor:UIColor.orangeColor] forBarMetrics:UIBarMetricsDefault];
 }
 
 #pragma mark - :. UIScrollViewDelegate
