@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * @return NSArray with only the elements that pass the truth test
  */
-- (NSArray *)filter:(BOOL(^)(id object))condition;
+- (NSArray *)filter:(BOOL (^)(id object))condition;
 
 /**
  * @return NSArray with only the elements that pass the truth test
@@ -25,23 +25,22 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * performs the operation to each element
  */
-- (void)each:(void(^)(id object))operation;
+- (void)each:(void (^)(id object))operation;
 
 /**
  * @return new NSArray from the result of the block performed to each element
  */
-- (NSArray *)map:(id(^)(id obj, NSUInteger idx))block;
+- (NSArray *)map:(id (^)(id obj, NSUInteger idx))block;
 
 /**
  * @return new NSArray by flatting it and performing a map to each element
  */
-- (NSArray *)flattenMap:(id(^)(id obj, NSUInteger idx))block;
+- (NSArray *)flattenMap:(id (^)(id obj, NSUInteger idx))block;
 
 /**
  * @return new NSArray by flatting it with the key and performing a map to each element
  */
-- (NSArray *)flattenMap:(NSString *)key block:(id(^)(id obj, NSUInteger idx))block;
-
+- (NSArray *)flattenMap:(NSString *)key block:(id (^)(id obj, NSUInteger idx))block;
 
 - (NSNumber *)sum;
 - (NSNumber *)sum:(NSString *)keypath;
@@ -52,8 +51,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSNumber *)min;
 - (NSNumber *)min:(NSString *)keypath;
 - (NSUInteger)countKeyPath:(NSString *)keypath;
+- (NSArray *)flatten:(NSString *)keypath;
 
-- (id)objectPassingTest:(BOOL(^)(id))block;
+- (id)objectPassingTest:(BOOL (^)(id))block;
 
 /*!
  *  @brief  排序
@@ -110,7 +110,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (CGRect)rectAtIndex:(NSUInteger)index;
 
 @end
-
 
 @interface NSMutableArray (SafeAccess)
 

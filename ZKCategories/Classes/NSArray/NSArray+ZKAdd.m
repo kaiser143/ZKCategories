@@ -10,10 +10,10 @@
 
 @implementation NSArray (ZKAdd)
 
-- (NSArray *)filter:(BOOL(^)(id object))condition {
-    return [self filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
-        return condition(evaluatedObject);
-    }]];
+- (NSArray *)filter:(BOOL (^)(id object))condition {
+    return [self filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id _Nonnull evaluatedObject, NSDictionary<NSString *, id> *_Nullable bindings) {
+                     return condition(evaluatedObject);
+                 }]];
 }
 
 - (NSArray *)ignore:(id)value {
@@ -22,8 +22,8 @@
     }];
 }
 
-- (NSArray *)map:(id(^)(id obj, NSUInteger idx))block {
-    NSMutableArray* result = [NSMutableArray arrayWithCapacity:self.count];
+- (NSArray *)map:(id (^)(id obj, NSUInteger idx))block {
+    NSMutableArray *result = [NSMutableArray arrayWithCapacity:self.count];
     [self enumerateObjectsUsingBlock:^(id currentObject, NSUInteger index, BOOL *stop) {
         id mappedCurrentObject = block(currentObject, index);
         if (mappedCurrentObject) {
@@ -33,48 +33,48 @@
     return result;
 }
 
-- (NSArray *)flattenMap:(id(^)(id obj, NSUInteger idx))block{
-    NSMutableArray* results = [NSMutableArray new];
-    [self each:^(NSArray* array) {
+- (NSArray *)flattenMap:(id (^)(id obj, NSUInteger idx))block {
+    NSMutableArray *results = [NSMutableArray new];
+    [self each:^(NSArray *array) {
         [results addObject:[array map:^id(id obj, NSUInteger idx) {
-            return block(obj,idx);
-        }]];
+                     return block(obj, idx);
+                 }]];
     }];
     return results;
 }
 
-- (NSArray *)flattenMap:(NSString*)key block:(id(^)(id obj, NSUInteger idx))block{
-    NSMutableArray* results = [NSMutableArray new];
+- (NSArray *)flattenMap:(NSString *)key block:(id (^)(id obj, NSUInteger idx))block {
+    NSMutableArray *results = [NSMutableArray new];
     [self each:^(id object) {
         [results addObject:[[object valueForKey:key] map:^id(id obj, NSUInteger idx) {
-            return block(obj,idx);
-        }]];
+                     return block(obj, idx);
+                 }]];
     }];
     return results;
 }
 
-- (void)each:(void(^)(id object))operation{
+- (void)each:(void (^)(id object))operation {
     [self enumerateObjectsUsingBlock:^(id object, NSUInteger idx, BOOL *stop) {
         operation(object);
     }];
 }
 
-- (id)objectPassingTest:(BOOL(^)(id))block {
+- (id)objectPassingTest:(BOOL (^)(id))block {
     NSCParameterAssert(block != NULL);
-    
+
     return [self filter:block].firstObject;
 }
 
 //==============================================
 #pragma mark - Operators
 //==============================================
-- (NSNumber *)operator:(NSString *)operator keypath:(NSString *)keypath{
-    NSString* finalKeyPath;
-    if(keypath != nil)
+- (NSNumber *) operator:(NSString *)operator keypath:(NSString *)keypath {
+    NSString *finalKeyPath;
+    if (keypath != nil)
         finalKeyPath = [NSString stringWithFormat:@"%@.@%@.self",keypath, operator];
     else
         finalKeyPath = [NSString stringWithFormat:@"@%@.self",operator];
-    
+
     return [self valueForKeyPath:finalKeyPath];
 }
 
@@ -87,12 +87,12 @@
 - (NSNumber *)min                    { return [self operator:@"min" keypath:nil];    }
 - (NSNumber *)min:(NSString*)keypath { return [self operator:@"min" keypath:keypath];}
 
-- (NSUInteger)countKeyPath:(NSString*)keypath{
+- (NSUInteger)countKeyPath:(NSString *)keypath {
     return [self flatten:keypath].count;
 }
 
-- (NSArray*)flatten:(NSString*)keypath{
-    NSMutableArray* results = [NSMutableArray new];
+- (NSArray *)flatten:(NSString *)keypath {
+    NSMutableArray *results = [NSMutableArray new];
     [self each:^(id object) {
         [results addObjectsFromArray:[object valueForKeyPath:keypath]];
     }];
@@ -119,7 +119,7 @@
     NSMutableArray *array = [NSMutableArray array];
     for (NSString *key in sortedKeyValue.allKeys)
         [array addObject:[NSSortDescriptor sortDescriptorWithKey:key ascending:[[sortedKeyValue objectForKey:key] boolValue]]];
-    
+
     return [self sortedArrayUsingDescriptors:array];
 }
 
@@ -144,10 +144,9 @@
     if ([value isKindOfClass:[NSNumber class]]) {
         return [value stringValue];
     }
-    
+
     return nil;
 }
-
 
 - (NSNumber *)numberAtIndex:(NSUInteger)index {
     id value = [self objectOrNilAtIndex:index];
@@ -164,7 +163,7 @@
 
 - (NSDecimalNumber *)decimalNumberAtIndex:(NSUInteger)index {
     id value = [self objectOrNilAtIndex:index];
-    
+
     if ([value isKindOfClass:[NSDecimalNumber class]]) {
         return value;
     } else if ([value isKindOfClass:[NSNumber class]]) {
@@ -187,7 +186,6 @@
     }
     return nil;
 }
-
 
 - (NSDictionary *)dictionaryAtIndex:(NSUInteger)index {
     id value = [self objectOrNilAtIndex:index];
@@ -224,7 +222,7 @@
 
 - (BOOL)boolAtIndex:(NSUInteger)index {
     id value = [self objectOrNilAtIndex:index];
-    
+
     if (value == nil || value == [NSNull null]) {
         return NO;
     }
@@ -239,7 +237,7 @@
 
 - (int16_t)int16AtIndex:(NSUInteger)index {
     id value = [self objectOrNilAtIndex:index];
-    
+
     if (value == nil || value == [NSNull null]) {
         return 0;
     }
@@ -254,7 +252,7 @@
 
 - (int32_t)int32AtIndex:(NSUInteger)index {
     id value = [self objectOrNilAtIndex:index];
-    
+
     if (value == nil || value == [NSNull null]) {
         return 0;
     }
@@ -266,7 +264,7 @@
 
 - (int64_t)int64AtIndex:(NSUInteger)index {
     id value = [self objectOrNilAtIndex:index];
-    
+
     if (value == nil || value == [NSNull null]) {
         return 0;
     }
@@ -278,7 +276,7 @@
 
 - (char)charAtIndex:(NSUInteger)index {
     id value = [self objectOrNilAtIndex:index];
-    
+
     if (value == nil || value == [NSNull null]) {
         return 0;
     }
@@ -290,7 +288,7 @@
 
 - (short)shortAtIndex:(NSUInteger)index {
     id value = [self objectOrNilAtIndex:index];
-    
+
     if (value == nil || value == [NSNull null]) {
         return 0;
     }
@@ -305,7 +303,7 @@
 
 - (float)floatAtIndex:(NSUInteger)index {
     id value = [self objectOrNilAtIndex:index];
-    
+
     if (value == nil || value == [NSNull null]) {
         return 0;
     }
@@ -316,7 +314,7 @@
 }
 - (double)doubleAtIndex:(NSUInteger)index {
     id value = [self objectOrNilAtIndex:index];
-    
+
     if (value == nil || value == [NSNull null]) {
         return 0;
     }
@@ -328,13 +326,13 @@
 
 - (NSDate *)dateAtIndex:(NSUInteger)index dateFormat:(NSString *)dateFormat {
     NSDateFormatter *formater = [[NSDateFormatter alloc] init];
-    formater.dateFormat = dateFormat;
-    id value = [self objectOrNilAtIndex:index];
-    
+    formater.dateFormat       = dateFormat;
+    id value                  = [self objectOrNilAtIndex:index];
+
     if (value == nil || value == [NSNull null]) {
         return nil;
     }
-    
+
     if ([value isKindOfClass:[NSString class]] && ![value isEqualToString:@""] && !dateFormat) {
         return [formater dateFromString:value];
     }
@@ -344,38 +342,37 @@
 //CG
 - (CGFloat)CGFloatAtIndex:(NSUInteger)index {
     id value = [self objectOrNilAtIndex:index];
-    
+
     CGFloat f = [value doubleValue];
-    
+
     return f;
 }
 
 - (CGPoint)pointAtIndex:(NSUInteger)index {
     id value = [self objectOrNilAtIndex:index];
-    
+
     CGPoint point = CGPointFromString(value);
-    
+
     return point;
 }
 
 - (CGSize)sizeAtIndex:(NSUInteger)index {
     id value = [self objectOrNilAtIndex:index];
-    
+
     CGSize size = CGSizeFromString(value);
-    
+
     return size;
 }
 
 - (CGRect)rectAtIndex:(NSUInteger)index {
     id value = [self objectOrNilAtIndex:index];
-    
+
     CGRect rect = CGRectFromString(value);
-    
+
     return rect;
 }
 
 @end
-
 
 @implementation NSMutableArray (SafeAccess)
 
@@ -451,7 +448,6 @@
 
 #pragma clang diagnostic pop
 
-
 - (id)popFirstObject {
     id obj = nil;
     if (self.count) {
@@ -500,7 +496,7 @@
 
 - (void)reverse {
     NSUInteger count = self.count;
-    int mid = floor(count / 2.0);
+    int mid          = floor(count / 2.0);
     for (NSUInteger i = 0; i < mid; i++) {
         [self exchangeObjectAtIndex:i withObjectAtIndex:(count - (i + 1))];
     }

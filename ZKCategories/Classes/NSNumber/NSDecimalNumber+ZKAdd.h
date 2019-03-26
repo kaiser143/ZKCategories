@@ -43,5 +43,4 @@
 - (NSDecimalNumber *)discountPercentageWithBaseValue:(NSDecimalNumber *)baseValue;
 - (NSDecimalNumber *)discountPercentageWithBaseValue:(NSDecimalNumber *)baseValue roundToScale:(NSUInteger)scale;
 
-
 @end

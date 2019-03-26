@@ -10,23 +10,29 @@
 
 @implementation NSError (ZKAdd)
 
-+ (NSError *)errorWithDomain:(NSString *)domain code:(NSInteger)code
++ (NSError *)errorWithDomain:(NSString *)domain
+                        code:(NSInteger)code
                  description:(NSString *)description {
-    
-    NSError *result = [NSError errorWithDomain:domain code:code userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                          description, NSLocalizedDescriptionKey,
-                                                                          nil]];
+
+    NSError *result = [NSError errorWithDomain:domain
+                                          code:code
+                                      userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                 description, NSLocalizedDescriptionKey,
+                                                                 nil]];
     return result;
 }
 
++ (NSError *)errorWithDomain:(NSString *)domain
+                        code:(NSInteger)code
+                 description:(NSString *)description
+               failureReason:(NSString *)failureReason {
 
-+ (NSError *)errorWithDomain:(NSString *)domain code:(NSInteger)code
-                 description:(NSString *)description failureReason:(NSString *)failureReason {
-    
-    NSError *result = [NSError errorWithDomain:domain code:code userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                          description, NSLocalizedDescriptionKey,
-                                                                          failureReason, NSLocalizedFailureReasonErrorKey,
-                                                                          nil]];
+    NSError *result = [NSError errorWithDomain:domain
+                                          code:code
+                                      userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                                 description, NSLocalizedDescriptionKey,
+                                                                 failureReason, NSLocalizedFailureReasonErrorKey,
+                                                                 nil]];
     return result;
 }
 

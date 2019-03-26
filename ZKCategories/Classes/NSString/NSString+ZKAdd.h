@@ -84,7 +84,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSInteger)byteLength;
 
-
 #pragma mark - :. Hash
 ///=============================================================================
 /// @name Hash
@@ -171,7 +170,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable NSString *)crc32String;
 
-
 #pragma mark - :. Encode and decode
 ///=============================================================================
 /// @name Encode and decode
@@ -202,7 +200,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Escape commmon HTML to Entity.
- Example: "a<b" will be escape to "a&lt;b".
+ Example: "a < b" will be escape to "a&lt;b".
  */
 - (NSString *)stringByEscapingHTML;
 
@@ -251,7 +249,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (CGFloat)heightForFont:(UIFont *)font width:(CGFloat)width;
 
-
 #pragma mark - :. Regular Expression
 ///=============================================================================
 /// @name Regular Expression
@@ -297,7 +294,6 @@ NS_ASSUME_NONNULL_BEGIN
                              options:(NSRegularExpressionOptions)options
                           withString:(NSString *)replacement;
 
-
 #pragma mark - :. NSNumber Compatible
 ///=============================================================================
 /// @name NSNumber Compatible
@@ -313,7 +309,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) unsigned long unsignedLongValue;
 @property (readonly) unsigned long long unsignedLongLongValue;
 @property (readonly) NSUInteger unsignedIntegerValue;
-
 
 #pragma mark - :. Utilities
 ///=============================================================================
@@ -471,15 +466,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSString *)stringNamed:(NSString *)name;
 
-
 /** Appends or Increments a sequence number in brackets
  
  If the receiver already has a number suffix then it is incremented. If not then (1) is added.
  
  @return The incremented path
  */
-- (NSString * _Nonnull)pathByIncrementingSequenceNumber;
-
+- (NSString *_Nonnull)pathByIncrementingSequenceNumber;
 
 /** Removes a sequence number in brackets
  
@@ -487,10 +480,9 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return The modified path
  */
-- (NSString * _Nonnull)pathByDeletingSequenceNumber;
+- (NSString *_Nonnull)pathByDeletingSequenceNumber;
 
 @end
-
 
 @interface NSString (ZKUTI)
 
@@ -506,14 +498,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (NSString *)MIMETypeForFileExtension:(NSString *)extension;
 
-
 /**
  Method to get the official description for a given file extension.
  @param extension the file extension
  @return the description
  */
 + (NSString *)fileTypeDescriptionForFileExtension:(NSString *)extension;
-
 
 /**
  Method to get the preferred UTI for a given file extension.

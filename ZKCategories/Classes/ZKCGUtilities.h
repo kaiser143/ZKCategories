@@ -106,7 +106,7 @@ NSString *ZKUIViewContentModeToCAGravity(UIViewContentMode contentMode);
 /**
  Returns a rectangle to fit the @param rect with specified content mode.
  
- @param rect The constrant rect
+ @param \rect The constrant rect
  @param size The content size
  @param mode The content mode
  @return A rectangle for the given content mode.

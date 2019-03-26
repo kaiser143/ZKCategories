@@ -15,24 +15,24 @@
     if (!timeZone) {
         timeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
     }
-    
+
     // Y-MM-dd'T'HH':'MM':'ss'.'SSS'Z
     // Y-MM-dd'T'HH':'MM':'ss'.'SSS'Z'Z
     NSMutableString *formatString = [[NSMutableString alloc] initWithString:@"Y-MM-dd'T'HH':'mm':'ss"];
     if (inSupportFractionalSeconds) {
         [formatString appendString:@"'.'SSS"];
     }
-    
+
     [formatString appendString:@"'Z'"];
-    
+
     if (inTimeZone && ![timeZone isEqualToTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT"]]) {
         [formatString appendString:@"Z"];
     }
-    
+
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:formatString];
     [formatter setTimeZone:timeZone];
-    
+
     return formatter;
 }
 
@@ -41,8 +41,8 @@
 }
 
 - (NSString *)HTTPTimeZoneHeaderStringForTimeZone:(NSTimeZone *)inTimeZone {
-    NSTimeZone *timeZone = inTimeZone ? inTimeZone : [NSTimeZone localTimeZone];
-    NSString *dateString = [self ISO8601StringForTimeZone:timeZone];
+    NSTimeZone *timeZone     = inTimeZone ? inTimeZone : [NSTimeZone localTimeZone];
+    NSString *dateString     = [self ISO8601StringForTimeZone:timeZone];
     NSString *timeZoneHeader = [NSString stringWithFormat:@"%@;;%@", dateString, [timeZone name]];
     return timeZoneHeader;
 }
@@ -61,7 +61,7 @@
 
 - (NSString *)ISO8601StringForTimeZone:(NSTimeZone *)inTimeZone usingFractionalSeconds:(BOOL)inUseFractionalSeconds {
     return [[NSDate ISO8601DateFormatterConfiguredForTimeZone:inTimeZone supportingFractionalSeconds:inUseFractionalSeconds] stringFromDate:self];
-    
+
     /*
      struct tm *timeinfo;
      char buffer[80];
@@ -152,21 +152,21 @@
 }
 
 - (NSDate *)dateByAddingYears:(NSInteger)years {
-    NSCalendar *calendar =  [NSCalendar currentCalendar];
+    NSCalendar *calendar         = [NSCalendar currentCalendar];
     NSDateComponents *components = [[NSDateComponents alloc] init];
     [components setYear:years];
     return [calendar dateByAddingComponents:components toDate:self options:0];
 }
 
 - (NSDate *)dateByAddingMonths:(NSInteger)months {
-    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSCalendar *calendar         = [NSCalendar currentCalendar];
     NSDateComponents *components = [[NSDateComponents alloc] init];
     [components setMonth:months];
     return [calendar dateByAddingComponents:components toDate:self options:0];
 }
 
 - (NSDate *)dateByAddingWeeks:(NSInteger)weeks {
-    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSCalendar *calendar         = [NSCalendar currentCalendar];
     NSDateComponents *components = [[NSDateComponents alloc] init];
     [components setWeekOfYear:weeks];
     return [calendar dateByAddingComponents:components toDate:self options:0];
@@ -174,25 +174,25 @@
 
 - (NSDate *)dateByAddingDays:(NSInteger)days {
     NSTimeInterval aTimeInterval = [self timeIntervalSinceReferenceDate] + 86400 * days;
-    NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
+    NSDate *newDate              = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
     return newDate;
 }
 
 - (NSDate *)dateByAddingHours:(NSInteger)hours {
     NSTimeInterval aTimeInterval = [self timeIntervalSinceReferenceDate] + 3600 * hours;
-    NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
+    NSDate *newDate              = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
     return newDate;
 }
 
 - (NSDate *)dateByAddingMinutes:(NSInteger)minutes {
     NSTimeInterval aTimeInterval = [self timeIntervalSinceReferenceDate] + 60 * minutes;
-    NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
+    NSDate *newDate              = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
     return newDate;
 }
 
 - (NSDate *)dateByAddingSeconds:(NSInteger)seconds {
     NSTimeInterval aTimeInterval = [self timeIntervalSinceReferenceDate] + seconds;
-    NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
+    NSDate *newDate              = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
     return newDate;
 }
 
@@ -215,8 +215,8 @@
     static NSDateFormatter *formatter = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        formatter = [[NSDateFormatter alloc] init];
-        formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        formatter            = [[NSDateFormatter alloc] init];
+        formatter.locale     = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
         formatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ssZ";
     });
     return [formatter stringFromDate:self];
@@ -240,8 +240,8 @@
     static NSDateFormatter *formatter = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        formatter = [[NSDateFormatter alloc] init];
-        formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        formatter            = [[NSDateFormatter alloc] init];
+        formatter.locale     = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
         formatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ssZ";
     });
     return [formatter dateFromString:dateString];
