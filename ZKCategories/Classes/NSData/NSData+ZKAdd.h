@@ -179,7 +179,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (uint32_t)crc32;
 
-
 #pragma mark - :. Encrypt and Decrypt
 ///=============================================================================
 /// @name Encrypt and Decrypt
@@ -208,7 +207,6 @@ NS_ASSUME_NONNULL_BEGIN
  @return      An NSData decrypted, or nil if an error occurs.
  */
 - (nullable NSData *)aes256DecryptWithkey:(NSData *)key iv:(nullable NSData *)iv;
-
 
 #pragma mark - :. Encode and decode
 ///=============================================================================
@@ -254,7 +252,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable id)jsonValueDecoded;
 
-
 #pragma mark - :. Inflate and deflate
 ///=============================================================================
 /// @name Inflate and deflate
@@ -284,7 +281,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable NSData *)zlibDeflate;
 
-
 #pragma mark - :. Others
 ///=============================================================================
 /// @name Others
@@ -298,7 +294,6 @@ NS_ASSUME_NONNULL_BEGIN
  @return A new data create from the file.
  */
 + (nullable NSData *)dataNamed:(NSString *)name;
-
 
 @end
 

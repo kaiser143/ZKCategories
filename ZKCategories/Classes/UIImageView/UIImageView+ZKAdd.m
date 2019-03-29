@@ -33,9 +33,9 @@
     if (!self) {
         return nil;
     }
-    
+
     [self setCornerRadius:radius rectCorner:rectCorner];
-    
+
     return self;
 }
 
@@ -44,9 +44,9 @@
     if (!self) {
         return nil;
     }
-    
+
     [self setCornerRadiusRoundingRect];
-    
+
     return self;
 }
 
@@ -55,16 +55,15 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:@"image"]) {
-        UIImage *newImage = change[NSKeyValueChangeNewKey];
+        UIImage *newImage = change[ NSKeyValueChangeNewKey ];
         if ([newImage isMemberOfClass:[NSNull class]]) {
             return;
-        }
-        else if ([[self associatedValueForKey:@selector(updateImage:withRadius:withCorner:)] integerValue] == 1) {
+        } else if ([[self associatedValueForKey:@selector(updateImage:withRadius:withCorner:)] integerValue] == 1) {
             return;
         }
-    
+
         if (self.isRounding) {
-            [self updateImage:newImage withRadius:CGRectGetWidth(self.frame)/2 withCorner:UIRectCornerAllCorners];
+            [self updateImage:newImage withRadius:CGRectGetWidth(self.frame) / 2 withCorner:UIRectCornerAllCorners];
         } else if (0 != self.radius && 0 != self.corner && nil != self.image) {
             [self updateImage:newImage withRadius:self.radius withCorner:self.corner];
         }
@@ -81,12 +80,12 @@
 
 - (void)setCornerRadiusRoundingRect {
     self.rounding = YES;
-    
+
     if (!self.hadAddObserver) {
         [self addObserver:self forKeyPath:@"image" options:NSKeyValueObservingOptionNew context:nil];
         self.hadAddObserver = YES;
     }
-    
+
     [self layoutIfNeeded];
 }
 
@@ -94,22 +93,22 @@
 #pragma mark :. Private methods
 
 - (void)setCornerRadius:(CGFloat)radius rectCorner:(UIRectCorner)rectCorner {
-    self.radius = radius;
-    self.corner = rectCorner;
+    self.radius   = radius;
+    self.corner   = rectCorner;
     self.rounding = NO;
     if (!self.hadAddObserver) {
         [self addObserver:self forKeyPath:@"image" options:NSKeyValueObservingOptionNew context:nil];
         self.hadAddObserver = YES;
     }
-    
+
     [self layoutIfNeeded];
 }
 
 - (void)updateImage:(UIImage *)image withRadius:(CGFloat)radius withCorner:(UIRectCorner)corner {
-    CGSize size = self.bounds.size;
-    CGFloat scale = [UIScreen mainScreen].scale;
+    CGSize size       = self.bounds.size;
+    CGFloat scale     = [UIScreen mainScreen].scale;
     CGSize resultSize = CGSizeMake(radius, radius);
-    
+
     UIGraphicsBeginImageContextWithOptions(size, NO, scale);
     CGContextRef currentContext = UIGraphicsGetCurrentContext();
     if (nil == currentContext) {
@@ -141,15 +140,15 @@
     if (self.hadAddObserver) {
         [self removeObserver:self forKeyPath:@"image"];
     }
-    
+
     [self __dealloc];
 }
 
 - (void)__layoutSubviews {
     [self __layoutSubviews];
-    
+
     if (self.isRounding) {
-        [self updateImage:self.image withRadius:CGRectGetWidth(self.frame)/2 withCorner:UIRectCornerAllCorners];
+        [self updateImage:self.image withRadius:CGRectGetWidth(self.frame) / 2 withCorner:UIRectCornerAllCorners];
     } else if (0 != self.radius && 0 != self.corner && nil != self.image) {
         [self updateImage:self.image withRadius:self.radius withCorner:self.corner];
     }

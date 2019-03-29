@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param offset Shadow offset
  @param radius Shadow radius
  */
-- (void)setLayerShadow:(nullable UIColor*)color offset:(CGSize)offset radius:(CGFloat)radius;
+- (void)setLayerShadow:(nullable UIColor *)color offset:(CGSize)offset radius:(CGFloat)radius;
 
 /**
  Remove all subviews.
@@ -104,20 +104,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (CGRect)convertRect:(CGRect)rect fromViewOrWindow:(nullable UIView *)view;
 
-
-@property (nonatomic) CGFloat left;        ///< Shortcut for frame.origin.x.
-@property (nonatomic) CGFloat top;         ///< Shortcut for frame.origin.y
-@property (nonatomic) CGFloat right;       ///< Shortcut for frame.origin.x + frame.size.width
-@property (nonatomic) CGFloat bottom;      ///< Shortcut for frame.origin.y + frame.size.height
-@property (nonatomic) CGFloat width;       ///< Shortcut for frame.size.width.
-@property (nonatomic) CGFloat height;      ///< Shortcut for frame.size.height.
-@property (nonatomic) CGFloat centerX;     ///< Shortcut for center.x
-@property (nonatomic) CGFloat centerY;     ///< Shortcut for center.y
-@property (nonatomic) CGPoint origin;      ///< Shortcut for frame.origin.
-@property (nonatomic) CGSize  size;        ///< Shortcut for frame.size.
+@property (nonatomic) CGFloat left;    ///< Shortcut for frame.origin.x.
+@property (nonatomic) CGFloat top;     ///< Shortcut for frame.origin.y
+@property (nonatomic) CGFloat right;   ///< Shortcut for frame.origin.x + frame.size.width
+@property (nonatomic) CGFloat bottom;  ///< Shortcut for frame.origin.y + frame.size.height
+@property (nonatomic) CGFloat width;   ///< Shortcut for frame.size.width.
+@property (nonatomic) CGFloat height;  ///< Shortcut for frame.size.height.
+@property (nonatomic) CGFloat centerX; ///< Shortcut for center.x
+@property (nonatomic) CGFloat centerY; ///< Shortcut for center.y
+@property (nonatomic) CGPoint origin;  ///< Shortcut for frame.origin.
+@property (nonatomic) CGSize size;     ///< Shortcut for frame.size.
 
 @end
-
 
 @interface UIView (ZKActionHandlers)
 
@@ -173,9 +171,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param options A mask of options indicating how you want to perform the animations.
  @param animations An additional block for custom animations.
  */
-- (void)animateLayoutIfNeededWithBounce:(BOOL)bounce options:(UIViewAnimationOptions)options animations:(void (^ __nullable)(void))animations;
+- (void)animateLayoutIfNeededWithBounce:(BOOL)bounce options:(UIViewAnimationOptions)options animations:(void (^__nullable)(void))animations;
 
-- (void)animateLayoutIfNeededWithBounce:(BOOL)bounce options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^ __nullable)(BOOL finished))completion;
+- (void)animateLayoutIfNeededWithBounce:(BOOL)bounce options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^__nullable)(BOOL finished))completion;
 
 /**
  Animates the view's constraints by calling layoutIfNeeded.

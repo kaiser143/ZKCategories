@@ -24,7 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSData *)compressBySizeWithMaxLength:(NSUInteger)maxLength;
 
-
 #pragma mark - Create image
 ///=============================================================================
 /// @name Create image
@@ -143,7 +142,6 @@ NS_ASSUME_NONNULL_BEGIN
  Whether this image has alpha channel.
  */
 - (BOOL)hasAlphaChannel;
-
 
 #pragma mark - Modify Image
 ///=============================================================================
@@ -297,7 +295,6 @@ NS_ASSUME_NONNULL_BEGIN
  Returns a horizontally flipped image. ⇋
  */
 - (nullable UIImage *)imageByFlipHorizontal;
-
 
 #pragma mark - Image Effect
 ///=============================================================================

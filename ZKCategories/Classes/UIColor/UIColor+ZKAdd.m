@@ -1,3 +1,4 @@
+
 //
 //  UIColor+ZKAdd.m
 //  ZKCategories(https://github.com/kaiser143/ZKCategories.git)
@@ -11,41 +12,42 @@
 
 #define CLAMP_COLOR_VALUE(v) (v) = (v) < 0 ? 0 : (v) > 1 ? 1 : (v)
 
-void ZK_RGB2HSL(CGFloat r, CGFloat g, CGFloat b,
-                CGFloat *h, CGFloat *s, CGFloat *l) {
+void ZK_RGB2HSL(CGFloat r, CGFloat g, CGFloat b, CGFloat *h, CGFloat *s, CGFloat *l) {
     CLAMP_COLOR_VALUE(r);
     CLAMP_COLOR_VALUE(g);
     CLAMP_COLOR_VALUE(b);
-    
+
     CGFloat max, min, delta, sum;
-    max = fmaxf(r, fmaxf(g, b));
-    min = fminf(r, fminf(g, b));
+    max   = fmaxf(r, fmaxf(g, b));
+    min   = fminf(r, fminf(g, b));
     delta = max - min;
-    sum = max + min;
-    
-    *l = sum / 2;           // Lightness
-    if (delta == 0) {       // No Saturation, so Hue is undefined (achromatic)
+    sum   = max + min;
+
+    *l = sum / 2;     // Lightness
+    if (delta == 0) { // No Saturation, so Hue is undefined (achromatic)
         *h = *s = 0;
         return;
     }
-    *s = delta / (sum < 1 ? sum : 2 - sum);             // Saturation
-    if (r == max) *h = (g - b) / delta / 6;             // color between y & m
-    else if (g == max) *h = (2 + (b - r) / delta) / 6;  // color between c & y
-    else *h = (4 + (r - g) / delta) / 6;                // color between m & y
+    *s = delta / (sum < 1 ? sum : 2 - sum); // Saturation
+    if (r == max)
+        *h = (g - b) / delta / 6; // color between y & m
+    else if (g == max)
+        *h = (2 + (b - r) / delta) / 6; // color between c & y
+    else
+        *h = (4 + (r - g) / delta) / 6; // color between m & y
     if (*h < 0) *h += 1;
 }
 
-void ZK_HSL2RGB(CGFloat h, CGFloat s, CGFloat l,
-                CGFloat *r, CGFloat *g, CGFloat *b) {
+void ZK_HSL2RGB(CGFloat h, CGFloat s, CGFloat l, CGFloat *r, CGFloat *g, CGFloat *b) {
     CLAMP_COLOR_VALUE(h);
     CLAMP_COLOR_VALUE(s);
     CLAMP_COLOR_VALUE(l);
-    
+
     if (s == 0) { // No Saturation, Hue is undefined (achromatic)
         *r = *g = *b = l;
         return;
     }
-    
+
     CGFloat q;
     q = (l <= 0.5) ? (l * (1 + s)) : (l + s - (l * s));
     if (q <= 0) {
@@ -54,56 +56,81 @@ void ZK_HSL2RGB(CGFloat h, CGFloat s, CGFloat l,
         *r = *g = *b = 0;
         int sextant;
         CGFloat m, sv, fract, vsf, mid1, mid2;
-        m = l + l - q;
-        sv = (q - m) / q;
+        m             = l + l - q;
+        sv            = (q - m) / q;
         if (h == 1) h = 0;
         h *= 6.0;
         sextant = h;
-        fract = h - sextant;
-        vsf = q * sv * fract;
-        mid1 = m + vsf;
-        mid2 = q - vsf;
+        fract   = h - sextant;
+        vsf     = q * sv * fract;
+        mid1    = m + vsf;
+        mid2    = q - vsf;
         switch (sextant) {
-            case 0: *r = q; *g = mid1; *b = m; break;
-            case 1: *r = mid2; *g = q; *b = m; break;
-            case 2: *r = m; *g = q; *b = mid1; break;
-            case 3: *r = m; *g = mid2; *b = q; break;
-            case 4: *r = mid1; *g = m; *b = q; break;
-            case 5: *r = q; *g = m; *b = mid2; break;
+            case 0:
+                *r = q;
+                *g = mid1;
+                *b = m;
+                break;
+            case 1:
+                *r = mid2;
+                *g = q;
+                *b = m;
+                break;
+            case 2:
+                *r = m;
+                *g = q;
+                *b = mid1;
+                break;
+            case 3:
+                *r = m;
+                *g = mid2;
+                *b = q;
+                break;
+            case 4:
+                *r = mid1;
+                *g = m;
+                *b = q;
+                break;
+            case 5:
+                *r = q;
+                *g = m;
+                *b = mid2;
+                break;
         }
     }
 }
 
-void ZK_RGB2HSB(CGFloat r, CGFloat g, CGFloat b,
-                CGFloat *h, CGFloat *s, CGFloat *v) {
+void ZK_RGB2HSB(CGFloat r, CGFloat g, CGFloat b, CGFloat *h, CGFloat *s, CGFloat *v) {
     CLAMP_COLOR_VALUE(r);
     CLAMP_COLOR_VALUE(g);
     CLAMP_COLOR_VALUE(b);
-    
+
     CGFloat max, min, delta;
-    max = fmax(r, fmax(g, b));
-    min = fmin(r, fmin(g, b));
+    max   = fmax(r, fmax(g, b));
+    min   = fmin(r, fmin(g, b));
     delta = max - min;
-    
-    *v = max;               // Brightness
-    if (delta == 0) {       // No Saturation, so Hue is undefined (achromatic)
+
+    *v = max;         // Brightness
+    if (delta == 0) { // No Saturation, so Hue is undefined (achromatic)
         *h = *s = 0;
         return;
     }
-    *s = delta / max;       // Saturation
-    
-    if (r == max) *h = (g - b) / delta / 6;             // color between y & m
-    else if (g == max) *h = (2 + (b - r) / delta) / 6;  // color between c & y
-    else *h = (4 + (r - g) / delta) / 6;                // color between m & c
+    *s = delta / max; // Saturation
+
+    if (r == max)
+        *h = (g - b) / delta / 6; // color between y & m
+    else if (g == max)
+        *h = (2 + (b - r) / delta) / 6; // color between c & y
+    else
+        *h = (4 + (r - g) / delta) / 6; // color between m & c
     if (*h < 0) *h += 1;
 }
 
-void ZK_HSB2RGB(CGFloat h, CGFloat s, CGFloat v,
-                CGFloat *r, CGFloat *g, CGFloat *b) {
+void ZK_HSB2RGB(CGFloat h, CGFloat s, CGFloat v, CGFloat *r, CGFloat *g, CGFloat *b) {
     CLAMP_COLOR_VALUE(h);
     CLAMP_COLOR_VALUE(s);
     CLAMP_COLOR_VALUE(v);
-    
+
     if (s == 0) {
         *r = *g = *b = v; // No Saturation, so Hue is undefined (Achromatic)
     } else {
@@ -112,34 +139,57 @@ void ZK_HSB2RGB(CGFloat h, CGFloat s, CGFloat v,
         if (h == 1) h = 0;
         h *= 6;
         sextant = floor(h);
-        f = h - sextant;
-        p = v * (1 - s);
-        q = v * (1 - s * f);
-        t = v * (1 - s * (1 - f));
+        f       = h - sextant;
+        p       = v * (1 - s);
+        q       = v * (1 - s * f);
+        t       = v * (1 - s * (1 - f));
         switch (sextant) {
-            case 0: *r = v; *g = t; *b = p; break;
-            case 1: *r = q; *g = v; *b = p; break;
-            case 2: *r = p; *g = v; *b = t; break;
-            case 3: *r = p; *g = q; *b = v; break;
-            case 4: *r = t; *g = p; *b = v; break;
-            case 5: *r = v; *g = p; *b = q; break;
+            case 0:
+                *r = v;
+                *g = t;
+                *b = p;
+                break;
+            case 1:
+                *r = q;
+                *g = v;
+                *b = p;
+                break;
+            case 2:
+                *r = p;
+                *g = v;
+                *b = t;
+                break;
+            case 3:
+                *r = p;
+                *g = q;
+                *b = v;
+                break;
+            case 4:
+                *r = t;
+                *g = p;
+                *b = v;
+                break;
+            case 5:
+                *r = v;
+                *g = p;
+                *b = q;
+                break;
         }
     }
 }
 
-void ZK_RGB2CMYK(CGFloat r, CGFloat g, CGFloat b,
-                 CGFloat *c, CGFloat *m, CGFloat *y, CGFloat *k) {
+void ZK_RGB2CMYK(CGFloat r, CGFloat g, CGFloat b, CGFloat *c, CGFloat *m, CGFloat *y, CGFloat *k) {
     CLAMP_COLOR_VALUE(r);
     CLAMP_COLOR_VALUE(g);
     CLAMP_COLOR_VALUE(b);
-    
+
     *c = 1 - r;
     *m = 1 - g;
     *y = 1 - b;
     *k = fmin(*c, fmin(*m, *y));
-    
+
     if (*k == 1) {
-        *c = *m = *y = 0;   // Pure black
+        *c = *m = *y = 0; // Pure black
     } else {
         *c = (*c - *k) / (1 - *k);
         *m = (*m - *k) / (1 - *k);
@@ -147,24 +197,22 @@ void ZK_RGB2CMYK(CGFloat r, CGFloat g, CGFloat b,
     }
 }
 
-void ZK_CMYK2RGB(CGFloat c, CGFloat m, CGFloat y, CGFloat k,
-                 CGFloat *r, CGFloat *g, CGFloat *b) {
+void ZK_CMYK2RGB(CGFloat c, CGFloat m, CGFloat y, CGFloat k, CGFloat *r, CGFloat *g, CGFloat *b) {
     CLAMP_COLOR_VALUE(c);
     CLAMP_COLOR_VALUE(m);
     CLAMP_COLOR_VALUE(y);
     CLAMP_COLOR_VALUE(k);
-    
+
     *r = (1 - c) * (1 - k);
     *g = (1 - m) * (1 - k);
     *b = (1 - y) * (1 - k);
 }
 
-void ZK_HSB2HSL(CGFloat h, CGFloat s, CGFloat b,
-                CGFloat *hh, CGFloat *ss, CGFloat *ll) {
+void ZK_HSB2HSL(CGFloat h, CGFloat s, CGFloat b, CGFloat *hh, CGFloat *ss, CGFloat *ll) {
     CLAMP_COLOR_VALUE(h);
     CLAMP_COLOR_VALUE(s);
     CLAMP_COLOR_VALUE(b);
-    
+
     *hh = h;
     *ll = (2 - s) * b / 2;
     if (*ll <= 0.5) {
@@ -174,12 +222,11 @@ void ZK_HSB2HSL(CGFloat h, CGFloat s, CGFloat b,
     }
 }
 
-void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l,
-                CGFloat *hh, CGFloat *ss, CGFloat *bb) {
+void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFloat *ss, CGFloat *bb) {
     CLAMP_COLOR_VALUE(h);
     CLAMP_COLOR_VALUE(s);
     CLAMP_COLOR_VALUE(l);
-    
+
     *hh = h;
     if (l <= 0.5) {
         *bb = (s + 1) * l;
@@ -193,10 +240,10 @@ void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l,
 @implementation UIColor (ZKAdd)
 
 + (UIColor *)randomColor {
-    NSInteger aRedValue = arc4random() % 255;
+    NSInteger aRedValue   = arc4random() % 255;
     NSInteger aGreenValue = arc4random() % 255;
-    NSInteger aBlueValue = arc4random() % 255;
-    UIColor *randColor = [UIColor colorWithRed:aRedValue / 255.0f green:aGreenValue / 255.0f blue:aBlueValue / 255.0f alpha:1.0f];
+    NSInteger aBlueValue  = arc4random() % 255;
+    UIColor *randColor    = [UIColor colorWithRed:aRedValue / 255.0f green:aGreenValue / 255.0f blue:aBlueValue / 255.0f alpha:1.0f];
     return randColor;
 }
 
@@ -242,18 +289,18 @@ void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l,
 - (uint32_t)rgbValue {
     CGFloat r = 0, g = 0, b = 0, a = 0;
     [self getRed:&r green:&g blue:&b alpha:&a];
-    int8_t red = r * 255;
+    int8_t red    = r * 255;
     uint8_t green = g * 255;
-    uint8_t blue = b * 255;
+    uint8_t blue  = b * 255;
     return (red << 16) + (green << 8) + blue;
 }
 
 - (uint32_t)rgbaValue {
     CGFloat r = 0, g = 0, b = 0, a = 0;
     [self getRed:&r green:&g blue:&b alpha:&a];
-    int8_t red = r * 255;
+    int8_t red    = r * 255;
     uint8_t green = g * 255;
-    uint8_t blue = b * 255;
+    uint8_t blue  = b * 255;
     uint8_t alpha = a * 255;
     return (red << 24) + (green << 16) + (blue << 8) + alpha;
 }
@@ -265,33 +312,40 @@ static inline NSUInteger hexStrToInt(NSString *str) {
 }
 
 static BOOL hexStrToRGBA(NSString *str,
-                         CGFloat *r, CGFloat *g, CGFloat *b, CGFloat *a) {
+                         CGFloat *r,
+                         CGFloat *g,
+                         CGFloat *b,
+                         CGFloat *a) {
     str = [[str stringByTrim] uppercaseString];
     if ([str hasPrefix:@"#"]) {
         str = [str substringFromIndex:1];
     } else if ([str hasPrefix:@"0X"]) {
         str = [str substringFromIndex:2];
     }
-    
+
     NSUInteger length = [str length];
     //         RGB            RGBA          RRGGBB        RRGGBBAA
     if (length != 3 && length != 4 && length != 6 && length != 8) {
         return NO;
     }
-    
+
     //RGB,RGBA,RRGGBB,RRGGBBAA
     if (length < 5) {
         *r = hexStrToInt([str substringWithRange:NSMakeRange(0, 1)]) / 255.0f;
         *g = hexStrToInt([str substringWithRange:NSMakeRange(1, 1)]) / 255.0f;
         *b = hexStrToInt([str substringWithRange:NSMakeRange(2, 1)]) / 255.0f;
-        if (length == 4)  *a = hexStrToInt([str substringWithRange:NSMakeRange(3, 1)]) / 255.0f;
-        else *a = 1;
+        if (length == 4)
+            *a = hexStrToInt([str substringWithRange:NSMakeRange(3, 1)]) / 255.0f;
+        else
+            *a = 1;
     } else {
         *r = hexStrToInt([str substringWithRange:NSMakeRange(0, 2)]) / 255.0f;
         *g = hexStrToInt([str substringWithRange:NSMakeRange(2, 2)]) / 255.0f;
         *b = hexStrToInt([str substringWithRange:NSMakeRange(4, 2)]) / 255.0f;
-        if (length == 8) *a = hexStrToInt([str substringWithRange:NSMakeRange(6, 2)]) / 255.0f;
-        else *a = 1;
+        if (length == 8)
+            *a = hexStrToInt([str substringWithRange:NSMakeRange(6, 2)]) / 255.0f;
+        else
+            *a = 1;
     }
     return YES;
 }
@@ -313,33 +367,33 @@ static BOOL hexStrToRGBA(NSString *str,
 }
 
 - (NSString *)hexStringWithAlpha:(BOOL)withAlpha {
-    CGColorRef color = self.CGColor;
-    size_t count = CGColorGetNumberOfComponents(color);
-    const CGFloat *components = CGColorGetComponents(color);
+    CGColorRef color              = self.CGColor;
+    size_t count                  = CGColorGetNumberOfComponents(color);
+    const CGFloat *components     = CGColorGetComponents(color);
     static NSString *stringFormat = @"%02x%02x%02x";
-    NSString *hex = nil;
+    NSString *hex                 = nil;
     if (count == 2) {
-        NSUInteger white = (NSUInteger)(components[0] * 255.0f);
-        hex = [NSString stringWithFormat:stringFormat, white, white, white];
+        NSUInteger white = (NSUInteger)(components[ 0 ] * 255.0f);
+        hex              = [NSString stringWithFormat:stringFormat, white, white, white];
     } else if (count == 4) {
         hex = [NSString stringWithFormat:stringFormat,
-               (NSUInteger)(components[0] * 255.0f),
-               (NSUInteger)(components[1] * 255.0f),
-               (NSUInteger)(components[2] * 255.0f)];
+                                         (NSUInteger)(components[ 0 ] * 255.0f),
+                                         (NSUInteger)(components[ 1 ] * 255.0f),
+                                         (NSUInteger)(components[ 2 ] * 255.0f)];
     }
-    
+
     if (hex && withAlpha) {
         hex = [hex stringByAppendingFormat:@"%02lx",
-               (unsigned long)(self.alpha * 255.0 + 0.5)];
+                                           (unsigned long)(self.alpha * 255.0 + 0.5)];
     }
     return hex;
 }
 
 - (UIColor *)colorByAddColor:(UIColor *)add blendMode:(CGBlendMode)blendMode {
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGBitmapInfo bitmapInfo = kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big;
-    uint8_t pixel[4] = { 0 };
-    CGContextRef context = CGBitmapContextCreate(&pixel, 1, 1, 8, 4, colorSpace, bitmapInfo);
+    CGBitmapInfo bitmapInfo    = kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big;
+    uint8_t pixel[ 4 ]         = {0};
+    CGContextRef context       = CGBitmapContextCreate(&pixel, 1, 1, 8, 4, colorSpace, bitmapInfo);
     CGContextSetFillColorWithColor(context, self.CGColor);
     CGContextFillRect(context, CGRectMake(0, 0, 1, 1));
     CGContextSetBlendMode(context, blendMode);
@@ -347,7 +401,7 @@ static BOOL hexStrToRGBA(NSString *str,
     CGContextFillRect(context, CGRectMake(0, 0, 1, 1));
     CGContextRelease(context);
     CGColorSpaceRelease(colorSpace);
-    return [UIColor colorWithRed:pixel[0] / 255.0f green:pixel[1] / 255.0f blue:pixel[2] / 255.0f alpha:pixel[3] / 255.0f];
+    return [UIColor colorWithRed:pixel[ 0 ] / 255.0f green:pixel[ 1 ] / 255.0f blue:pixel[ 2 ] / 255.0f alpha:pixel[ 3 ] / 255.0f];
 }
 
 - (UIColor *)colorByChangeHue:(CGFloat)h saturation:(CGFloat)s brightness:(CGFloat)b alpha:(CGFloat)a {
@@ -439,35 +493,36 @@ static BOOL hexStrToRGBA(NSString *str,
 }
 
 - (NSString *)colorSpaceString {
-    CGColorSpaceModel model =  CGColorSpaceGetModel(CGColorGetColorSpace(self.CGColor));
+    CGColorSpaceModel model = CGColorSpaceGetModel(CGColorGetColorSpace(self.CGColor));
     switch (model) {
         case kCGColorSpaceModelUnknown:
             return @"kCGColorSpaceModelUnknown";
-            
+
         case kCGColorSpaceModelMonochrome:
             return @"kCGColorSpaceModelMonochrome";
-            
+
         case kCGColorSpaceModelRGB:
             return @"kCGColorSpaceModelRGB";
-            
+
         case kCGColorSpaceModelCMYK:
             return @"kCGColorSpaceModelCMYK";
-            
+
         case kCGColorSpaceModelLab:
             return @"kCGColorSpaceModelLab";
-            
+
         case kCGColorSpaceModelDeviceN:
             return @"kCGColorSpaceModelDeviceN";
-            
+
         case kCGColorSpaceModelIndexed:
             return @"kCGColorSpaceModelIndexed";
-            
+
         case kCGColorSpaceModelPattern:
             return @"kCGColorSpaceModelPattern";
-            
+
         default:
             return @"ColorSpaceInvalid";
     }
 }
 
 @end
+d

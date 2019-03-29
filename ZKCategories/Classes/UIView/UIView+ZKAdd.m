@@ -14,23 +14,23 @@
 - (UIView *)descendantOrSelfWithClass:(Class)cls {
     if ([self isKindOfClass:cls])
         return self;
-    
+
     for (UIView *child in self.subviews) {
-        UIView* it = [child descendantOrSelfWithClass:cls];
+        UIView *it = [child descendantOrSelfWithClass:cls];
         if (it)
             return it;
     }
-    
+
     return nil;
 }
 
 - (UIView *)ancestorOrSelfWithClass:(Class)cls {
     if ([self isKindOfClass:cls]) {
         return self;
-        
+
     } else if (self.superview) {
         return [self.superview ancestorOrSelfWithClass:cls];
-        
+
     } else {
         return nil;
     }
@@ -56,10 +56,10 @@
 }
 
 - (NSData *)snapshotPDF {
-    CGRect bounds = self.bounds;
-    NSMutableData* data = [NSMutableData data];
+    CGRect bounds              = self.bounds;
+    NSMutableData *data        = [NSMutableData data];
     CGDataConsumerRef consumer = CGDataConsumerCreateWithCFData((__bridge CFMutableDataRef)data);
-    CGContextRef context = CGPDFContextCreate(consumer, &bounds, NULL);
+    CGContextRef context       = CGPDFContextCreate(consumer, &bounds, NULL);
     CGDataConsumerRelease(consumer);
     if (!context) return nil;
     CGPDFContextBeginPage(context, NULL);
@@ -72,12 +72,12 @@
     return data;
 }
 
-- (void)setLayerShadow:(UIColor*)color offset:(CGSize)offset radius:(CGFloat)radius {
-    self.layer.shadowColor = color.CGColor;
-    self.layer.shadowOffset = offset;
-    self.layer.shadowRadius = radius;
-    self.layer.shadowOpacity = 1;
-    self.layer.shouldRasterize = YES;
+- (void)setLayerShadow:(UIColor *)color offset:(CGSize)offset radius:(CGFloat)radius {
+    self.layer.shadowColor        = color.CGColor;
+    self.layer.shadowOffset       = offset;
+    self.layer.shadowRadius       = radius;
+    self.layer.shadowOpacity      = 1;
+    self.layer.shouldRasterize    = YES;
     self.layer.rasterizationScale = [UIScreen mainScreen].scale;
 }
 
@@ -87,7 +87,6 @@
         [self.subviews.lastObject removeFromSuperview];
     }
 }
-
 
 - (UIViewController *)viewController {
     for (UIView *view = self; view; view = view.superview) {
@@ -106,7 +105,7 @@
     }
     if (!self.window) return 0;
     CGFloat alpha = 1;
-    UIView *v = self;
+    UIView *v     = self;
     while (v) {
         if (v.hidden) {
             alpha = 0;
@@ -126,9 +125,9 @@
             return [self convertPoint:point toView:nil];
         }
     }
-    
+
     UIWindow *from = [self isKindOfClass:[UIWindow class]] ? (id)self : self.window;
-    UIWindow *to = [view isKindOfClass:[UIWindow class]] ? (id)view : view.window;
+    UIWindow *to   = [view isKindOfClass:[UIWindow class]] ? (id)view : view.window;
     if ((!from || !to) || (from == to)) return [self convertPoint:point toView:view];
     point = [self convertPoint:point toView:from];
     point = [to convertPoint:point fromWindow:from];
@@ -144,9 +143,9 @@
             return [self convertPoint:point fromView:nil];
         }
     }
-    
+
     UIWindow *from = [view isKindOfClass:[UIWindow class]] ? (id)view : view.window;
-    UIWindow *to = [self isKindOfClass:[UIWindow class]] ? (id)self : self.window;
+    UIWindow *to   = [self isKindOfClass:[UIWindow class]] ? (id)self : self.window;
     if ((!from || !to) || (from == to)) return [self convertPoint:point fromView:view];
     point = [from convertPoint:point fromView:view];
     point = [to convertPoint:point fromWindow:from];
@@ -162,9 +161,9 @@
             return [self convertRect:rect toView:nil];
         }
     }
-    
+
     UIWindow *from = [self isKindOfClass:[UIWindow class]] ? (id)self : self.window;
-    UIWindow *to = [view isKindOfClass:[UIWindow class]] ? (id)view : view.window;
+    UIWindow *to   = [view isKindOfClass:[UIWindow class]] ? (id)view : view.window;
     if (!from || !to) return [self convertRect:rect toView:view];
     if (from == to) return [self convertRect:rect toView:view];
     rect = [self convertRect:rect toView:from];
@@ -181,9 +180,9 @@
             return [self convertRect:rect fromView:nil];
         }
     }
-    
+
     UIWindow *from = [view isKindOfClass:[UIWindow class]] ? (id)view : view.window;
-    UIWindow *to = [self isKindOfClass:[UIWindow class]] ? (id)self : self.window;
+    UIWindow *to   = [self isKindOfClass:[UIWindow class]] ? (id)self : self.window;
     if ((!from || !to) || (from == to)) return [self convertRect:rect fromView:view];
     rect = [from convertRect:rect fromView:view];
     rect = [to convertRect:rect fromWindow:from];
@@ -196,9 +195,9 @@
 }
 
 - (void)setLeft:(CGFloat)x {
-    CGRect frame = self.frame;
+    CGRect frame   = self.frame;
     frame.origin.x = x;
-    self.frame = frame;
+    self.frame     = frame;
 }
 
 - (CGFloat)top {
@@ -206,9 +205,9 @@
 }
 
 - (void)setTop:(CGFloat)y {
-    CGRect frame = self.frame;
+    CGRect frame   = self.frame;
     frame.origin.y = y;
-    self.frame = frame;
+    self.frame     = frame;
 }
 
 - (CGFloat)right {
@@ -216,9 +215,9 @@
 }
 
 - (void)setRight:(CGFloat)right {
-    CGRect frame = self.frame;
+    CGRect frame   = self.frame;
     frame.origin.x = right - frame.size.width;
-    self.frame = frame;
+    self.frame     = frame;
 }
 
 - (CGFloat)bottom {
@@ -226,9 +225,9 @@
 }
 
 - (void)setBottom:(CGFloat)bottom {
-    CGRect frame = self.frame;
+    CGRect frame   = self.frame;
     frame.origin.y = bottom - frame.size.height;
-    self.frame = frame;
+    self.frame     = frame;
 }
 
 - (CGFloat)width {
@@ -236,9 +235,9 @@
 }
 
 - (void)setWidth:(CGFloat)width {
-    CGRect frame = self.frame;
+    CGRect frame     = self.frame;
     frame.size.width = width;
-    self.frame = frame;
+    self.frame       = frame;
 }
 
 - (CGFloat)height {
@@ -246,9 +245,9 @@
 }
 
 - (void)setHeight:(CGFloat)height {
-    CGRect frame = self.frame;
+    CGRect frame      = self.frame;
     frame.size.height = height;
-    self.frame = frame;
+    self.frame        = frame;
 }
 
 - (CGFloat)centerX {
@@ -274,7 +273,7 @@
 - (void)setOrigin:(CGPoint)origin {
     CGRect frame = self.frame;
     frame.origin = origin;
-    self.frame = frame;
+    self.frame   = frame;
 }
 
 - (CGSize)size {
@@ -283,8 +282,8 @@
 
 - (void)setSize:(CGSize)size {
     CGRect frame = self.frame;
-    frame.size = size;
-    self.frame = frame;
+    frame.size   = size;
+    self.frame   = frame;
 }
 
 @end
@@ -293,21 +292,20 @@
 
 - (void)setTapActionWithBlock:(void (^)(void))block {
     UITapGestureRecognizer *gesture = [self associatedValueForKey:_cmd];
-    
+
     if (!gesture) {
         gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_handleActionForTapGesture:)];
         [self addGestureRecognizer:gesture];
         [self setAssociateValue:gesture withKey:_cmd];
     }
-    
+
     [self setAssociateCopyValue:block withKey:@selector(_handleActionForTapGesture:)];
 }
 
 - (void)_handleActionForTapGesture:(UITapGestureRecognizer *)gesture {
     if (gesture.state == UIGestureRecognizerStateRecognized) {
-        void(^action)(void) = [self associatedValueForKey:_cmd];
-        if (action)
-        {
+        void (^action)(void) = [self associatedValueForKey:_cmd];
+        if (action) {
             action();
         }
     }
@@ -315,20 +313,20 @@
 
 - (void)setLongPressActionWithBlock:(void (^)(void))block {
     UILongPressGestureRecognizer *gesture = [self associatedValueForKey:_cmd];
-    
+
     if (!gesture) {
         gesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_handleActionForLongPressGesture:)];
         [self addGestureRecognizer:gesture];
         [self setAssociateValue:gesture withKey:_cmd];
     }
-    
+
     [self setAssociateCopyValue:block withKey:@selector(_handleActionForLongPressGesture:)];
 }
 
 - (void)_handleActionForLongPressGesture:(UITapGestureRecognizer *)gesture {
     if (gesture.state == UIGestureRecognizerStateBegan) {
-        void(^action)(void) = [self associatedValueForKey:_cmd];
-        
+        void (^action)(void) = [self associatedValueForKey:_cmd];
+
         if (action) {
             action();
         }
@@ -347,7 +345,7 @@
     if (![NSThread isMainThread]) {
         [self methodCalledNotFromMainThread:NSStringFromSelector(_cmd)];
     }
-    
+
     // not really an endless loop, this calls the original
     [self _setNeedsLayout_MainThreadCheck];
 }
@@ -356,7 +354,7 @@
     if (![NSThread isMainThread]) {
         [self methodCalledNotFromMainThread:NSStringFromSelector(_cmd)];
     }
-    
+
     // not really an endless loop, this calls the original
     [self _setNeedsDisplay_MainThreadCheck];
 }
@@ -365,7 +363,7 @@
     if (![NSThread isMainThread]) {
         [self methodCalledNotFromMainThread:NSStringFromSelector(_cmd)];
     }
-    
+
     // not really an endless loop, this calls the original
     [self _setNeedsDisplayInRect_MainThreadCheck:rect];
 }
@@ -389,8 +387,7 @@
     [self animateLayoutIfNeededWithDuration:duration bounce:bounce options:options animations:animations completion:completion];
 }
 
-- (void)animateLayoutIfNeededWithDuration:(NSTimeInterval)duration bounce:(BOOL)bounce options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion
-{
+- (void)animateLayoutIfNeededWithDuration:(NSTimeInterval)duration bounce:(BOOL)bounce options:(UIViewAnimationOptions)options animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion {
     if (bounce) {
         [UIView animateWithDuration:duration
                               delay:0.0
@@ -399,20 +396,19 @@
                             options:options
                          animations:^{
                              [self layoutIfNeeded];
-                             
+
                              if (animations) {
                                  animations();
                              }
                          }
                          completion:completion];
-    }
-    else {
+    } else {
         [UIView animateWithDuration:duration
                               delay:0.0
                             options:options
                          animations:^{
                              [self layoutIfNeeded];
-                             
+
                              if (animations) {
                                  animations();
                              }

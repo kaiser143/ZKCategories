@@ -15,13 +15,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UITextField (ZKAdd)
 
-@property(copy, nonatomic) BOOL (^shouldBegindEditingBlock)(UITextField *textField);
-@property(copy, nonatomic) BOOL (^shouldEndEditingBlock)(UITextField *textField);
-@property(copy, nonatomic) void (^didBeginEditingBlock)(UITextField *textField);
-@property(copy, nonatomic) void (^didEndEditingBlock)(UITextField *textField);
-@property(copy, nonatomic) BOOL (^shouldChangeCharactersInRangeBlock)(UITextField *textField, NSRange range, NSString *replacementString);
-@property(copy, nonatomic) BOOL (^shouldReturnBlock)(UITextField *textField);
-@property(copy, nonatomic) BOOL (^shouldClearBlock)(UITextField *textField);
+@property (nonatomic, copy) BOOL (^shouldBegindEditingBlock)(UITextField *textField);
+@property (nonatomic, copy) BOOL (^shouldEndEditingBlock)(UITextField *textField);
+@property (nonatomic, copy) void (^didBeginEditingBlock)(UITextField *textField);
+@property (nonatomic, copy) void (^didEndEditingBlock)(UITextField *textField);
+@property (nonatomic, copy) BOOL (^shouldChangeCharactersInRangeBlock)(UITextField *textField, NSRange range, NSString *replacementString);
+@property (nonatomic, copy) BOOL (^shouldReturnBlock)(UITextField *textField);
+@property (nonatomic, copy) BOOL (^shouldClearBlock)(UITextField *textField);
 
 - (void)setShouldBegindEditingBlock:(BOOL (^)(UITextField *textField))shouldBegindEditingBlock;
 - (void)setShouldEndEditingBlock:(BOOL (^)(UITextField *textField))shouldEndEditingBlock;

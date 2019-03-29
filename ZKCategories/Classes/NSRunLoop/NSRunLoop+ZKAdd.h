@@ -12,7 +12,7 @@
 - (void)testPerformBlockAndWait {
     // 1
     __block BOOL flag = NO;
-    
+ 
     [[NSRunLoop currentRunLoop] performBlockAndWait:^(BOOL *finish) {
         double delayInSeconds = 2.0;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
@@ -23,7 +23,7 @@
             *finish = YES;
         });
     }];
-    
+ 
     // 3
     XCTAssertTrue(flag);
 }
@@ -37,6 +37,5 @@ extern NSString *const NSRunloopTimeoutException;
  *	@brief	extension of NSRunLoop for waiting.
  */
 - (void)performBlockAndWait:(void (^)(BOOL *finish))block timeoutInterval:(NSTimeInterval)timeoutInterval;
-
 
 @end

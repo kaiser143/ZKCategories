@@ -12,7 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UITableView (ZKAdd)
 
-
 /**
  * The view that contains the "index" along the right side of the table.
  */
@@ -30,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)scrollToLastRow:(BOOL)animated;
 
-- (void)touchRowAtIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated;
+- (void)touchRowAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated;
 
 /**
  Perform a series of method calls that insert, delete, or select rows and

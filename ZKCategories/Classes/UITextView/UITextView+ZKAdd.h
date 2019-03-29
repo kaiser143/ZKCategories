@@ -11,9 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UITextView (ZKAdd)
 
-@property(nonatomic) CGFloat maxFontSize, minFontSize;
+@property (nonatomic) CGFloat maxFontSize, minFontSize;
 
-@property(nonatomic, getter=isZoomEnabled) BOOL zoomEnabled;
+@property (nonatomic, getter=isZoomEnabled) BOOL zoomEnabled;
 
 /**
  *  @brief  当前选中的字符串范围
@@ -56,7 +56,6 @@ NS_ASSUME_NONNULL_BEGIN
     }
 }
  */
-
 
 @end
 

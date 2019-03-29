@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^ZKNSObjectDelayBlock)(BOOL cancel);
+typedef void (^ZKNSObjectDelayBlock)(BOOL cancel);
 
 @interface NSObject (ZKAdd)
 
@@ -20,10 +20,10 @@ typedef void(^ZKNSObjectDelayBlock)(BOOL cancel);
 - (id)safePerform:(SEL)selector;
 - (id)safePerform:(SEL)selector withObject:(nullable id)object;
 
-+ (ZKNSObjectDelayBlock)performBlock:(void(^)(void))block afterDelay:(NSTimeInterval)delay;
++ (ZKNSObjectDelayBlock)performBlock:(void (^)(void))block afterDelay:(NSTimeInterval)delay;
 
 + (void)cancelBlock:(ZKNSObjectDelayBlock)block;
-+ (void)cancelPreviousPerformBlock:(ZKNSObjectDelayBlock)aWrappingBlockHandle __attribute__ ((deprecated));
++ (void)cancelPreviousPerformBlock:(ZKNSObjectDelayBlock)aWrappingBlockHandle __attribute__((deprecated));
 
 /// catgory runtime实现get set方法增加一个字符串属性
 @property (nonatomic, strong) NSString *stringProperty;
@@ -36,7 +36,6 @@ typedef void(^ZKNSObjectDelayBlock)(BOOL cancel);
 
 @end
 
-
 @interface NSObject (ZKRuntime)
 
 /**-------------------------------------------------------------------------------------
@@ -48,7 +47,7 @@ typedef void(^ZKNSObjectDelayBlock)(BOOL cancel);
  Adds a block to be executed as soon as the receiver's memory is deallocated
  @param block The block to execute when the receiver is being deallocated
  */
-- (void)addDeallocBlock:(void(^)(void))block;
+- (void)addDeallocBlock:(void (^)(void))block;
 
 /**
  Adds a new instance method to a class. All instances of this class will have this method.
@@ -58,7 +57,7 @@ typedef void(^ZKNSObjectDelayBlock)(BOOL cancel);
  @param block The block to execute for the instance method, a pointer to the instance is passed as the only parameter.
  @returns `YES` if the operation was successful
  */
-+ (BOOL)addInstanceMethodWithSelectorName:(NSString *)selectorName block:(void(^)(id))block;
++ (BOOL)addInstanceMethodWithSelectorName:(NSString *)selectorName block:(void (^)(id))block;
 
 /**-------------------------------------------------------------------------------------
  @name Method Swizzling
@@ -71,7 +70,6 @@ typedef void(^ZKNSObjectDelayBlock)(BOOL cancel);
  @param otherSelector The second method
  */
 + (void)swizzleMethod:(SEL)selector withMethod:(SEL)otherSelector;
-
 
 /**
  Exchanges two class method implementations. After the call methods to the first selector will now go to the second one and vice versa.
@@ -121,7 +119,6 @@ typedef void(^ZKNSObjectDelayBlock)(BOOL cancel);
  Remove all associated values.
  */
 - (void)removeAssociatedValues;
-
 
 #pragma mark - :. Others
 ///=============================================================================
@@ -178,7 +175,6 @@ typedef void(^ZKNSObjectDelayBlock)(BOOL cancel);
 
 @end
 
-
 @interface NSObject (ZKAddForKVO)
 
 /**
@@ -193,7 +189,7 @@ typedef void(^ZKNSObjectDelayBlock)(BOOL cancel);
  
  @param block   The block to register for KVO notifications.
  */
-- (void)addObserverBlockForKeyPath:(NSString*)keyPath
+- (void)addObserverBlockForKeyPath:(NSString *)keyPath
                              block:(void (^)(id _Nonnull obj, id _Nonnull oldVal, id _Nonnull newVal))block;
 
 /**
@@ -204,7 +200,7 @@ typedef void(^ZKNSObjectDelayBlock)(BOOL cancel);
  @param keyPath A key-path, relative to the receiver, for which blocks is
  registered to receive KVO change notifications.
  */
-- (void)removeObserverBlocksForKeyPath:(NSString*)keyPath;
+- (void)removeObserverBlocksForKeyPath:(NSString *)keyPath;
 
 /**
  Stops all blocks (associated by `addObserverBlockForKeyPath:block:`) from

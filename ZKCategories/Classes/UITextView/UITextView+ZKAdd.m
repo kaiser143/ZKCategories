@@ -16,14 +16,14 @@ static void *zoomEnabledKey = &zoomEnabledKey;
 
 - (NSRange)selectedRange {
     UITextPosition *beginning = self.beginningOfDocument;
-    
-    UITextRange *selectedRange = self.selectedTextRange;
+
+    UITextRange *selectedRange     = self.selectedTextRange;
     UITextPosition *selectionStart = selectedRange.start;
-    UITextPosition *selectionEnd = selectedRange.end;
-    
+    UITextPosition *selectionEnd   = selectedRange.end;
+
     NSInteger location = [self offsetFromPosition:beginning toPosition:selectionStart];
-    NSInteger length = [self offsetFromPosition:selectionStart toPosition:selectionEnd];
-    
+    NSInteger length   = [self offsetFromPosition:selectionStart toPosition:selectionEnd];
+
     return NSMakeRange(location, length);
 }
 
@@ -33,10 +33,10 @@ static void *zoomEnabledKey = &zoomEnabledKey;
 }
 
 - (void)setSelectedRange:(NSRange)range {
-    UITextPosition *beginning = self.beginningOfDocument;
+    UITextPosition *beginning     = self.beginningOfDocument;
     UITextPosition *startPosition = [self positionFromPosition:beginning offset:range.location];
-    UITextPosition *endPosition = [self positionFromPosition:beginning offset:NSMaxRange(range)];
-    UITextRange *selectionRange = [self textRangeFromPosition:startPosition toPosition:endPosition];
+    UITextPosition *endPosition   = [self positionFromPosition:beginning offset:NSMaxRange(range)];
+    UITextRange *selectionRange   = [self textRangeFromPosition:startPosition toPosition:endPosition];
     [self setSelectedTextRange:selectionRange];
 }
 
@@ -46,7 +46,7 @@ static void *zoomEnabledKey = &zoomEnabledKey;
     UITextRange *selectedRange = [self markedTextRange];
     if (selectedRange) {
         NSString *newText = [self textInRange:selectedRange];
-        textLength = (newText.length + 1) / 2 + [self offsetFromPosition:self.beginningOfDocument toPosition:selectedRange.start] + text.length;
+        textLength        = (newText.length + 1) / 2 + [self offsetFromPosition:self.beginningOfDocument toPosition:selectedRange.start] + text.length;
     } else {
         textLength = self.text.length + text.length;
     }
@@ -71,27 +71,26 @@ static void *zoomEnabledKey = &zoomEnabledKey;
 
 - (void)pinchGesture:(UIPinchGestureRecognizer *)gestureRecognizer {
     if (!self.isZoomEnabled) return;
-    
+
     CGFloat pointSize = (gestureRecognizer.velocity > 0.0f ? 1.0f : -1.0f) + self.font.pointSize;
-    
+
     pointSize = MAX(MIN(pointSize, self.maxFontSize), self.minFontSize);
-    
+
     self.font = [UIFont fontWithName:self.font.fontName size:pointSize];
 }
 
-
 - (void)setZoomEnabled:(BOOL)zoomEnabled {
     [self setAssociateValue:@(zoomEnabled) withKey:zoomEnabledKey];
-    
+
     if (zoomEnabled) {
         for (UIGestureRecognizer *recognizer in self.gestureRecognizers) // initialized already
             if ([recognizer isKindOfClass:[UIPinchGestureRecognizer class]]) return;
-        
-        self.minFontSize = self.minFontSize ?: 8.0f;
-        self.maxFontSize = self.maxFontSize ?: 42.0f;
+
+        self.minFontSize                          = self.minFontSize ?: 8.0f;
+        self.maxFontSize                          = self.maxFontSize ?: 42.0f;
         UIPinchGestureRecognizer *pinchRecognizer = [[UIPinchGestureRecognizer alloc]
-                                                     initWithTarget:self
-                                                     action:@selector(pinchGesture:)];
+            initWithTarget:self
+                    action:@selector(pinchGesture:)];
         [self addGestureRecognizer:pinchRecognizer];
 #if !__has_feature(objc_arc)
         [pinchRecognizer release];

@@ -15,7 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface UIDevice (ZKAdd)
 
-
 #pragma mark - Device Information
 ///=============================================================================
 /// @name Device Information
@@ -47,7 +46,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// The System's startup time.
 @property (nonatomic, readonly) NSDate *systemUptime;
 
-
 #pragma mark - Network Information
 ///=============================================================================
 /// @name Network Information
@@ -58,7 +56,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Cell IP address of this device (can be nil). e.g. @"10.2.2.222"
 @property (nullable, nonatomic, readonly) NSString *ipAddressCell;
-
 
 /**
  Network traffic type:
@@ -78,11 +75,11 @@ typedef NS_OPTIONS(NSUInteger, ZKNetworkTrafficType) {
     ZKNetworkTrafficTypeWIFIReceived = 1 << 3,
     ZKNetworkTrafficTypeAWDLSent     = 1 << 4,
     ZKNetworkTrafficTypeAWDLReceived = 1 << 5,
-    
+
     ZKNetworkTrafficTypeWWAN = ZKNetworkTrafficTypeWWANSent | ZKNetworkTrafficTypeWWANReceived,
     ZKNetworkTrafficTypeWIFI = ZKNetworkTrafficTypeWIFISent | ZKNetworkTrafficTypeWIFIReceived,
     ZKNetworkTrafficTypeAWDL = ZKNetworkTrafficTypeAWDLSent | ZKNetworkTrafficTypeAWDLReceived,
-    
+
     ZKNetworkTrafficTypeALL = ZKNetworkTrafficTypeWWAN |
                               ZKNetworkTrafficTypeWIFI |
                               ZKNetworkTrafficTypeAWDL,
@@ -96,9 +93,9 @@ typedef NS_OPTIONS(NSUInteger, ZKNetworkTrafficType) {
  
      uint64_t bytes = [[UIDevice currentDevice] getNetworkTrafficBytes:ZKNetworkTrafficTypeALL];
      NSTimeInterval time = CACurrentMediaTime();
-     
+ 
      uint64_t bytesPerSecond = (bytes - _lastBytes) / (time - _lastTime);
-     
+ 
      _lastBytes = bytes;
      _lastTime = time;
  
@@ -121,7 +118,6 @@ typedef NS_OPTIONS(NSUInteger, ZKNetworkTrafficType) {
 
 /// Used disk space in byte. (-1 when error occurs)
 @property (nonatomic, readonly) int64_t diskSpaceUsed;
-
 
 #pragma mark - Memory Information
 ///=============================================================================

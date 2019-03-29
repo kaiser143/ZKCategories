@@ -10,29 +10,21 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern void ZK_RGB2HSL(CGFloat r, CGFloat g, CGFloat b,
-                       CGFloat *h, CGFloat *s, CGFloat *l);
+UIKIT_EXTERN void ZK_RGB2HSL(CGFloat r, CGFloat g, CGFloat b, CGFloat *h, CGFloat *s, CGFloat *l);
 
-extern void ZK_HSL2RGB(CGFloat h, CGFloat s, CGFloat l,
-                       CGFloat *r, CGFloat *g, CGFloat *b);
+UIKIT_EXTERN void ZK_HSL2RGB(CGFloat h, CGFloat s, CGFloat l, CGFloat *r, CGFloat *g, CGFloat *b);
 
-extern void ZK_RGB2HSB(CGFloat r, CGFloat g, CGFloat b,
-                       CGFloat *h, CGFloat *s, CGFloat *v);
+UIKIT_EXTERN void ZK_RGB2HSB(CGFloat r, CGFloat g, CGFloat b, CGFloat *h, CGFloat *s, CGFloat *v);
 
-extern void ZK_HSB2RGB(CGFloat h, CGFloat s, CGFloat v,
-                       CGFloat *r, CGFloat *g, CGFloat *b);
+UIKIT_EXTERN void ZK_HSB2RGB(CGFloat h, CGFloat s, CGFloat v, CGFloat *r, CGFloat *g, CGFloat *b);
 
-extern void ZK_RGB2CMYK(CGFloat r, CGFloat g, CGFloat b,
-                        CGFloat *c, CGFloat *m, CGFloat *y, CGFloat *k);
+UIKIT_EXTERN void ZK_RGB2CMYK(CGFloat r, CGFloat g, CGFloat b, CGFloat *c, CGFloat *m, CGFloat *y, CGFloat *k);
 
-extern void ZK_CMYK2RGB(CGFloat c, CGFloat m, CGFloat y, CGFloat k,
-                        CGFloat *r, CGFloat *g, CGFloat *b);
+UIKIT_EXTERN void ZK_CMYK2RGB(CGFloat c, CGFloat m, CGFloat y, CGFloat k, CGFloat *r, CGFloat *g, CGFloat *b);
 
-extern void ZK_HSB2HSL(CGFloat h, CGFloat s, CGFloat b,
-                       CGFloat *hh, CGFloat *ss, CGFloat *ll);
+UIKIT_EXTERN void ZK_HSB2HSL(CGFloat h, CGFloat s, CGFloat b, CGFloat *hh, CGFloat *ss, CGFloat *ll);
 
-extern void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l,
-                       CGFloat *hh, CGFloat *ss, CGFloat *bb);
+UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFloat *ss, CGFloat *bb);
 
 /*
  Create UIColor with a hex string.
@@ -42,7 +34,7 @@ extern void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l,
  The `#` or "0x" sign is not required.
  */
 #ifndef UIColorHex
-#define UIColorHex(_hex_)   [UIColor colorWithHexString:((__bridge NSString *)CFSTR(#_hex_))]
+#define UIColorHex(_hex_) [UIColor colorWithHexString:((__bridge NSString *)CFSTR(#_hex_))]
 #endif
 
 @interface UIColor (ZKAdd)
@@ -188,7 +180,6 @@ extern void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l,
                    brightness:(CGFloat)brightnessDelta
                         alpha:(CGFloat)alphaDelta;
 
-
 #pragma mark - Get color's description
 ///=============================================================================
 /// @name Get color's description
@@ -226,7 +217,6 @@ extern void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l,
  @return The color's value as a hex string.
  */
 - (nullable NSString *)hexStringWithAlpha;
-
 
 #pragma mark - Retrieving Color Information
 ///=============================================================================

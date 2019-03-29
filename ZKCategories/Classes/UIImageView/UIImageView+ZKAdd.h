@@ -18,12 +18,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (instancetype)initWithCornerRadius:(CGFloat)radius rectCorner:(UIRectCorner)rectCorner;
 
-
 /*!
  *    @brief    初始化方法，生成圆形ImageView
  */
 - (instancetype)initWithRoundingRectImageView;
-
 
 /*!
  *    @brief    设置成圆角

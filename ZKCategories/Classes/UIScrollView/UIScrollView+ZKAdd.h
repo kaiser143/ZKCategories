@@ -83,7 +83,6 @@ typedef NS_ENUM(NSUInteger, ZKScrollDirection) {
  */
 - (void)scrollToRightAnimated:(BOOL)animated;
 
-
 - (NSInteger)pages;
 - (NSInteger)currentPage;
 - (CGFloat)scrollPercent;

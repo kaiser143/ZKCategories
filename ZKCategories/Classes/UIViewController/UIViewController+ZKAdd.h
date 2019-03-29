@@ -17,7 +17,7 @@ typedef NS_ENUM(NSUInteger, ZKKeyboardStatus) {
     ZKKeyboardStatusWillHide
 };
 
-typedef void(^ZKKeyboardFrameAnimationBlock)(CGRect keyboardFrame);
+typedef void (^ZKKeyboardFrameAnimationBlock)(CGRect keyboardFrame);
 
 @interface UIViewController (KeyboardNotifications)
 
@@ -47,7 +47,7 @@ typedef void(^ZKKeyboardFrameAnimationBlock)(CGRect keyboardFrame);
 - (void)kai_presentViewController:(UIViewController *)newViewController;
 - (void)kai_presentViewController:(UIViewController *)newViewController animated:(BOOL)animated;
 
-- (void)backButtonTouched:(void(^)(UIViewController *viewController))backButtonHandler;
+- (void)backButtonTouched:(void (^)(UIViewController *viewController))backButtonHandler;
 
 @end
 

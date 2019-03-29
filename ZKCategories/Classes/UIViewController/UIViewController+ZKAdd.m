@@ -269,7 +269,7 @@
 
 #pragma mark - :. Back
 
-- (void)backButtonTouched:(void (^)(UIViewController * _Nonnull))backButtonHandler {
+- (void)backButtonTouched:(void (^)(UIViewController *_Nonnull))backButtonHandler {
     if (backButtonHandler) self.kai_interactivePopDisabled = YES;
 
     [self setAssociateCopyValue:backButtonHandler withKey:@selector(backButtonHandler)];

@@ -18,14 +18,14 @@ ZKSYNTH_DUMMY_CLASS(UITextField_ZKAdd)
 
 - (NSRange)selectedRange {
     UITextPosition *beginning = self.beginningOfDocument;
-    
-    UITextRange *selectedRange = self.selectedTextRange;
+
+    UITextRange *selectedRange     = self.selectedTextRange;
     UITextPosition *selectionStart = selectedRange.start;
-    UITextPosition *selectionEnd = selectedRange.end;
-    
+    UITextPosition *selectionEnd   = selectedRange.end;
+
     NSInteger location = [self offsetFromPosition:beginning toPosition:selectionStart];
-    NSInteger length = [self offsetFromPosition:selectionStart toPosition:selectionEnd];
-    
+    NSInteger length   = [self offsetFromPosition:selectionStart toPosition:selectionEnd];
+
     return NSMakeRange(location, length);
 }
 
@@ -35,10 +35,10 @@ ZKSYNTH_DUMMY_CLASS(UITextField_ZKAdd)
 }
 
 - (void)setSelectedRange:(NSRange)range {
-    UITextPosition *beginning = self.beginningOfDocument;
+    UITextPosition *beginning     = self.beginningOfDocument;
     UITextPosition *startPosition = [self positionFromPosition:beginning offset:range.location];
-    UITextPosition *endPosition = [self positionFromPosition:beginning offset:NSMaxRange(range)];
-    UITextRange *selectionRange = [self textRangeFromPosition:startPosition toPosition:endPosition];
+    UITextPosition *endPosition   = [self positionFromPosition:beginning offset:NSMaxRange(range)];
+    UITextRange *selectionRange   = [self textRangeFromPosition:startPosition toPosition:endPosition];
     [self setSelectedTextRange:selectionRange];
 }
 
@@ -48,7 +48,7 @@ ZKSYNTH_DUMMY_CLASS(UITextField_ZKAdd)
     if (textField.shouldBegindEditingBlock) {
         return textField.shouldBegindEditingBlock(textField);
     }
-    
+
     id delegate = [self associatedValueForKey:UITextFieldDelegateKey];
     if ([delegate respondsToSelector:@selector(textFieldShouldBeginEditing:)]) {
         return [delegate textFieldShouldBeginEditing:textField];
@@ -73,7 +73,7 @@ ZKSYNTH_DUMMY_CLASS(UITextField_ZKAdd)
     if (textField.didBeginEditingBlock) {
         textField.didBeginEditingBlock(textField);
     }
-    
+
     id delegate = [self associatedValueForKey:UITextFieldDelegateKey];
     if ([delegate respondsToSelector:@selector(textFieldDidBeginEditing:)]) {
         [delegate textFieldDidBeginEditing:textField];
@@ -125,7 +125,7 @@ ZKSYNTH_DUMMY_CLASS(UITextField_ZKAdd)
 
 #pragma mark Block setting/getting methods
 
-- (BOOL(^)(UITextField *))shouldBegindEditingBlock {
+- (BOOL (^)(UITextField *))shouldBegindEditingBlock {
     return [self associatedValueForKey:_cmd];
 }
 
@@ -134,7 +134,7 @@ ZKSYNTH_DUMMY_CLASS(UITextField_ZKAdd)
     [self setAssociateCopyValue:shouldBegindEditingBlock withKey:@selector(shouldBegindEditingBlock)];
 }
 
-- (BOOL(^)(UITextField *))shouldEndEditingBlock {
+- (BOOL (^)(UITextField *))shouldEndEditingBlock {
     return [self associatedValueForKey:_cmd];
 }
 
@@ -161,16 +161,16 @@ ZKSYNTH_DUMMY_CLASS(UITextField_ZKAdd)
     [self setAssociateCopyValue:didEndEditingBlock withKey:@selector(didEndEditingBlock)];
 }
 
-- (BOOL(^)(UITextField *, NSRange, NSString *))shouldChangeCharactersInRangeBlock {
+- (BOOL (^)(UITextField *, NSRange, NSString *))shouldChangeCharactersInRangeBlock {
     return [self associatedValueForKey:_cmd];
 }
 
-- (void)setShouldChangeCharactersInRangeBlock:(BOOL(^)(UITextField *, NSRange, NSString *))shouldChangeCharactersInRangeBlock {
+- (void)setShouldChangeCharactersInRangeBlock:(BOOL (^)(UITextField *, NSRange, NSString *))shouldChangeCharactersInRangeBlock {
     [self setDelegateIfNoDelegateSet];
     [self setAssociateCopyValue:shouldChangeCharactersInRangeBlock withKey:@selector(shouldChangeCharactersInRangeBlock)];
 }
 
-- (BOOL(^)(UITextField *))shouldReturnBlock {
+- (BOOL (^)(UITextField *))shouldReturnBlock {
     return objc_getAssociatedObject(self, _cmd);
 }
 
@@ -179,11 +179,11 @@ ZKSYNTH_DUMMY_CLASS(UITextField_ZKAdd)
     [self setAssociateCopyValue:shouldReturnBlock withKey:_cmd];
 }
 
-- (BOOL(^)(UITextField *))shouldClearBlock {
+- (BOOL (^)(UITextField *))shouldClearBlock {
     return [self associatedValueForKey:_cmd];
 }
 
-- (void)setShouldClearBlock:(BOOL(^)(UITextField *textField))shouldClearBlock {
+- (void)setShouldClearBlock:(BOOL (^)(UITextField *textField))shouldClearBlock {
     [self setDelegateIfNoDelegateSet];
     [self setAssociateCopyValue:shouldClearBlock withKey:@selector(shouldClearBlock)];
 }
