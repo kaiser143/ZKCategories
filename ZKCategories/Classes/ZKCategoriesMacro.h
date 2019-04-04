@@ -22,6 +22,14 @@
 #endif
 
 
+#if !defined(ZKAuto)
+#if defined(__cplusplus)
+#define ZKAuto auto
+#else
+#define ZKAuto __auto_type
+#endif
+#endif
+
 
 ZK_EXTERN_C_BEGIN
 
@@ -51,7 +59,7 @@ ZK_EXTERN_C_BEGIN
  More info: http://developer.apple.com/library/mac/#qa/qa2006/qa1490.html .
  *******************************************************************************
  Example:
- ZKSYNTH_DUMMY_CLASS(NSString_ZKAdd)
+    ZKSYNTH_DUMMY_CLASS(NSString_ZKAdd)
  */
 #ifndef ZKSYNTH_DUMMY_CLASS
 #define ZKSYNTH_DUMMY_CLASS(_name_) \
@@ -68,14 +76,14 @@ ZK_EXTERN_C_BEGIN
  @warning #import <objc/runtime.h>
  *******************************************************************************
  Example:
- @interface NSObject (MyAdd)
- @property (nonatomic, retain) UIColor *myColor;
- @end
+    @interface NSObject (MyAdd)
+    @property (nonatomic, retain) UIColor *myColor;
+    @end
  
- #import <objc/runtime.h>
- @implementation NSObject (MyAdd)
- ZKSYNTH_DYNAMIC_PROPERTY_OBJECT(myColor, setMyColor, RETAIN, UIColor *)
- @end
+    #import <objc/runtime.h>
+    @implementation NSObject (MyAdd)
+    ZKSYNTH_DYNAMIC_PROPERTY_OBJECT(myColor, setMyColor, RETAIN, UIColor *)
+    @end
  */
 #ifndef ZKSYNTH_DYNAMIC_PROPERTY_OBJECT
 #define ZKSYNTH_DYNAMIC_PROPERTY_OBJECT(_getter_, _setter_, _association_, _type_) \
@@ -97,14 +105,14 @@ ZK_EXTERN_C_BEGIN
  @warning #import <objc/runtime.h>
  *******************************************************************************
  Example:
- @interface NSObject (MyAdd)
- @property (nonatomic, retain) CGPoint myPoint;
- @end
+    @interface NSObject (MyAdd)
+    @property (nonatomic, retain) CGPoint myPoint;
+    @end
  
- #import <objc/runtime.h>
- @implementation NSObject (MyAdd)
- ZKSYNTH_DYNAMIC_PROPERTY_CTYPE(myPoint, setMyPoint, CGPoint)
- @end
+    #import <objc/runtime.h>
+    @implementation NSObject (MyAdd)
+    ZKSYNTH_DYNAMIC_PROPERTY_CTYPE(myPoint, setMyPoint, CGPoint)
+    @end
  */
 #ifndef ZKSYNTH_DYNAMIC_PROPERTY_CTYPE
 #define ZKSYNTH_DYNAMIC_PROPERTY_CTYPE(_getter_, _setter_, _type_) \
