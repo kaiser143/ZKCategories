@@ -575,7 +575,7 @@
 
 #pragma mark Working with Paths
 
-- (NSString *)pathByIncrementingSequenceNumbe {
+- (NSString *)pathByIncrementingSequenceNumber {
     NSString *baseName = [self stringByDeletingPathExtension];
     NSString *extension = [self pathExtension];
     

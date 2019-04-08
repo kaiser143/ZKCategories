@@ -68,7 +68,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - :. Java API
 
-- (BOOL)contains:(nonnull NSString *)substring;
+- (BOOL)contains:(nonnull NSString *)substring NS_SWIFT_UNAVAILABLE("");
 - (BOOL)startWith:(nonnull NSString *)substring;
 - (BOOL)endWith:(nonnull NSString *)substring;
 - (NSUInteger)indexOf:(nonnull NSString *)substring;
