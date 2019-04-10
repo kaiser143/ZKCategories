@@ -15,12 +15,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Finds the first descendant view (including this view) that is a member of a particular class.
  */
-- (nullable UIView *)descendantOrSelfWithClass:(Class)cls;
+- (nullable __kindof UIView *)descendantOrSelfWithClass:(Class)cls;
 
 /**
  * Finds the first ancestor view (including this view) that is a member of a particular class.
  */
-- (nullable UIView *)ancestorOrSelfWithClass:(Class)cls;
+- (nullable __kindof UIView *)ancestorOrSelfWithClass:(Class)cls;
 
 /**
  Create a snapshot image of the complete view hierarchy.

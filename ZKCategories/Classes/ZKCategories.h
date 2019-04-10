@@ -96,6 +96,6 @@
     #import "UILabel+ZKAdd.h"
     #import "NSData+ZKAdd.h"
 
-#endif  /* __has_inclue */
+#endif  /* __has_include */
 
 #endif  /* _ZKCategories_ */
