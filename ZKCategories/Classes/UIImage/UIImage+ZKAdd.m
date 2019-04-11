@@ -11,6 +11,7 @@
 #import <ImageIO/ImageIO.h>
 #import <Accelerate/Accelerate.h>
 #import <CoreText/CoreText.h>
+#import <CoreImage/CoreImage.h>
 #import <objc/runtime.h>
 #import "ZKCategoriesMacro.h"
 
@@ -301,6 +302,75 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
+}
+
++ (UIImage *)imageWithString:(NSString *)string size:(CGSize)size image:(UIImage *)image {
+    CIImage *outputImage = [UIImage.new imageWithString:string];
+    return [UIImage createNonInterpolatedUIImageFormCIImage:outputImage size:size image:image];
+}
+
++ (UIImage *)createNonInterpolatedUIImageFormCIImage:(CIImage *)image size:(CGSize)size image:(UIImage *)extra {
+    CGRect extent = CGRectIntegral(image.extent);
+    CGFloat scale = MIN(size.width/CGRectGetWidth(extent), size.height/CGRectGetHeight(extent));
+    
+    // 1.创建bitmap;//
+    size_t width = CGRectGetWidth(extent) * scale;
+    size_t height = CGRectGetHeight(extent) * scale;
+    //创建一个DeviceGray颜色空间
+    CGColorSpaceRef cs = CGColorSpaceCreateDeviceGray();
+    //CGBitmapContextCreate(void * _Nullable data, size_t width, size_t height, size_t bitsPerComponent, size_t bytesPerRow, CGColorSpaceRef  _Nullable space, uint32_t bitmapInfo)
+    //width：图片宽度像素
+    //height：图片高度像素
+    //bitsPerComponent：每个颜色的比特值，例如在rgba-32模式下为8
+    //bitmapInfo：指定的位图应该包含一个alpha通道。
+    CGContextRef bitmapRef = CGBitmapContextCreate(nil, width, height, 8, 0, cs, (CGBitmapInfo)kCGImageAlphaNone);
+    CIContext *context = [CIContext contextWithOptions:nil];
+    //创建CoreGraphics image
+    CGImageRef bitmapImage = [context createCGImage:image fromRect:extent];
+    
+    CGContextSetInterpolationQuality(bitmapRef, kCGInterpolationNone);
+    CGContextScaleCTM(bitmapRef, scale, scale);
+    CGContextDrawImage(bitmapRef, extent, bitmapImage);
+    
+    // 2.保存bitmap到图片
+    CGImageRef scaledImage = CGBitmapContextCreateImage(bitmapRef);
+    CGContextRelease(bitmapRef);
+    CGImageRelease(bitmapImage);
+    
+    //原图
+    UIImage *outputImage = [UIImage imageWithCGImage:scaledImage];
+    
+    if (extra == nil) return outputImage;
+    
+    //给二维码加 logo 图
+    UIGraphicsBeginImageContextWithOptions(outputImage.size, NO, [[UIScreen mainScreen] scale]);
+    [outputImage drawInRect:CGRectMake(0,0 , size.width, size.height)];
+    CGFloat waterImagesizeWidth  = size.width * 0.2;
+    CGFloat waterImagesizeHeight = size.height * 0.2;
+    //把logo图画到生成的二维码图片上，注意尺寸不要太大（最大不超过二维码图片的%30），太大会造成扫不出来
+    [extra drawInRect:CGRectMake((size.width - waterImagesizeWidth)/2.0, (size.height - waterImagesizeHeight)/2.0, waterImagesizeWidth, waterImagesizeHeight)];
+    UIImage *result = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return result;
+}
+
+- (CIImage *)imageWithString:(NSString *)strings {
+    // 1. 实例化二维码滤镜
+    CIFilter *filter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
+    // 2. 恢复滤镜的默认属性
+    [filter setDefaults];
+    // 3. 将字符串转换成NSData
+    NSData *data = [strings dataUsingEncoding:NSUTF8StringEncoding];
+    // 4. 通过KVO设置滤镜inputMessage数据
+    [filter setValue:data forKey:@"inputMessage"];//通过kvo方式给一个字符串，生成二维码
+    [filter setValue:@"H" forKey:@"inputCorrectionLevel"];//设置二维码的纠错水平，越高纠错水平越高，可以污损的范围越大
+    // 5. 获得滤镜输出的图像
+    CIImage *outPutImage = [filter outputImage];//拿到二维码图片
+    
+    // 6. 将CIImage转换成UIImage，并放大显示
+    // (此时获取到的二维码比较模糊,所以需要用下面的createNonInterpolatedUIImageFormCIImage方法重绘二维码)
+    //    UIImage *codeImage = [UIImage imageWithCIImage:outputImage scale:1.0 orientation:UIImageOrientationUp];
+    return outPutImage;
 }
 
 - (BOOL)hasAlphaChannel {

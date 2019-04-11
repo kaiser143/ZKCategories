@@ -385,8 +385,12 @@
 }
 
 - (CGFloat)widthForFont:(UIFont *)font {
-    CGSize size = [self sizeForFont:font size:CGSizeMake(HUGE, HUGE) mode:NSLineBreakByWordWrapping];
-    return size.width;
+    if (@available(iOS 7.0, *)) {
+        return [self sizeWithAttributes:@{NSFontAttributeName: font}].width;
+    } else {
+        CGSize size = [self sizeForFont:font size:CGSizeMake(HUGE, HUGE) mode:NSLineBreakByWordWrapping];
+        return size.width;
+    }
 }
 
 - (CGFloat)heightForFont:(UIFont *)font width:(CGFloat)width {

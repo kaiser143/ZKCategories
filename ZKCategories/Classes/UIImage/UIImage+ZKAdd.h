@@ -133,6 +133,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (nullable UIImage *)imageWithSize:(CGSize)size drawBlock:(void (^)(CGContextRef context))drawBlock;
 
+/*!
+ *  @brief    根据字符串生成二维码
+ *  @param    string    字符串内容
+ *  @param    size    生成的二维码图片大小
+ *  @param    image    logo
+ */
++ (nullable UIImage *)imageWithString:(NSString *)string size:(CGSize)size image:(nullable UIImage *)image;
+
 #pragma mark - Image Info
 ///=============================================================================
 /// @name Image Info
