@@ -372,6 +372,10 @@
     return rect;
 }
 
+- (BOOL)isEmpty {
+    return [self count] == 0 ? YES : NO;
+}
+
 @end
 
 @implementation NSMutableArray (SafeAccess)

@@ -458,6 +458,10 @@ return def;
     return xmlStr;
 }
 
+- (BOOL)isEmpty {
+    return [self count] == 0 ? YES : NO;
+}
+
 @end
 
 @implementation NSDictionary (ZKAdd_Private)

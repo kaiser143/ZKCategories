@@ -109,6 +109,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (CGRect)rectAtIndex:(NSUInteger)index;
 
+
+/*
+ * Checks to see if the array is empty
+ */
+@property(nonatomic, readonly, getter=isEmpty) BOOL empty;
+
 @end
 
 @interface NSMutableArray (SafeAccess)

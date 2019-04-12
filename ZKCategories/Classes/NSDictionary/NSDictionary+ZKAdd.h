@@ -209,6 +209,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSString *)XMLString;
 
+/*
+ * Checks to see if the dictionary is empty
+ */
+@property(nonatomic, readonly, getter=isEmpty) BOOL empty;
+
 @end
 
 @interface NSMutableDictionary (ZKAdd)
