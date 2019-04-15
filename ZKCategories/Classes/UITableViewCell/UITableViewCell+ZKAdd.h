@@ -12,8 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UITableViewCell (ZKAdd)
 
-@property (nonatomic, strong, readonly) NSIndexPath *kai_indexPath;
-
 @end
 
 NS_ASSUME_NONNULL_END

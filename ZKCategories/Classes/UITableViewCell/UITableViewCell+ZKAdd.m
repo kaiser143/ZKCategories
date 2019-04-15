@@ -23,23 +23,13 @@
 - (instancetype)_kai_initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     id object = [self _kai_initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (object) {
-        UIScrollView *scrollView = (UIScrollView *)[object descendantOrSelfWithClass:[UIScrollView class]];
-        if (scrollView) {
-            scrollView.delaysContentTouches = NO;
-        }
+        UIScrollView *scrollView = [object descendantOrSelfWithClass:[UIScrollView class]];
+        if (scrollView) scrollView.delaysContentTouches = NO;
         
         [(UIView *)object setClipsToBounds:YES];
     }
     
     return object;
-}
-
-- (UITableView *)tableView {
-    return (UITableView *)[self ancestorOrSelfWithClass:[UITableView class]];
-}
-
-- (NSIndexPath *)kai_indexPath {
-    return [[self tableView] indexPathForCell:self];
 }
 
 @end
