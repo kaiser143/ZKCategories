@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSNumberFormatterCurrencyStyle,     // 以货币通用格式输出 保留2位小数,第三位小数四舍五入,在前面添加dollor符号 $12,345.66(会根据手机语言不同会改变)
     NSNumberFormatterPercentStyle,      // 以百分制形式输出  整个数字乘以保留2为小数,第三位小数四舍五入,然后乘以100,同时在最后加上百分号
     NSNumberFormatterScientificStyle,   // 以科学计数法输出 1.2345602322E5
-    NSNumberFormatterSpellOutStyle,     // 十二万三千四百五十六点〇二三二二
+    NSNumberFormatterSpellOutStyle,     // 十二万三千四百五十六点〇二三二二 (会根据手机语言不同会改变)
     NSNumberFormatterOrdinalStyle NS_ENUM_AVAILABLE(10_11, 9_0),            // 输出  12,346th
     NSNumberFormatterCurrencyISOCodeStyle NS_ENUM_AVAILABLE(10_11, 9_0),    // USD 123,456.02
     NSNumberFormatterCurrencyPluralStyle NS_ENUM_AVAILABLE(10_11, 9_0),     // 123,456.02美元
