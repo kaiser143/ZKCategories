@@ -35,7 +35,7 @@
 }
 
 - (NSString *)stringWithDecimals:(NSInteger)decimals {
-    NSNumberFormatter *formatter = [NSNumberFormatter new];
+    NSNumberFormatter *formatter = NSNumberFormatter.new;
     formatter.locale = [NSLocale currentLocale];
     formatter.maximumFractionDigits = decimals;
     formatter.minimumFractionDigits = decimals;
@@ -43,27 +43,16 @@
     return [formatter stringFromNumber:self];
 }
 
-- (NSString *)roundBankerValue {
-    NSString *stringValue;
-    
-    @autoreleasepool {
-        if ([self isMemberOfClass:[NSDecimalNumber class]]) {
-            NSDecimalNumberHandler *roundingBehavior = [NSDecimalNumberHandler decimalNumberHandlerWithRoundingMode:NSRoundBankers
-                                                                                                              scale:2
-                                                                                                   raiseOnExactness:NO
-                                                                                                    raiseOnOverflow:NO
-                                                                                                   raiseOnUnderflow:NO
-                                                                                                raiseOnDivideByZero:YES];
-            NSDecimalNumber *roundedOunces = [(NSDecimalNumber *)self decimalNumberByRoundingAccordingToBehavior:roundingBehavior];
-            stringValue = roundedOunces.stringValue;
-        } else {
-            NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-            [formatter setPositiveFormat:@"###,##0.00;"];
-            stringValue = [formatter stringFromNumber:self];
-        };
-    }
-    
-    return stringValue;
+- (NSString *)formatterWithNumberStyle:(NSNumberFormatterStyle)style {
+    NSString *strings = [NSNumberFormatter localizedStringFromNumber:self
+                                                         numberStyle:style];
+    return strings;
+}
+
+- (NSString *)stringWithFormat:(NSString *)format {
+    NSNumberFormatter *formatter = NSNumberFormatter.new;
+    [formatter setPositiveFormat:format];
+    return [formatter stringFromNumber:self];
 }
 
 + (NSNumber *)numberWithString:(NSString *)string {

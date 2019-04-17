@@ -22,25 +22,25 @@
 /**
  *  @brief  四舍五入 NSRoundPlain
  *
- *  @param scale 限制位数
+ *  @param decimals 限制位数
  *
  *  @return 返回结果
  */
-- (NSDecimalNumber *)roundToScale:(NSUInteger)scale;
+- (NSDecimalNumber *)decimalNumberWithDecimals:(NSUInteger)decimals;
 /**
  *  @brief  四舍五入
  *
- *  @param scale        限制位数
+ *  @param decimals        限制位数
  *  @param roundingMode NSRoundingMode
  *
  *  @return 返回结果
  */
-- (NSDecimalNumber *)roundToScale:(NSUInteger)scale mode:(NSRoundingMode)roundingMode;
+- (NSDecimalNumber *)decimalNumberWithDecimals:(NSUInteger)decimals mode:(NSRoundingMode)roundingMode;
 
 - (NSDecimalNumber *)decimalNumberWithPercentage:(float)percent;
 - (NSDecimalNumber *)decimalNumberWithDiscountPercentage:(NSDecimalNumber *)discountPercentage;
-- (NSDecimalNumber *)decimalNumberWithDiscountPercentage:(NSDecimalNumber *)discountPercentage roundToScale:(NSUInteger)scale;
+- (NSDecimalNumber *)decimalNumberWithDiscountPercentage:(NSDecimalNumber *)discountPercentage decimals:(NSUInteger)decimals;
 - (NSDecimalNumber *)discountPercentageWithBaseValue:(NSDecimalNumber *)baseValue;
-- (NSDecimalNumber *)discountPercentageWithBaseValue:(NSDecimalNumber *)baseValue roundToScale:(NSUInteger)scale;
+- (NSDecimalNumber *)discountPercentageWithBaseValue:(NSDecimalNumber *)baseValue decimals:(NSUInteger)decimals;
 
 @end

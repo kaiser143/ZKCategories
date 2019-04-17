@@ -24,6 +24,12 @@
     
     self.view.backgroundColor = UIColor.whiteColor;
     
+    NSNumber *number = @(13145678.1415926);
+    NSLog(@"%@", [number stringWithFormat:@",###.00"]);
+    NSLog(@"%@", [number stringWithFormat:@".00"]);
+    NSLog(@"%@", [number stringWithFormat:@"0.00%"]);
+    NSLog(@"%@", [number stringWithFormat:@"#.##%"]);
+    
     static NSInteger i = 0;
     if (i == 0) {
         UIButton *next = [UIButton buttonWithType:UIButtonTypeCustom];

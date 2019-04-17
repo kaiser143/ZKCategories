@@ -10,26 +10,12 @@
 
 @implementation NSDecimalNumber (ZKAdd)
 
-/**
- *  @brief  四舍五入 NSRoundPlain
- *
- *  @param scale 限制位数
- *
- *  @return 返回结果
- */
-- (NSDecimalNumber *)roundToScale:(NSUInteger)scale{
-    return [self roundToScale:scale mode:NSRoundPlain];
+- (NSDecimalNumber *)decimalNumberWithDecimals:(NSUInteger)decimals{
+    return [self decimalNumberWithDecimals:decimals mode:NSRoundPlain];
 }
-/**
- *  @brief  四舍五入
- *
- *  @param scale        限制位数
- *  @param roundingMode NSRoundingMode
- *
- *  @return 返回结果
- */
-- (NSDecimalNumber *)roundToScale:(NSUInteger)scale mode:(NSRoundingMode)roundingMode{
-    NSDecimalNumberHandler *handler = [[NSDecimalNumberHandler alloc] initWithRoundingMode:roundingMode scale:scale raiseOnExactness:NO raiseOnOverflow:YES raiseOnUnderflow:YES raiseOnDivideByZero:YES];
+
+- (NSDecimalNumber *)decimalNumberWithDecimals:(NSUInteger)decimals mode:(NSRoundingMode)roundingMode{
+    NSDecimalNumberHandler *handler = [[NSDecimalNumberHandler alloc] initWithRoundingMode:roundingMode scale:decimals raiseOnExactness:NO raiseOnOverflow:YES raiseOnUnderflow:YES raiseOnDivideByZero:YES];
     return [self decimalNumberByRoundingAccordingToBehavior:handler];
 }
 
@@ -44,9 +30,9 @@
     return [self decimalNumberBySubtracting:percent];
 }
 
-- (NSDecimalNumber *)decimalNumberWithDiscountPercentage:(NSDecimalNumber *)discountPercentage roundToScale:(NSUInteger)scale {
+- (NSDecimalNumber *)decimalNumberWithDiscountPercentage:(NSDecimalNumber *)discountPercentage decimals:(NSUInteger)decimals {
     NSDecimalNumber * value = [self decimalNumberWithDiscountPercentage:discountPercentage];
-    return [value roundToScale:scale];
+    return [value decimalNumberWithDecimals:decimals];
 }
 
 - (NSDecimalNumber *)discountPercentageWithBaseValue:(NSDecimalNumber *)baseValue {
@@ -55,9 +41,9 @@
     return [hundred decimalNumberBySubtracting:percentage];
 }
 
-- (NSDecimalNumber *)discountPercentageWithBaseValue:(NSDecimalNumber *)baseValue roundToScale:(NSUInteger)scale {
+- (NSDecimalNumber *)discountPercentageWithBaseValue:(NSDecimalNumber *)baseValue decimals:(NSUInteger)decimals {
     NSDecimalNumber *discount = [self discountPercentageWithBaseValue:baseValue];
-    return [discount roundToScale:scale];
+    return [discount decimalNumberWithDecimals:decimals];
 }
 
 @end
