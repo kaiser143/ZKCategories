@@ -513,4 +513,35 @@
     }
 }
 
+- (NSArray *)intersectSet:(NSArray *)array {
+    NSMutableArray *result = [NSMutableArray arrayWithCapacity:(array.count + self.count)];
+    for (id obj  in array) {
+        if ([self indexOfObject:obj] != NSNotFound) {
+            [result addObject:obj];
+        }
+    }
+    return [result copy];
+}
+
+- (NSArray *)unionSet:(NSArray *)array {
+    NSMutableArray *result = [NSMutableArray arrayWithArray:self];
+    for (id obj in array) {
+        if ([self indexOfObject:obj] == NSNotFound) {
+            [result addObject:obj];
+        }
+    }
+    return [result copy];
+}
+
+- (NSArray *)differenceSet:(NSArray *)array {
+    NSMutableArray *result = [NSMutableArray arrayWithArray:self];
+    for (id obj in array) {
+        // belong B Set && belong A Set,remove it
+        if ([self indexOfObject:obj] != NSNotFound) {
+            [result removeObject:obj];
+        }
+    }
+    return [result copy];
+}
+
 @end

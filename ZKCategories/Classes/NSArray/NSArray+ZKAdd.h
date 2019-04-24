@@ -225,6 +225,22 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addRect:(CGRect)o;
 - (void)addRange:(NSRange)range;
 
+
+/*!
+ *  @brief    交集,返回的数组是array中的对象
+ */
+- (NSArray *)intersectSet:(NSArray *)array;
+
+/*!
+ *  @brief    并集
+ */
+- (NSArray *)unionSet:(NSArray *)array;
+
+/*!
+ *  @brief    差集
+ */
+- (NSArray *)differenceSet:(NSArray *)array;
+
 @end
 
 NS_ASSUME_NONNULL_END

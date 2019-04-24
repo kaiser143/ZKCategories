@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  *  @brief    数字格式化定制
- *  @param    format    eg:@"#.00"
+ *  @param    format    e.g.:@"#.00"
     #：为0则补位为空
     0：没有则补位为0
         @".00"           保留两位小数
