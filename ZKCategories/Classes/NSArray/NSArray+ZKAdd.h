@@ -10,12 +10,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NSArray (ZKAdd)
+@interface NSArray<__covariant ValueType> (ZKAdd)
 
 /**
  * @return NSArray with only the elements that pass the truth test
  */
-- (NSArray *)filter:(BOOL (^)(id object))condition;
+- (NSArray *)filter:(BOOL (^)(ValueType object))condition;
 
 /**
  * @return NSArray with only the elements that pass the truth test
@@ -25,22 +25,22 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * performs the operation to each element
  */
-- (void)each:(void (^)(id object))operation;
+- (void)each:(void (^)(ValueType object))operation;
 
 /**
  * @return new NSArray from the result of the block performed to each element
  */
-- (NSArray *)map:(id (^)(id obj, NSUInteger idx))block;
+- (NSArray *)map:(id (^)(ValueType obj, NSUInteger idx))block;
 
 /**
  * @return new NSArray by flatting it and performing a map to each element
  */
-- (NSArray *)flattenMap:(id (^)(id obj, NSUInteger idx))block;
+- (NSArray *)flattenMap:(id (^)(ValueType obj, NSUInteger idx))block;
 
 /**
  * @return new NSArray by flatting it with the key and performing a map to each element
  */
-- (NSArray *)flattenMap:(NSString *)key block:(id (^)(id obj, NSUInteger idx))block;
+- (NSArray *)flattenMap:(NSString *)key block:(id (^)(ValueType obj, NSUInteger idx))block;
 
 - (NSNumber *)sum;
 - (NSNumber *)sum:(NSString *)keypath;
@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSUInteger)countKeyPath:(NSString *)keypath;
 - (NSArray *)flatten:(NSString *)keypath;
 
-- (id)objectPassingTest:(BOOL (^)(id))block;
+- (ValueType)objectPassingTest:(BOOL (^)(ValueType))block;
 
 /*!
  *  @brief  排序
@@ -117,7 +117,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface NSMutableArray (SafeAccess)
+@interface NSMutableArray<ValueType> (SafeAccess)
 
 /**
  Removes the object with the lowest-valued index in the array.
@@ -143,7 +143,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return The first object, or nil.
  */
-- (nullable id)popFirstObject;
+- (nullable ValueType)popFirstObject;
 
 /**
  Removes and returns the object with the highest-valued index in the array.
@@ -151,7 +151,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return The first object, or nil.
  */
-- (nullable id)popLastObject;
+- (nullable ValueType)popLastObject;
 
 /**
  Inserts a given object at the end of the array.
@@ -159,7 +159,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param anObject The object to add to the end of the array's content.
  This value must not be nil. Raises an NSInvalidArgumentException if anObject is nil.
  */
-- (void)appendObject:(id)anObject;
+- (void)appendObject:(ValueType)anObject;
 
 /**
  Inserts a given object at the beginning of the array.
@@ -167,7 +167,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param anObject The object to add to the end of the array's content.
  This value must not be nil. Raises an NSInvalidArgumentException if anObject is nil.
  */
-- (void)prependObject:(id)anObject;
+- (void)prependObject:(ValueType)anObject;
 
 /**
  Adds the objects contained in another given array to the end of the receiving
@@ -176,7 +176,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param objects An array of objects to add to the end of the receiving array's
  content. If the objects is empty or nil, this method has no effect.
  */
-- (void)appendObjects:(NSArray *)objects;
+- (void)appendObjects:(NSArray<ValueType> *)objects;
 
 /**
  Adds the objects contained in another given array to the beginnin of the receiving
@@ -185,7 +185,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param objects An array of objects to add to the beginning of the receiving array's
  content. If the objects is empty or nil, this method has no effect.
  */
-- (void)prependObjects:(NSArray *)objects;
+- (void)prependObjects:(NSArray<ValueType> *)objects;
 
 /**
  Adds the objects contained in another given array at the index of the receiving
@@ -198,7 +198,7 @@ NS_ASSUME_NONNULL_BEGIN
  not be greater than the count of elements in the array. Raises an
  NSRangeException if index is greater than the number of elements in the array.
  */
-- (void)insertObjects:(NSArray *)objects atIndex:(NSUInteger)index;
+- (void)insertObjects:(NSArray<ValueType> *)objects atIndex:(NSUInteger)index;
 
 /**
  Reverse the index of object in this array.
@@ -211,7 +211,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)shuffle;
 
-- (void)addObj:(id)i;
+- (void)addObj:(ValueType)i;
 - (void)addString:(NSString *)i;
 - (void)addBool:(BOOL)i;
 - (void)addInt:(int)i;
@@ -229,17 +229,17 @@ NS_ASSUME_NONNULL_BEGIN
 /*!
  *  @brief    交集,返回的数组是array中的对象
  */
-- (NSArray *)intersectSet:(NSArray *)array;
+- (NSArray<ValueType> *)intersectSet:(NSArray *)array;
 
 /*!
  *  @brief    并集
  */
-- (NSArray *)unionSet:(NSArray *)array;
+- (NSArray<ValueType> *)unionSet:(NSArray *)array;
 
 /*!
  *  @brief    差集
  */
-- (NSArray *)differenceSet:(NSArray *)array;
+- (NSArray<ValueType> *)differenceSet:(NSArray *)array;
 
 @end
 

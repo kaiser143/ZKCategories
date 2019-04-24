@@ -71,7 +71,7 @@
 }
 
 - (void)addBlockForControlEvents:(UIControlEvents)controlEvents
-                           block:(void (^)(id sender))block {
+                           block:(void (^)(__kindof UIControl *sender))block {
     if (!controlEvents) return;
     _ZKUIControlBlockTarget *target = [[_ZKUIControlBlockTarget alloc]
                                        initWithBlock:block events:controlEvents];
@@ -81,7 +81,7 @@
 }
 
 - (void)setBlockForControlEvents:(UIControlEvents)controlEvents
-                           block:(void (^)(id sender))block {
+                           block:(void (^)(__kindof UIControl *sender))block {
     [self removeAllBlocksForControlEvents:UIControlEventAllEvents];
     [self addBlockForControlEvents:controlEvents block:block];
 }

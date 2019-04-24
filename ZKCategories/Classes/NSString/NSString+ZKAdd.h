@@ -56,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
  *   "3.02" ?? "3.0.3"
  *   "3.02" ?? "3.0.2"
  */
-- (NSComparisonResult)versionStringCompare:(nonnull NSString *)other;
+- (NSComparisonResult)versionStringCompare:(NSString *)other;
 
 #pragma mark - :. URL
 
@@ -68,11 +68,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - :. Java API
 
-- (BOOL)contains:(nonnull NSString *)substring NS_SWIFT_UNAVAILABLE("");
-- (BOOL)startWith:(nonnull NSString *)substring;
-- (BOOL)endWith:(nonnull NSString *)substring;
-- (NSUInteger)indexOf:(nonnull NSString *)substring;
-- (NSArray *)split:(nonnull NSString *)token;
+- (BOOL)contains:(NSString *)substring NS_SWIFT_UNAVAILABLE("");
+- (BOOL)startWith:(NSString *)substring;
+- (BOOL)endWith:(NSString *)substring;
+- (NSUInteger)indexOf:(NSString *)substring;
+- (NSArray *)split:(NSString *)token;
 
 /*!
  *    @brief    %1.0f Bytes", @"%1.1f KB", @"%1.1f MB", @"%1.1f GB", @"%1.1f TB

@@ -40,13 +40,13 @@
 
 @implementation UIGestureRecognizer (ZKAdd)
 
-- (instancetype)initWithActionBlock:(void (^)(id sender))block {
+- (instancetype)initWithActionBlock:(void (^)(__kindof UIGestureRecognizer *sender))block {
     self = [self init];
     [self addActionBlock:block];
     return self;
 }
 
-- (void)addActionBlock:(void (^)(id sender))block {
+- (void)addActionBlock:(void (^)(__kindof UIGestureRecognizer *sender))block {
     _ZKUIGestureRecognizerBlockTarget *target = [[_ZKUIGestureRecognizerBlockTarget alloc] initWithBlock:block];
     [self addTarget:target action:@selector(invoke:)];
     NSMutableArray *targets = [self kai_allUIGestureRecognizerBlockTargets];

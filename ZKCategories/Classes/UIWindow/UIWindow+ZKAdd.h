@@ -15,12 +15,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Searches the view hierarchy recursively for the first responder, starting with this window.
  */
-- (UIView *)findFirstResponder;
+- (__kindof UIView *)findFirstResponder;
 
 /**
  * Searches the view hierarchy recursively for the first responder, starting with topView.
  */
-- (UIView *)findFirstResponderInView:(UIView *)topView;
+- (__kindof UIView *)findFirstResponderInView:(UIView *)topView;
 
 @end
 

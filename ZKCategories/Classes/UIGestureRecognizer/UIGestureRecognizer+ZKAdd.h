@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
  @return An initialized instance of a concrete UIGestureRecognizer subclass or
          nil if an error occurred in the attempt to initialize the object.
  */
-- (instancetype)initWithActionBlock:(void (^)(id sender))block;
+- (instancetype)initWithActionBlock:(void (^)(__kindof UIGestureRecognizer *sender))block;
 
 /**
  Adds an action block to a gesture-recognizer object. It is retained by the
@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param block A block invoked by the action message. nil is not a valid value.
  */
-- (void)addActionBlock:(void (^)(id sender))block;
+- (void)addActionBlock:(void (^)(__kindof UIGestureRecognizer *sender))block;
 
 /**
  Remove all action blocks.

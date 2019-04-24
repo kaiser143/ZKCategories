@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param controlEvents  A bitmask specifying the control events for which the
  action message is sent.
  */
-- (void)addBlockForControlEvents:(UIControlEvents)controlEvents block:(void (^)(id sender))block;
+- (void)addBlockForControlEvents:(UIControlEvents)controlEvents block:(void (^)(__kindof UIControl *sender))block;
 
 /**
  Adds or replaces a block for a particular event (or events) to an internal
@@ -56,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param controlEvents  A bitmask specifying the control events for which the
  action message is sent.
  */
-- (void)setBlockForControlEvents:(UIControlEvents)controlEvents block:(void (^)(id sender))block;
+- (void)setBlockForControlEvents:(UIControlEvents)controlEvents block:(void (^)(__kindof UIControl *sender))block;
 
 /**
  Removes all blocks for a particular event (or events) from an internal

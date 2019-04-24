@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NSDictionary (ZKAdd)
+@interface NSDictionary<__covariant KeyType, __covariant ValueType> (ZKAdd)
 
 - (NSString *)URLEncodedStringValue;
 
@@ -20,11 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
 ///
 /// Returns a new dictionary containing the entries of the receiver combined with
 /// those of `dictionary`.
-- (NSDictionary *)dictionaryByAddingEntriesFromDictionary:(NSDictionary *)dictionary;
+- (NSDictionary<KeyType, ValueType> *)dictionaryByAddingEntriesFromDictionary:(NSDictionary<KeyType, ValueType> *)dictionary;
 
 /// Creates a new dictionary with all the entries for the given keys removed from
 /// the receiver.
-- (NSDictionary *)dictionaryByRemovingValuesForKeys:(NSArray *)keys;
+- (NSDictionary<KeyType, ValueType> *)dictionaryByRemovingValuesForKeys:(NSArray<KeyType> *)keys;
 
 /**
  Returns a new array containing the dictionary's keys sorted.
@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
  @return A new array containing the dictionary's keys,
  or an empty array if the dictionary has no entries.
  */
-- (NSArray *)allKeysSorted;
+- (NSArray<KeyType> *)allKeysSorted;
 
 /**
  Returns a new array containing the dictionary's values sorted by keys.
@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
  @return A new array containing the dictionary's values sorted by keys,
  or an empty array if the dictionary has no entries.
  */
-- (NSArray *)allValuesSortedByKeys;
+- (NSArray<ValueType> *)allValuesSortedByKeys;
 
 /**
  Returns a new dictionary containing the entries for keys.
@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param keys The keys.
  @return The entries for the keys.
  */
-- (NSDictionary *)entriesForKeys:(NSArray *)keys;
+- (NSDictionary<KeyType, ValueType> *)entriesForKeys:(NSArray<KeyType> *)keys;
 
 /**
  Convert dictionary to json string. return nil if an error occurs.
@@ -75,7 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param xmlDataOrString XML in NSData or NSString format.
  @return Return a new dictionary, or nil if an error occurs.
  */
-+ (nullable NSDictionary *)dictionaryWithXML:(id)xmlDataOrString;
++ (nullable NSDictionary<KeyType, ValueType> *)dictionaryWithXML:(id)xmlDataOrString;
 
 #pragma mark - :. SafeAccess
 
@@ -84,7 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param key The key.
  */
-- (BOOL)hasKey:(id)key;
+- (BOOL)hasKey:(KeyType)key;
 
 /**
  Returns a NSString value for the specified key.
@@ -92,7 +92,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param key The key for which to return the corresponding value
  @returns the resulting string. If the result is not a NSString and can't converted to one, it returns nil
  */
-- (NSString *)stringForKey:(id)key;
+- (NSString *)stringForKey:(KeyType)key;
 
 /**
  Returns a NSNumber value for the specified key.
@@ -101,7 +101,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param key The key for which to return the corresponding value
  @returns the resulting number. If the result is not a NSNumber and can't converted to one, it returns nil
  */
-- (NSNumber *)numberForKey:(id)key;
+- (NSNumber *)numberForKey:(KeyType)key;
 
 /**
  Returns a NSNumber value for the specified key.
@@ -109,7 +109,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param numberFormatter The formatter to use to parse the number if the object found on the key is a string
  @returns the resulting number. If the result is not a NSNumber and can't converted to one, it returns nil
  */
-- (NSNumber *)numberForKey:(id)key usingFormatter:(NSNumberFormatter *)numberFormatter;
+- (NSNumber *)numberForKey:(KeyType)key usingFormatter:(NSNumberFormatter *)numberFormatter;
 
 /**
  Returns a NSArray value for the specified key.
@@ -117,7 +117,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param key The key for which to return the corresponding value
  @returns the resulting array. If the result is not a NSArray, it returns nil
  */
-- (NSArray *)arrayForKey:(id)key;
+- (NSArray<ValueType> *)arrayForKey:(KeyType)key;
 
 /**
  Returns a NSDictionary value for the specified key.
@@ -125,7 +125,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param key The key for which to return the corresponding value
  @returns the resulting dictionary. If the result is not a NSDictionary, it returns nil
  */
-- (NSDictionary *)dictionaryForKey:(id)key;
+- (NSDictionary<KeyType, ValueType> *)dictionaryForKey:(KeyType)key;
 
 /**
  Returns an object for the specified keyPath
@@ -133,7 +133,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param keyPath A key path of the form relationship.property (with one or more relationships); for example “department.name” or “department.manager.lastName”
  @returns The value for the derived property identified by keyPath. If the keyPath is not valid, it returns nil
  */
-- (id)objectForKeyPath:(NSString *)keyPath;
+- (ValueType)objectForKeyPath:(NSString *)keyPath;
 
 /**
  Returns an object for the specified keyPath
@@ -141,7 +141,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param keyPath A key path of the form relationship.property, see objectForKeyPath:
  @returns The value for the derived property identified by keyPath. If the keyPath is not valid or the result is not a NSString or can't be converted to one, it returns nil
  */
-- (NSString *)stringForKeyPath:(id)keyPath;
+- (NSString *)stringForKeyPath:(NSString *)keyPath;
 
 /**
  Returns an object for the specified keyPath
@@ -149,7 +149,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param keyPath A key path of the form relationship.property, see objectForKeyPath:
  @returns The value for the derived property identified by keyPath. If the keyPath is not valid or the result is not a NSNumber or can't be converted to one, it returns nil
  */
-- (NSNumber *)numberForKeyPath:(id)keyPath;
+- (NSNumber *)numberForKeyPath:(NSString *)keyPath;
 
 /**
  Returns an object for the specified keyPath
@@ -158,7 +158,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param numberFormatter The formatter to use to parse the number if the object found on the keypath is a string
  @returns The value for the derived property identified by keyPath. If the keyPath is not valid or the result is not a NSNumber or can't be converted to one, it returns nil
  */
-- (NSNumber *)numberForKeyPath:(id)keyPath usingFormatter:(NSNumberFormatter *)numberFormatter;
+- (NSNumber *)numberForKeyPath:(NSString *)keyPath usingFormatter:(NSNumberFormatter *)numberFormatter;
 
 /**
  Returns an object for the specified keyPath
@@ -166,7 +166,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param keyPath A key path of the form relationship.property, see objectForKeyPath:
  @returns The value for the derived property identified by keyPath. If the keyPath is not valid or the result is not a NSArray, it returns nil
  */
-- (NSArray *)arrayForKeyPath:(id)keyPath;
+- (NSArray *)arrayForKeyPath:(NSString *)keyPath;
 
 /**
  Returns an object for the specified keyPath
@@ -174,7 +174,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param keyPath A key path of the form relationship.property, see objectForKeyPath:
  @returns The value for the derived property identified by keyPath. If the keyPath is not valid or the result is not a NSDictionary, it returns nil
  */
-- (NSDictionary *)dictionaryForKeyPath:(id)keyPath;
+- (NSDictionary<KeyType, ValueType> *)dictionaryForKeyPath:(NSString *)keyPath;
 
 - (BOOL)boolValueForKey:(NSString *)key default:(BOOL)def;
 
@@ -216,7 +216,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface NSMutableDictionary (ZKAdd)
+@interface NSMutableDictionary<KeyType, ValueType> (ZKAdd)
 
 /**
  Removes and returns the value associated with a given key.
@@ -224,7 +224,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param aKey The key for which to return and remove the corresponding value.
  @return The value associated with aKey, or nil if no value is associated with aKey.
  */
-- (nullable id)popObjectForKey:(id)aKey;
+- (nullable ValueType)popObjectForKey:(KeyType)aKey;
 
 /**
  Returns a new dictionary containing the entries for keys, and remove these
@@ -234,7 +234,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param keys The keys.
  @return The entries for the keys.
  */
-- (NSDictionary *)popEntriesForKeys:(NSArray *)keys;
+- (NSDictionary<KeyType, ValueType> *)popEntriesForKeys:(NSArray<KeyType> *)keys;
 
 @end
 
