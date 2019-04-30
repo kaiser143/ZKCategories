@@ -239,7 +239,7 @@ NS_ASSUME_NONNULL_BEGIN
 /*!
  *  @brief    差集
  */
-- (NSArray<ValueType> *)differenceSet:(NSArray *)array;
+- (NSArray<ValueType> *)subtractingSet:(NSArray *)array;
 
 @end
 

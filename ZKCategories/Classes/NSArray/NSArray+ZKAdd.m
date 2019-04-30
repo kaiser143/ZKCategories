@@ -533,7 +533,7 @@
     return [result copy];
 }
 
-- (NSArray *)differenceSet:(NSArray *)array {
+- (NSArray *)subtractingSet:(NSArray *)array {
     NSMutableArray *result = [NSMutableArray arrayWithArray:self];
     for (id obj in array) {
         // belong B Set && belong A Set,remove it
