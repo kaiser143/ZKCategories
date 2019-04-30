@@ -115,6 +115,21 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, readonly, getter=isEmpty) BOOL empty;
 
+/*!
+ *  @brief    交集,返回的数组是array中的对象
+ */
+- (NSArray<ValueType> *)intersectSet:(NSArray *)array;
+
+/*!
+ *  @brief    并集
+ */
+- (NSArray<ValueType> *)unionSet:(NSArray *)array;
+
+/*!
+ *  @brief    差集
+ */
+- (NSArray<ValueType> *)subtractingSet:(NSArray *)array;
+
 @end
 
 @interface NSMutableArray<ValueType> (SafeAccess)
@@ -224,22 +239,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addSize:(CGSize)o;
 - (void)addRect:(CGRect)o;
 - (void)addRange:(NSRange)range;
-
-
-/*!
- *  @brief    交集,返回的数组是array中的对象
- */
-- (NSArray<ValueType> *)intersectSet:(NSArray *)array;
-
-/*!
- *  @brief    并集
- */
-- (NSArray<ValueType> *)unionSet:(NSArray *)array;
-
-/*!
- *  @brief    差集
- */
-- (NSArray<ValueType> *)subtractingSet:(NSArray *)array;
 
 @end
 
