@@ -205,4 +205,28 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+
+/*
+- (id)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        [self loadContentsFromNib];
+        [self awakeFromNib];
+    }
+    
+    return self;
+}
+*/
+@interface UIView (ZKNibLoading)
+
+- (void)loadContentsFromNibNamed:(NSString *)nibName bundle:(NSBundle *)bundle;
+- (void)loadContentsFromNibNamed:(NSString *)nibName;
+
+// Convenience method, loads a nib named after the class name.
+- (void)loadContentsFromNib;
+
+// View where all content from nib will be added.
+- (UIView *)contentViewForNib;
+
+@end
+
 NS_ASSUME_NONNULL_END
