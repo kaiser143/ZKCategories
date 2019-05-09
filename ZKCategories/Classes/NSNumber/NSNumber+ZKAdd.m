@@ -52,6 +52,7 @@
 - (NSString *)stringWithFormat:(NSString *)format {
     NSNumberFormatter *formatter = NSNumberFormatter.new;
     [formatter setPositiveFormat:format];
+    formatter.minimumIntegerDigits = 1;
     return [formatter stringFromNumber:self];
 }
 

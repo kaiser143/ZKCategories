@@ -33,9 +33,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray *)map:(id (^)(ValueType obj, NSUInteger idx))block;
 
 /**
- * @return new NSArray by flatting it and performing a map to each element
+ * @return new NSArray by flatting it and performing a map to each element(格式化二维数组中的元素)
  */
-- (NSArray *)flattenMap:(id (^)(ValueType obj, NSUInteger idx))block;
+- (NSArray *)flattenMap:(id (^)(id obj, NSUInteger idx))block;
 
 /**
  * @return new NSArray by flatting it with the key and performing a map to each element
