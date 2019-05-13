@@ -12,8 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIBarButtonItem (ZKAdd)
 
-+ (instancetype)itemWithTitle:(NSString *)title target:(id)target action:(SEL)action;
-
 + (instancetype)itemWithImage:(UIImage *)image target:(id)target action:(SEL)action;
 
 /**

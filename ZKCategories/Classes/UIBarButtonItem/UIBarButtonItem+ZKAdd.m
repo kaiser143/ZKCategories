@@ -9,7 +9,7 @@
 #import "UIBarButtonItem+ZKAdd.h"
 #import "NSObject+ZKAdd.h"
 
-@interface _ZKUIBarButtonItemBlockTarget : NSObject
+@interface _KAIBarButtonItemBlockTarget : NSObject
 
 @property (nonatomic, copy) void (^block)(id sender);
 
@@ -18,7 +18,7 @@
 
 @end
 
-@implementation _ZKUIBarButtonItemBlockTarget
+@implementation _KAIBarButtonItemBlockTarget
 
 - (id)initWithBlock:(void (^)(id sender))block{
     self = [super init];
@@ -36,30 +36,12 @@
 
 @implementation UIBarButtonItem (ZKAdd)
 
-+ (instancetype)itemWithTitle:(NSString *)title target:(id)target action:(SEL)action {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.titleLabel.font = [UIFont systemFontOfSize:14.f];
-    [button setTitle:title forState:UIControlStateNormal];
-//    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//    [button setTitleColor:ZKCommonSubtitleTextColor forState:UIControlStateDisabled];
-    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
-    [button sizeToFit];
-    
-    return [[self alloc] initWithCustomView:button];
-}
-
 + (instancetype)itemWithImage:(UIImage *)image target:(id)target action:(SEL)action {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setImage:image forState:UIControlStateNormal];
-    [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
-    [button sizeToFit];
-    
-    return [[self alloc] initWithCustomView:button];
+    return [[self alloc] initWithImage:[image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:target action:action];
 }
 
 - (void)setActionBlock:(void (^)(id sender))block {
-    _ZKUIBarButtonItemBlockTarget *target = [[_ZKUIBarButtonItemBlockTarget alloc] initWithBlock:block];
+    _KAIBarButtonItemBlockTarget *target = [[_KAIBarButtonItemBlockTarget alloc] initWithBlock:block];
     [self setAssociateValue:target withKey:_cmd];
     
     [self setTarget:target];
@@ -67,7 +49,7 @@
 }
 
 - (void (^)(id))actionBlock {
-    _ZKUIBarButtonItemBlockTarget *target = [self associatedValueForKey:@selector(setActionBlock:)];
+    _KAIBarButtonItemBlockTarget *target = [self associatedValueForKey:@selector(setActionBlock:)];
     return target.block;
 }
 
