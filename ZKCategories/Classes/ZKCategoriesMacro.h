@@ -472,12 +472,6 @@ ZK_EXTERN_C_BEGIN
  * uses of \@keypath.
  */
 #define keypath(...) \
-    _Pragma("clang diagnostic push") \
-    _Pragma("clang diagnostic ignored \"-Warc-repeated-use-of-weak\"") \
-    (NO).boolValue ? ((NSString * _Nonnull)nil) : ((NSString * _Nonnull)@(cStringKeypath(__VA_ARGS__))) \
-    _Pragma("clang diagnostic pop") \
-
-#define cStringKeypath(...) \
     metamacro_if_eq(1, metamacro_argcount(__VA_ARGS__))(keypath1(__VA_ARGS__))(keypath2(__VA_ARGS__))
 
 #define keypath1(PATH) \
