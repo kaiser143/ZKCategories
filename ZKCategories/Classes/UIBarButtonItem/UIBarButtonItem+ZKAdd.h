@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIBarButtonItem (ZKAdd)
 
-+ (instancetype)itemWithImage:(UIImage *)image target:(id)target action:(SEL)action;
++ (instancetype)itemWithImage:(UIImage *)image target:(nullable id)target action:(nullable SEL)action;
 
 /**
  The block that invoked when the item is selected. The objects captured by block
