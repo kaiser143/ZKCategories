@@ -16,17 +16,17 @@ static inline dispatch_time_t dTimeDelay(NSTimeInterval time) {
     return dispatch_time(DISPATCH_TIME_NOW, delta);
 }
 
-@interface ZKObjectBlockExecutor : NSObject
+@interface _KAIBlockExecutor : NSObject
 
 @property (nonatomic, copy) void (^deallocBlock)(void);
 
 @end
 
-@implementation ZKObjectBlockExecutor
+@implementation _KAIBlockExecutor
 
 + (id)blockExecutorWithDeallocBlock:(void (^)(void))block {
-    ZKObjectBlockExecutor *executor = [[ZKObjectBlockExecutor alloc] init];
-    executor.deallocBlock           = block; // copy
+    _KAIBlockExecutor *executor = [[_KAIBlockExecutor alloc] init];
+    executor.deallocBlock       = block; // copy
     return executor;
 }
 
@@ -168,7 +168,7 @@ static char DTRuntimeDeallocBlocks;
         objc_setAssociatedObject(self, &DTRuntimeDeallocBlocks, deallocBlocks, OBJC_ASSOCIATION_RETAIN);
     }
 
-    ZKObjectBlockExecutor *executor = [ZKObjectBlockExecutor blockExecutorWithDeallocBlock:block];
+    _KAIBlockExecutor *executor = [_KAIBlockExecutor blockExecutorWithDeallocBlock:block];
 
     [deallocBlocks addObject:executor];
 }
@@ -465,7 +465,7 @@ static char DTRuntimeDeallocBlocks;
         unsigned int attributeCount;
         objc_property_attribute_t *attrs = property_copyAttributeList(property, &attributeCount);
 
-        for (int i = 0; i < attributeCount; i++) {
+        for (int i          = 0; i < attributeCount; i++) {
             NSString *name  = [NSString stringWithCString:attrs[ i ].name encoding:NSUTF8StringEncoding];
             NSString *value = [NSString stringWithCString:attrs[ i ].value encoding:NSUTF8StringEncoding];
             [dictionary setObject:value forKey:name];
@@ -665,7 +665,7 @@ static char DTRuntimeDeallocBlocks;
 
 @end
 
-@interface _ZKNSObjetKVOBlockTarget : NSObject
+@interface _KAIKVOBlockTarget : NSObject
 
 @property (nonatomic, copy) void (^block)(__weak id obj, id oldVal, id newVal);
 
@@ -673,7 +673,7 @@ static char DTRuntimeDeallocBlocks;
 
 @end
 
-@implementation _ZKNSObjetKVOBlockTarget
+@implementation _KAIKVOBlockTarget
 
 - (id)initWithBlock:(void (^)(__weak id obj, id oldVal, id newVal))block {
     self = [super init];
@@ -703,7 +703,7 @@ static char DTRuntimeDeallocBlocks;
 
 @end
 
-@interface _ZKKVOInfo : NSObject
+@interface _KAIKVOInfo : NSObject
 
 @property (nonatomic, copy) NSString *keyPath;
 @property (nonatomic, weak) NSObject *observer;
@@ -712,7 +712,7 @@ static char DTRuntimeDeallocBlocks;
 
 @end
 
-@implementation _ZKKVOInfo
+@implementation _KAIKVOInfo
 
 - (instancetype)initWithObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath {
     self = [super init];
@@ -735,9 +735,9 @@ static char DTRuntimeDeallocBlocks;
 
 - (void)addObserverBlockForKeyPath:(NSString *)keyPath block:(void (^)(__weak id obj, id oldVal, id newVal))block {
     if (!keyPath || !block) return;
-    _ZKNSObjetKVOBlockTarget *target = [[_ZKNSObjetKVOBlockTarget alloc] initWithBlock:block];
-    NSMutableDictionary *dic         = [self _kai_allNSObjectObserverBlocks];
-    NSMutableArray *arr              = dic[ keyPath ];
+    _KAIKVOBlockTarget *target = [[_KAIKVOBlockTarget alloc] initWithBlock:block];
+    NSMutableDictionary *dic   = [self _kai_allNSObjectObserverBlocks];
+    NSMutableArray *arr        = dic[ keyPath ];
     if (!arr) {
         arr            = [NSMutableArray new];
         dic[ keyPath ] = arr;
@@ -790,7 +790,7 @@ static char DTRuntimeDeallocBlocks;
 - (void)_kai_addObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context {
     if (!observer || !keyPath) return;
 
-    _ZKKVOInfo *info         = [[_ZKKVOInfo alloc] initWithObserver:observer forKeyPath:keyPath];
+    _KAIKVOInfo *info        = [[_KAIKVOInfo alloc] initWithObserver:observer forKeyPath:keyPath];
     NSMutableDictionary *dic = [self _kai_allObserverInfos];
     NSMutableArray *arr      = dic[ keyPath ];
     if (!arr) {
@@ -808,7 +808,7 @@ static char DTRuntimeDeallocBlocks;
 
     NSMutableDictionary *dic = [self _kai_allObserverInfos];
     NSMutableArray *array    = dic[ keyPath ];
-    _ZKKVOInfo *info         = [array objectPassingTest:^BOOL(_ZKKVOInfo *obj) {
+    _KAIKVOInfo *info        = [array objectPassingTest:^BOOL(_KAIKVOInfo *obj) {
         return ([observer isEqual:obj.observer] && [keyPath isEqualToString:obj.keyPath]);
     }];
     if (info) [array removeObject:info];
@@ -817,8 +817,8 @@ static char DTRuntimeDeallocBlocks;
 - (BOOL)_kai_observerKeyPath:(NSString *)keyPath observer:(id)observer {
     NSMutableDictionary *dic = [self _kai_allObserverInfos];
     NSArray *array           = dic[ keyPath ];
-    _ZKKVOInfo *info         = [array objectPassingTest:^BOOL(_ZKKVOInfo *obj) {
-        return ([observer isEqual:obj.observer] && [keyPath isEqualToString:obj.keyPath]);
+    _KAIKVOInfo *info        = [array objectPassingTest:^BOOL(_KAIKVOInfo *obj) {
+        return (observer == obj.observer && [keyPath isEqualToString:obj.keyPath]);
     }];
     return info ? YES : NO;
 }

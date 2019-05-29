@@ -176,7 +176,7 @@ ZKSYNTH_DUMMY_CLASS(UITextField_ZKAdd)
 
 - (void)setShouldReturnBlock:(BOOL (^)(UITextField *))shouldReturnBlock {
     [self setDelegateIfNoDelegateSet];
-    [self setAssociateCopyValue:shouldReturnBlock withKey:_cmd];
+    [self setAssociateCopyValue:shouldReturnBlock withKey:@selector(shouldReturnBlock)];
 }
 
 - (BOOL (^)(UITextField *))shouldClearBlock {
