@@ -46,10 +46,10 @@
 }
 
 + (void)kai_postNotificationName:(NSDictionary *)info {
-    NSString *name = [info objectForKey:@"name"];
-    id object = [info objectForKey:@"object"];
+    NSString *name         = [info objectForKey:@"name"];
+    id object              = [info objectForKey:@"object"];
     NSDictionary *userInfo = [info objectForKey:@"userInfo"];
-    
+
     [[self defaultCenter] postNotificationName:name object:object userInfo:userInfo];
 }
 

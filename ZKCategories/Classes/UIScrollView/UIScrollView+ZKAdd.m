@@ -17,8 +17,8 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 
 - (void)setContentInsetTop:(CGFloat)contentInsetTop {
     UIEdgeInsets inset = self.contentInset;
-    inset.top = contentInsetTop;
-    self.contentInset = inset;
+    inset.top          = contentInsetTop;
+    self.contentInset  = inset;
 }
 
 - (CGFloat)contentInsetTop {
@@ -27,8 +27,8 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 
 - (void)setContentInsetBottom:(CGFloat)contentInsetBottom {
     UIEdgeInsets inset = self.contentInset;
-    inset.bottom = contentInsetBottom;
-    self.contentInset = inset;
+    inset.bottom       = contentInsetBottom;
+    self.contentInset  = inset;
 }
 
 - (CGFloat)contentInsetBottom {
@@ -37,8 +37,8 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 
 - (void)setContentInsetLeft:(CGFloat)contentInsetLeft {
     UIEdgeInsets inset = self.contentInset;
-    inset.left = contentInsetLeft;
-    self.contentInset = inset;
+    inset.left         = contentInsetLeft;
+    self.contentInset  = inset;
 }
 
 - (CGFloat)contentInsetLeft {
@@ -47,8 +47,8 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 
 - (void)setContentInsetRight:(CGFloat)contentInsetRight {
     UIEdgeInsets inset = self.contentInset;
-    inset.right = contentInsetRight;
-    self.contentInset = inset;
+    inset.right        = contentInsetRight;
+    self.contentInset  = inset;
 }
 
 - (CGFloat)contentInsetRight {
@@ -56,8 +56,8 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 }
 
 - (void)setContentOffsetX:(CGFloat)contentOffsetX {
-    CGPoint offset = self.contentOffset;
-    offset.x = contentOffsetX;
+    CGPoint offset     = self.contentOffset;
+    offset.x           = contentOffsetX;
     self.contentOffset = offset;
 }
 
@@ -66,8 +66,8 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 }
 
 - (void)setContentOffsetY:(CGFloat)contentOffsetY {
-    CGPoint offset = self.contentOffset;
-    offset.y = contentOffsetY;
+    CGPoint offset     = self.contentOffset;
+    offset.y           = contentOffsetY;
     self.contentOffset = offset;
 }
 
@@ -76,8 +76,8 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 }
 
 - (void)setContentSizeWidth:(CGFloat)contentSizeWidth {
-    CGSize size = self.contentSize;
-    size.width = contentSizeWidth;
+    CGSize size      = self.contentSize;
+    size.width       = contentSizeWidth;
     self.contentSize = size;
 }
 
@@ -86,8 +86,8 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 }
 
 - (void)setContentSizeHeight:(CGFloat)contentSizeHeight {
-    CGSize size = self.contentSize;
-    size.height = contentSizeHeight;
+    CGSize size      = self.contentSize;
+    size.height      = contentSizeHeight;
     self.contentSize = size;
 }
 
@@ -97,7 +97,7 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 
 - (ZKScrollDirection)scrollDirection {
     ZKScrollDirection direction = ZKScrollDirectionUndefine;
-    CGPoint point = [self.panGestureRecognizer translationInView:self.superview];
+    CGPoint point               = [self.panGestureRecognizer translationInView:self.superview];
     if (point.y > 0.0f) {
         direction = ZKScrollDirectionUp;
     } else if (point.y < 0.0f) {
@@ -107,7 +107,7 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
     } else if (point.x > 0.0f) {
         direction = ZKScrollDirectionRight;
     }
-    
+
     return direction;
 }
 
@@ -129,25 +129,25 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 
 - (void)scrollToTopAnimated:(BOOL)animated {
     CGPoint off = self.contentOffset;
-    off.y = 0 - self.contentInset.top;
+    off.y       = 0 - self.contentInset.top;
     [self setContentOffset:off animated:animated];
 }
 
 - (void)scrollToBottomAnimated:(BOOL)animated {
     CGPoint off = self.contentOffset;
-    off.y = self.contentSize.height - self.bounds.size.height + self.contentInset.bottom;
+    off.y       = self.contentSize.height - self.bounds.size.height + self.contentInset.bottom;
     [self setContentOffset:off animated:animated];
 }
 
 - (void)scrollToLeftAnimated:(BOOL)animated {
     CGPoint off = self.contentOffset;
-    off.x = 0 - self.contentInset.left;
+    off.x       = 0 - self.contentInset.left;
     [self setContentOffset:off animated:animated];
 }
 
 - (void)scrollToRightAnimated:(BOOL)animated {
     CGPoint off = self.contentOffset;
-    off.x = self.contentSize.width - self.bounds.size.width + self.contentInset.right;
+    off.x       = self.contentSize.width - self.bounds.size.width + self.contentInset.right;
     [self setContentOffset:off animated:animated];
 }
 
@@ -157,39 +157,39 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 }
 
 - (NSInteger)currentPage {
-    NSInteger pages = self.contentSize.width / self.frame.size.width;
+    NSInteger pages       = self.contentSize.width / self.frame.size.width;
     CGFloat scrollPercent = [self scrollPercent];
     NSInteger currentPage = (NSInteger)roundf((pages - 1) * scrollPercent);
     return currentPage;
 }
 
 - (CGFloat)scrollPercent {
-    CGFloat width = self.contentSize.width - self.frame.size.width;
+    CGFloat width         = self.contentSize.width - self.frame.size.width;
     CGFloat scrollPercent = self.contentOffset.x / width;
     return scrollPercent;
 }
 
 - (CGFloat)pagesY {
-    CGFloat pageHeight = self.frame.size.height;
+    CGFloat pageHeight    = self.frame.size.height;
     CGFloat contentHeight = self.contentSize.height;
     return contentHeight / pageHeight;
 }
 
 - (CGFloat)pagesX {
-    CGFloat pageWidth = self.frame.size.width;
+    CGFloat pageWidth    = self.frame.size.width;
     CGFloat contentWidth = self.contentSize.width;
     return contentWidth / pageWidth;
 }
 
 - (CGFloat)currentPageY {
     CGFloat pageHeight = self.frame.size.height;
-    CGFloat offsetY = self.contentOffset.y;
+    CGFloat offsetY    = self.contentOffset.y;
     return offsetY / pageHeight;
 }
 
 - (CGFloat)currentPageX {
     CGFloat pageWidth = self.frame.size.width;
-    CGFloat offsetX = self.contentOffset.x;
+    CGFloat offsetX   = self.contentOffset.x;
     return offsetX / pageWidth;
 }
 
@@ -203,17 +203,17 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 
 - (void)setPageY:(CGFloat)page animated:(BOOL)animated {
     CGFloat pageHeight = self.frame.size.height;
-    CGFloat offsetY = page * pageHeight;
-    CGFloat offsetX = self.contentOffset.x;
-    CGPoint offset = CGPointMake(offsetX, offsetY);
+    CGFloat offsetY    = page * pageHeight;
+    CGFloat offsetX    = self.contentOffset.x;
+    CGPoint offset     = CGPointMake(offsetX, offsetY);
     [self setContentOffset:offset];
 }
 
 - (void)setPageX:(CGFloat)page animated:(BOOL)animated {
     CGFloat pageWidth = self.frame.size.width;
-    CGFloat offsetY = self.contentOffset.y;
-    CGFloat offsetX = page * pageWidth;
-    CGPoint offset = CGPointMake(offsetX, offsetY);
+    CGFloat offsetY   = self.contentOffset.y;
+    CGFloat offsetX   = page * pageWidth;
+    CGPoint offset    = CGPointMake(offsetX, offsetY);
     [self setContentOffset:offset animated:animated];
 }
 
@@ -239,7 +239,8 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 }
 
 - (void)setKeyboardDidChange:(KeyboardDidShowBlock)keyboardDidChange {
-    [self setAssociateCopyValue:keyboardDidChange withKey:@selector(keyboardDidChange)];;
+    [self setAssociateCopyValue:keyboardDidChange withKey:@selector(keyboardDidChange)];
+    ;
 }
 
 - (KeyboardDidShowBlock)keyboardDidChange {
@@ -298,7 +299,7 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 
 + (UIView *)findKeyboard {
     UIView *keyboardView = nil;
-    NSArray *windows = [[UIApplication sharedApplication] windows];
+    NSArray *windows     = [[UIApplication sharedApplication] windows];
     for (UIWindow *window in [windows reverseObjectEnumerator]) //逆序效率更高，因为键盘总在上方
     {
         keyboardView = [self findKeyboardInView:window];
@@ -329,22 +330,22 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
                                              selector:@selector(handleWillShowKeyboardNotification:)
                                                  name:UIKeyboardWillShowNotification
                                                object:nil];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleWillHideKeyboardNotification:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleKeyboardWillShowHideNotification:)
                                                  name:UIKeyboardDidShowNotification
                                                object:nil];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleKeyboardWillShowHideNotification:)
                                                  name:UIKeyboardDidHideNotification
                                                object:nil];
-    
+
     if (isPanGestured)
         [self.panGestureRecognizer addTarget:self action:@selector(handlePanGesture:)];
 }
@@ -354,7 +355,7 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidHideNotification object:nil];
-    
+
     if (isPanGestured)
         [self.panGestureRecognizer removeTarget:self action:@selector(handlePanGesture:)];
 }
@@ -364,47 +365,47 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 - (void)handlePanGesture:(UIPanGestureRecognizer *)pan {
     if (!self.keyboardView || self.keyboardView.hidden)
         return;
-    
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
+
+    CGRect screenRect    = [[UIScreen mainScreen] bounds];
     CGFloat screenHeight = screenRect.size.height;
-    
+
     UIWindow *panWindow = [[UIApplication sharedApplication] keyWindow];
-    CGPoint location = [pan locationInView:panWindow];
+    CGPoint location    = [pan locationInView:panWindow];
     location.y += self.messageInputBarHeight;
     CGPoint velocity = [pan velocityInView:panWindow];
-    
+
     switch (pan.state) {
         case UIGestureRecognizerStateBegan:
             self.previousKeyboardY = self.keyboardView.frame.origin.y;
             break;
         case UIGestureRecognizerStateEnded:
             if (velocity.y > 0 && self.keyboardView.frame.origin.y > self.previousKeyboardY) {
-                
+
                 [UIView animateWithDuration:0.3
-                                      delay:0
-                                    options:UIViewAnimationOptionCurveEaseOut
-                                 animations:^{
-                                     self.keyboardView.frame = CGRectMake(0.0f,
-                                                                          screenHeight,
-                                                                          self.keyboardView.frame.size.width,
-                                                                          self.keyboardView.frame.size.height);
-                                     
-                                     if (self.keyboardWillBeDismissed) {
-                                         self.keyboardWillBeDismissed();
-                                     }
-                                 }
-                                 completion:^(BOOL finished) {
-                                     self.keyboardView.hidden = YES;
-                                     self.keyboardView.frame = CGRectMake(0.0f,
-                                                                          self.previousKeyboardY,
-                                                                          self.keyboardView.frame.size.width,
-                                                                          self.keyboardView.frame.size.height);
-                                     [self resignFirstResponder];
-                                     
-                                     if (self.keyboardDidHide) {
-                                         self.keyboardDidHide();
-                                     }
-                                 }];
+                    delay:0
+                    options:UIViewAnimationOptionCurveEaseOut
+                    animations:^{
+                        self.keyboardView.frame = CGRectMake(0.0f,
+                                                             screenHeight,
+                                                             self.keyboardView.frame.size.width,
+                                                             self.keyboardView.frame.size.height);
+
+                        if (self.keyboardWillBeDismissed) {
+                            self.keyboardWillBeDismissed();
+                        }
+                    }
+                    completion:^(BOOL finished) {
+                        self.keyboardView.hidden = YES;
+                        self.keyboardView.frame  = CGRectMake(0.0f,
+                                                             self.previousKeyboardY,
+                                                             self.keyboardView.frame.size.width,
+                                                             self.keyboardView.frame.size.height);
+                        [self resignFirstResponder];
+
+                        if (self.keyboardDidHide) {
+                            self.keyboardDidHide();
+                        }
+                    }];
             } else { // gesture ended with no flick or a flick upwards, snap keyboard back to original position
                 [UIView animateWithDuration:0.2
                                       delay:0
@@ -413,7 +414,7 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
                                      if (self.keyboardWillSnapBackToPoint) {
                                          self.keyboardWillSnapBackToPoint(CGPointMake(0.0f, self.previousKeyboardY));
                                      }
-                                     
+
                                      self.keyboardView.frame = CGRectMake(0.0f,
                                                                           self.previousKeyboardY,
                                                                           self.keyboardView.frame.size.width,
@@ -422,20 +423,20 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
                                  completion:NULL];
             }
             break;
-            
-            // gesture is currently panning, match keyboard y to touch y
+
+        // gesture is currently panning, match keyboard y to touch y
         default:
             if (location.y > self.keyboardView.frame.origin.y || self.keyboardView.frame.origin.y != self.previousKeyboardY) {
-                
+
                 CGFloat newKeyboardY = self.previousKeyboardY + (location.y - self.previousKeyboardY);
-                newKeyboardY = newKeyboardY < self.previousKeyboardY ? self.previousKeyboardY : newKeyboardY;
-                newKeyboardY = newKeyboardY > screenHeight ? screenHeight : newKeyboardY;
-                
+                newKeyboardY         = newKeyboardY < self.previousKeyboardY ? self.previousKeyboardY : newKeyboardY;
+                newKeyboardY         = newKeyboardY > screenHeight ? screenHeight : newKeyboardY;
+
                 self.keyboardView.frame = CGRectMake(0.0f,
                                                      newKeyboardY,
                                                      self.keyboardView.frame.size.width,
                                                      self.keyboardView.frame.size.height);
-                
+
                 if (self.keyboardDidScrollToPoint) {
                     self.keyboardDidScrollToPoint(CGPointMake(0.0f, newKeyboardY));
                 }
@@ -449,11 +450,11 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 - (void)handleKeyboardWillShowHideNotification:(NSNotification *)notification {
     BOOL didShowed = YES;
     if ([notification.name isEqualToString:UIKeyboardDidShowNotification]) {
-        self.keyboardView = [UIScrollView findKeyboard].superview;
+        self.keyboardView        = [UIScrollView findKeyboard].superview;
         self.keyboardView.hidden = NO;
-        didShowed = YES;
+        didShowed                = YES;
     } else if ([notification.name isEqualToString:UIKeyboardDidHideNotification]) {
-        didShowed = NO;
+        didShowed                = NO;
         self.keyboardView.hidden = NO;
         [self resignFirstResponder];
     }
@@ -472,10 +473,10 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 }
 
 - (void)keyboardWillShowHide:(NSNotification *)notification {
-    CGRect keyboardRect = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGRect keyboardRect        = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     UIViewAnimationCurve curve = [[notification.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
-    double duration = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-    
+    double duration            = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+
     if (self.keyboardWillChange) {
         self.keyboardWillChange(keyboardRect, [self animationOptionsForCurve:curve], duration, (([notification.name isEqualToString:UIKeyboardWillShowNotification]) ? YES : NO));
     }
@@ -485,16 +486,16 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
     switch (curve) {
         case UIViewAnimationCurveEaseInOut:
             return UIViewAnimationOptionCurveEaseInOut;
-            
+
         case UIViewAnimationCurveEaseIn:
             return UIViewAnimationOptionCurveEaseIn;
-            
+
         case UIViewAnimationCurveEaseOut:
             return UIViewAnimationOptionCurveEaseOut;
-            
+
         case UIViewAnimationCurveLinear:
             return UIViewAnimationOptionCurveLinear;
-            
+
         default:
             return kNilOptions;
     }

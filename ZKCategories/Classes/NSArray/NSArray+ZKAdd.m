@@ -78,14 +78,22 @@
     return [self valueForKeyPath:finalKeyPath];
 }
 
-- (NSNumber *)sum                    { return [self operator:@"sum" keypath:nil];    }
-- (NSNumber *)sum:(NSString*)keypath { return [self operator:@"sum" keypath:keypath];}
-- (NSNumber *)avg                    { return [self operator:@"avg" keypath:nil];    }
-- (NSNumber *)avg:(NSString*)keypath { return [self operator:@"avg" keypath:keypath];}
-- (NSNumber *)max                    { return [self operator:@"max" keypath:nil];    }
-- (NSNumber *)max:(NSString*)keypath { return [self operator:@"max" keypath:keypath];}
-- (NSNumber *)min                    { return [self operator:@"min" keypath:nil];    }
-- (NSNumber *)min:(NSString*)keypath { return [self operator:@"min" keypath:keypath];}
+- (NSNumber *)sum { return [self operator:@"sum" keypath:nil];
+}
+- (NSNumber *)sum:(NSString *)keypath { return [self operator:@"sum" keypath:keypath];
+}
+- (NSNumber *)avg { return [self operator:@"avg" keypath:nil];
+}
+- (NSNumber *)avg:(NSString *)keypath { return [self operator:@"avg" keypath:keypath];
+}
+- (NSNumber *)max { return [self operator:@"max" keypath:nil];
+}
+- (NSNumber *)max:(NSString *)keypath { return [self operator:@"max" keypath:keypath];
+}
+- (NSNumber *)min { return [self operator:@"min" keypath:nil];
+}
+- (NSNumber *)min:(NSString *)keypath { return [self operator:@"min" keypath:keypath];
+}
 
 - (NSUInteger)countKeyPath:(NSString *)keypath {
     return [self flatten:keypath].count;
@@ -127,7 +135,7 @@
 
 - (id)objectOrNilAtIndex:(NSUInteger)index {
     if (index < self.count) {
-        return self[ index ];
+        return self[index];
     } else {
         return nil;
     }
@@ -378,7 +386,7 @@
 
 - (NSArray *)intersectSet:(NSArray *)array {
     NSMutableArray *result = [NSMutableArray arrayWithCapacity:(array.count + self.count)];
-    for (id obj  in array) {
+    for (id obj in array) {
         if ([self indexOfObject:obj] != NSNotFound) {
             [result addObject:obj];
         }

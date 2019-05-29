@@ -10,18 +10,18 @@
 #import "ZKCategoriesMacro.h"
 #import "NSObject+ZKAdd.h"
 
-@interface _ZKUIGestureRecognizerBlockTarget : NSObject
+@interface _KAIUIGestureRecognizerBlockTarget : NSObject
 
-@property (nonatomic, copy) void(^block)(id sender);
+@property (nonatomic, copy) void (^block)(id sender);
 
-- (id)initWithBlock:(void(^)(id sender))block;
+- (id)initWithBlock:(void (^)(id sender))block;
 - (void)invoke:(id)sender;
 
 @end
 
-@implementation _ZKUIGestureRecognizerBlockTarget
+@implementation _KAIUIGestureRecognizerBlockTarget
 
-- (id)initWithBlock:(void (^)(id sender))block{
+- (id)initWithBlock:(void (^)(id sender))block {
     self = [super init];
     if (self) {
         _block = [block copy];
@@ -35,9 +35,6 @@
 
 @end
 
-
-
-
 @implementation UIGestureRecognizer (ZKAdd)
 
 - (instancetype)initWithActionBlock:(void (^)(__kindof UIGestureRecognizer *sender))block {
@@ -47,13 +44,13 @@
 }
 
 - (void)addActionBlock:(void (^)(__kindof UIGestureRecognizer *sender))block {
-    _ZKUIGestureRecognizerBlockTarget *target = [[_ZKUIGestureRecognizerBlockTarget alloc] initWithBlock:block];
+    _KAIUIGestureRecognizerBlockTarget *target = [[_KAIUIGestureRecognizerBlockTarget alloc] initWithBlock:block];
     [self addTarget:target action:@selector(invoke:)];
     NSMutableArray *targets = [self kai_allUIGestureRecognizerBlockTargets];
     [targets addObject:target];
 }
 
-- (void)removeAllActionBlocks{
+- (void)removeAllActionBlocks {
     NSMutableArray *targets = [self kai_allUIGestureRecognizerBlockTargets];
     [targets enumerateObjectsUsingBlock:^(id target, NSUInteger idx, BOOL *stop) {
         [self removeTarget:target action:@selector(invoke:)];

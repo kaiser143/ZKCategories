@@ -18,7 +18,7 @@
 
 - (BOOL)isValidURL {
     NSPredicate *regex = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", URL_MATCHING_PATTERN];
-    BOOL returnBool = [regex evaluateWithObject:self];
+    BOOL returnBool    = [regex evaluateWithObject:self];
     return returnBool;
 }
 
@@ -29,7 +29,7 @@
     for (NSString *parameter in encodedParameters) {
         NSArray *keyValuePair = [parameter componentsSeparatedByString:@"="];
         if (keyValuePair.count == 2) {
-            NSString *key = [[keyValuePair objectAtIndex:0] stringByReplacingPercentEscapes];
+            NSString *key   = [[keyValuePair objectAtIndex:0] stringByReplacingPercentEscapes];
             NSString *value = [[keyValuePair objectAtIndex:1] stringByReplacingPercentEscapes];
             [mutableResponseDictionary setObject:value forKey:key];
         }
@@ -37,13 +37,13 @@
     return mutableResponseDictionary;
 }
 
-- (NSString *)stringByAddingQueryDictionary:(NSDictionary*)query {
+- (NSString *)stringByAddingQueryDictionary:(NSDictionary *)query {
     if (0 == query.count) return self;
 
     NSString *stringValue = [query URLEncodedStringValue];
     if ([self rangeOfString:@"?"].location == NSNotFound) {
         return [self stringByAppendingFormat:@"?%@", stringValue];
-        
+
     } else {
         return [self stringByAppendingFormat:@"&%@", stringValue];
     }
@@ -52,30 +52,30 @@
 - (NSComparisonResult)versionStringCompare:(NSString *)other {
     NSArray *oneComponents = [self componentsSeparatedByString:@"a"];
     NSArray *twoComponents = [other componentsSeparatedByString:@"a"];
-    
+
     // The parts before the "a"
     NSString *oneMain = [oneComponents objectAtIndex:0];
     NSString *twoMain = [twoComponents objectAtIndex:0];
-    
+
     // If main parts are different, return that result, regardless of alpha part
     NSComparisonResult mainDiff;
     if ((mainDiff = [oneMain compare:twoMain]) != NSOrderedSame) {
         return mainDiff;
     }
-    
+
     // At this point the main parts are the same; just deal with alpha stuff
     // If one has an alpha part and the other doesn't, the one without is newer
     if ([oneComponents count] < [twoComponents count]) {
         return NSOrderedDescending;
-        
+
     } else if ([oneComponents count] > [twoComponents count]) {
         return NSOrderedAscending;
-        
+
     } else if ([oneComponents count] == 1) {
         // Neither has an alpha part, and we know the main parts are the same
         return NSOrderedSame;
     }
-    
+
     // At this point the main parts are the same and both have alpha parts. Compare the alpha parts
     // numerically. If it's not a valid number (including empty string) it's treated as zero.
     NSNumber *oneAlpha = [NSNumber numberWithInt:[[oneComponents objectAtIndex:1] intValue]];
@@ -125,51 +125,51 @@
     return [self split:token limit:0];
 }
 
-- (NSArray*)split: (NSString*)token limit:(NSUInteger)maxResults {
-    NSMutableArray* result = [NSMutableArray arrayWithCapacity: 8];
-    NSString* buffer = self;
+- (NSArray *)split:(NSString *)token limit:(NSUInteger)maxResults {
+    NSMutableArray *result = [NSMutableArray arrayWithCapacity:8];
+    NSString *buffer       = self;
     while ([buffer contains:token]) {
         if (maxResults > 0 && [result count] == maxResults - 1) {
             break;
         }
         NSUInteger matchIndex = [buffer indexOf:token];
-        NSString* nextPart = [buffer substringFromIndex:0 toIndex:matchIndex];
-        buffer = [buffer substringFromIndex:matchIndex + [token length]];
+        NSString *nextPart    = [buffer substringFromIndex:0 toIndex:matchIndex];
+        buffer                = [buffer substringFromIndex:matchIndex + [token length]];
         [result addObject:nextPart];
     }
     if ([buffer length] > 0) {
         [result addObject:buffer];
     }
-    
+
     return result;
 }
 
-- (NSString*)substringFromIndex:(NSUInteger)from toIndex:(NSUInteger)to {
+- (NSString *)substringFromIndex:(NSUInteger)from toIndex:(NSUInteger)to {
     NSRange range;
     range.location = from;
-    range.length = to - from;
+    range.length   = to - from;
     return [self substringWithRange:range];
 }
 
 + (NSString *)stringByFormattingBytes:(long long)bytes {
     NSArray *units = @[@"%1.0f Bytes", @"%1.1f KB", @"%1.1f MB", @"%1.1f GB", @"%1.1f TB"];
-    
+
     long long value = bytes * 10;
-    for (NSUInteger i=0; i<[units count]; i++) {
+    for (NSUInteger i = 0; i < [units count]; i++) {
         if (i > 0) {
-            value = value/1024;
+            value = value / 1024;
         }
         if (value < 10000) {
-            return [NSString stringWithFormat:units[i], value/10.0];
+            return [NSString stringWithFormat:units[i], value / 10.0];
         }
     }
-    
-    return [NSString stringWithFormat:units[[units count]-1], value/10.0];
+
+    return [NSString stringWithFormat:units[[units count] - 1], value / 10.0];
 }
 
 - (NSInteger)byteLength {
     NSInteger strlength = 0;
-    char *p = (char *)[self cStringUsingEncoding:NSUnicodeStringEncoding];
+    char *p             = (char *)[self cStringUsingEncoding:NSUnicodeStringEncoding];
     for (int i = 0; i < [self lengthOfBytesUsingEncoding:NSUnicodeStringEncoding]; i++) {
         if (*p) {
             p++;
@@ -178,7 +178,7 @@
             p++;
         }
     }
-    
+
     return (strlength + 1) / 2;
 }
 
@@ -220,32 +220,32 @@
 
 - (NSString *)hmacMD5StringWithKey:(NSString *)key {
     return [[self dataUsingEncoding:NSUTF8StringEncoding]
-            hmacMD5StringWithKey:key];
+        hmacMD5StringWithKey:key];
 }
 
 - (NSString *)hmacSHA1StringWithKey:(NSString *)key {
     return [[self dataUsingEncoding:NSUTF8StringEncoding]
-            hmacSHA1StringWithKey:key];
+        hmacSHA1StringWithKey:key];
 }
 
 - (NSString *)hmacSHA224StringWithKey:(NSString *)key {
     return [[self dataUsingEncoding:NSUTF8StringEncoding]
-            hmacSHA224StringWithKey:key];
+        hmacSHA224StringWithKey:key];
 }
 
 - (NSString *)hmacSHA256StringWithKey:(NSString *)key {
     return [[self dataUsingEncoding:NSUTF8StringEncoding]
-            hmacSHA256StringWithKey:key];
+        hmacSHA256StringWithKey:key];
 }
 
 - (NSString *)hmacSHA384StringWithKey:(NSString *)key {
     return [[self dataUsingEncoding:NSUTF8StringEncoding]
-            hmacSHA384StringWithKey:key];
+        hmacSHA384StringWithKey:key];
 }
 
 - (NSString *)hmacSHA512StringWithKey:(NSString *)key {
     return [[self dataUsingEncoding:NSUTF8StringEncoding]
-            hmacSHA512StringWithKey:key];
+        hmacSHA512StringWithKey:key];
 }
 
 - (NSString *)base64EncodedString {
@@ -272,25 +272,25 @@
          - parameter string: The string to be percent-escaped.
          - returns: The percent-escaped string.
          */
-        static NSString * const kAFCharactersGeneralDelimitersToEncode = @":#[]@"; // does not include "?" or "/" due to RFC 3986 - Section 3.4
-        static NSString * const kAFCharactersSubDelimitersToEncode = @"!$&'()*+,;=";
-        
-        NSMutableCharacterSet * allowedCharacterSet = [[NSCharacterSet URLQueryAllowedCharacterSet] mutableCopy];
+        static NSString *const kAFCharactersGeneralDelimitersToEncode = @":#[]@"; // does not include "?" or "/" due to RFC 3986 - Section 3.4
+        static NSString *const kAFCharactersSubDelimitersToEncode     = @"!$&'()*+,;=";
+
+        NSMutableCharacterSet *allowedCharacterSet = [[NSCharacterSet URLQueryAllowedCharacterSet] mutableCopy];
         [allowedCharacterSet removeCharactersInString:[kAFCharactersGeneralDelimitersToEncode stringByAppendingString:kAFCharactersSubDelimitersToEncode]];
         static NSUInteger const batchSize = 50;
-        
-        NSUInteger index = 0;
+
+        NSUInteger index         = 0;
         NSMutableString *escaped = @"".mutableCopy;
-        
+
         while (index < self.length) {
             NSUInteger length = MIN(self.length - index, batchSize);
-            NSRange range = NSMakeRange(index, length);
+            NSRange range     = NSMakeRange(index, length);
             // To avoid breaking up character sequences such as 👴🏻👮🏽
-            range = [self rangeOfComposedCharacterSequencesForRange:range];
+            range               = [self rangeOfComposedCharacterSequencesForRange:range];
             NSString *substring = [self substringWithRange:range];
-            NSString *encoded = [substring stringByAddingPercentEncodingWithAllowedCharacters:allowedCharacterSet];
+            NSString *encoded   = [substring stringByAddingPercentEncodingWithAllowedCharacters:allowedCharacterSet];
             [escaped appendString:encoded];
-            
+
             index += range.length;
         }
         return escaped;
@@ -298,13 +298,13 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
         CFStringEncoding cfEncoding = CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding);
-        NSString *encoded = (__bridge_transfer NSString *)
-        CFURLCreateStringByAddingPercentEscapes(
-                                                kCFAllocatorDefault,
-                                                (__bridge CFStringRef)self,
-                                                NULL,
-                                                CFSTR("!#$&'()*+,/:;=?@[]"),
-                                                cfEncoding);
+        NSString *encoded           = (__bridge_transfer NSString *)
+            CFURLCreateStringByAddingPercentEscapes(
+                kCFAllocatorDefault,
+                (__bridge CFStringRef)self,
+                NULL,
+                CFSTR("!#$&'()*+,/:;=?@[]"),
+                cfEncoding);
         return encoded;
 #pragma clang diagnostic pop
     }
@@ -317,14 +317,14 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
         CFStringEncoding en = CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding);
-        NSString *decoded = [self stringByReplacingOccurrencesOfString:@"+"
+        NSString *decoded   = [self stringByReplacingOccurrencesOfString:@"+"
                                                             withString:@" "];
         decoded = (__bridge_transfer NSString *)
-        CFURLCreateStringByReplacingPercentEscapesUsingEncoding(
-                                                                NULL,
-                                                                (__bridge CFStringRef)decoded,
-                                                                CFSTR(""),
-                                                                en);
+            CFURLCreateStringByReplacingPercentEscapesUsingEncoding(
+                NULL,
+                (__bridge CFStringRef)decoded,
+                CFSTR(""),
+                en);
         return decoded;
 #pragma clang diagnostic pop
     }
@@ -333,22 +333,33 @@
 - (NSString *)stringByEscapingHTML {
     NSUInteger len = self.length;
     if (!len) return self;
-    
+
     unichar *buf = malloc(sizeof(unichar) * len);
     if (!buf) return self;
     [self getCharacters:buf range:NSMakeRange(0, len)];
-    
+
     NSMutableString *result = [NSMutableString string];
     for (int i = 0; i < len; i++) {
-        unichar c = buf[i];
+        unichar c     = buf[i];
         NSString *esc = nil;
         switch (c) {
-            case 34: esc = @"&quot;"; break;
-            case 38: esc = @"&amp;"; break;
-            case 39: esc = @"&apos;"; break;
-            case 60: esc = @"&lt;"; break;
-            case 62: esc = @"&gt;"; break;
-            default: break;
+            case 34:
+                esc = @"&quot;";
+                break;
+            case 38:
+                esc = @"&amp;";
+                break;
+            case 39:
+                esc = @"&apos;";
+                break;
+            case 60:
+                esc = @"&lt;";
+                break;
+            case 62:
+                esc = @"&gt;";
+                break;
+            default:
+                break;
         }
         if (esc) {
             [result appendString:esc];
@@ -368,12 +379,13 @@
         attr[NSFontAttributeName] = font;
         if (lineBreakMode != NSLineBreakByWordWrapping) {
             NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
-            paragraphStyle.lineBreakMode = lineBreakMode;
-            attr[NSParagraphStyleAttributeName] = paragraphStyle;
+            paragraphStyle.lineBreakMode            = lineBreakMode;
+            attr[NSParagraphStyleAttributeName]     = paragraphStyle;
         }
         CGRect rect = [self boundingRectWithSize:size
                                          options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-                                      attributes:attr context:nil];
+                                      attributes:attr
+                                         context:nil];
         result = rect.size;
     } else {
 #pragma clang diagnostic push
@@ -410,14 +422,18 @@
     if (regex.length == 0 || !block) return;
     NSRegularExpression *pattern = [NSRegularExpression regularExpressionWithPattern:regex options:options error:nil];
     if (!regex) return;
-    [pattern enumerateMatchesInString:self options:kNilOptions range:NSMakeRange(0, self.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        block([self substringWithRange:result.range], result.range, stop);
-    }];
+    [pattern enumerateMatchesInString:self
+                              options:kNilOptions
+                                range:NSMakeRange(0, self.length)
+                           usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                               block([self substringWithRange:result.range], result.range, stop);
+                           }];
 }
 
 - (NSString *)stringByReplacingRegex:(NSString *)regex
                              options:(NSRegularExpressionOptions)options
-                          withString:(NSString *)replacement; {
+                          withString:(NSString *)replacement;
+{
     NSRegularExpression *pattern = [NSRegularExpression regularExpressionWithPattern:regex options:options error:nil];
     if (!pattern) return self;
     return [pattern stringByReplacingMatchesInString:self options:0 range:NSMakeRange(0, [self length]) withTemplate:replacement];
@@ -427,41 +443,40 @@
     return self.numberValue.charValue;
 }
 
-- (unsigned char) unsignedCharValue {
+- (unsigned char)unsignedCharValue {
     return self.numberValue.unsignedCharValue;
 }
 
-- (short) shortValue {
+- (short)shortValue {
     return self.numberValue.shortValue;
 }
 
-- (unsigned short) unsignedShortValue {
+- (unsigned short)unsignedShortValue {
     return self.numberValue.unsignedShortValue;
 }
 
-- (unsigned int) unsignedIntValue {
+- (unsigned int)unsignedIntValue {
     return self.numberValue.unsignedIntValue;
 }
 
-- (long) longValue {
+- (long)longValue {
     return self.numberValue.longValue;
 }
 
-- (unsigned long) unsignedLongValue {
+- (unsigned long)unsignedLongValue {
     return self.numberValue.unsignedLongValue;
 }
 
-- (unsigned long long) unsignedLongLongValue {
+- (unsigned long long)unsignedLongLongValue {
     return self.numberValue.unsignedLongLongValue;
 }
 
-- (NSUInteger) unsignedIntegerValue {
+- (NSUInteger)unsignedIntegerValue {
     return self.numberValue.unsignedIntegerValue;
 }
 
-
 + (NSString *)stringWithUUID {
-    CFUUIDRef uuid = CFUUIDCreate(NULL);
+    CFUUIDRef uuid     = CFUUIDCreate(NULL);
     CFStringRef string = CFUUIDCreateString(NULL, uuid);
     CFRelease(uuid);
     return (__bridge_transfer NSString *)string;
@@ -483,17 +498,17 @@
     if (range.location != 0 || range.length != self.length) {
         str = [self substringWithRange:range];
     }
-    NSUInteger len = [str lengthOfBytesUsingEncoding:NSUTF32StringEncoding] / 4;
+    NSUInteger len    = [str lengthOfBytesUsingEncoding:NSUTF32StringEncoding] / 4;
     UTF32Char *char32 = (UTF32Char *)[str cStringUsingEncoding:NSUTF32LittleEndianStringEncoding];
     if (len == 0 || char32 == NULL) return;
-    
+
     NSUInteger location = 0;
-    BOOL stop = NO;
+    BOOL stop           = NO;
     NSRange subRange;
     UTF32Char oneChar;
-    
+
     for (NSUInteger i = 0; i < len; i++) {
-        oneChar = char32[i];
+        oneChar  = char32[i];
         subRange = NSMakeRange(location, oneChar > 0xFFFF ? 2 : 1);
         block(oneChar, subRange, &stop);
         if (stop) return;
@@ -513,7 +528,7 @@
 
 - (NSString *)stringByAppendingPathScale:(CGFloat)scale {
     if (fabs(scale - 1) <= __FLT_EPSILON__ || self.length == 0 || [self hasSuffix:@"/"]) return self.copy;
-    NSString *ext = self.pathExtension;
+    NSString *ext    = self.pathExtension;
     NSRange extRange = NSMakeRange(self.length - ext.length, 0);
     if (ext.length > 0) extRange.location -= 1;
     NSString *scaleStr = [NSString stringWithFormat:@"@%@x", @(scale)];
@@ -522,11 +537,13 @@
 
 - (CGFloat)pathScale {
     if (self.length == 0 || [self hasSuffix:@"/"]) return 1;
-    NSString *name = self.stringByDeletingPathExtension;
+    NSString *name        = self.stringByDeletingPathExtension;
     __block CGFloat scale = 1;
-    [name enumerateRegexMatches:@"@[0-9]+\\.?[0-9]*x$" options:NSRegularExpressionAnchorsMatchLines usingBlock: ^(NSString *match, NSRange matchRange, BOOL *stop) {
-        scale = [match substringWithRange:NSMakeRange(1, match.length - 2)].doubleValue;
-    }];
+    [name enumerateRegexMatches:@"@[0-9]+\\.?[0-9]*x$"
+                        options:NSRegularExpressionAnchorsMatchLines
+                     usingBlock:^(NSString *match, NSRange matchRange, BOOL *stop) {
+                         scale = [match substringWithRange:NSMakeRange(1, match.length - 2)].doubleValue;
+                     }];
     return scale;
 }
 
@@ -569,10 +586,10 @@
 
 + (NSString *)stringNamed:(NSString *)name {
     NSString *path = [[NSBundle mainBundle] pathForResource:name ofType:@""];
-    NSString *str = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
+    NSString *str  = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
     if (!str) {
         path = [[NSBundle mainBundle] pathForResource:name ofType:@"txt"];
-        str = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
+        str  = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
     }
     return str;
 }
@@ -580,46 +597,52 @@
 #pragma mark Working with Paths
 
 - (NSString *)pathByIncrementingSequenceNumber {
-    NSString *baseName = [self stringByDeletingPathExtension];
+    NSString *baseName  = [self stringByDeletingPathExtension];
     NSString *extension = [self pathExtension];
-    
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\(([0-9]+)\\)$" options:0 error:NULL];
+
+    NSRegularExpression *regex       = [NSRegularExpression regularExpressionWithPattern:@"\\(([0-9]+)\\)$" options:0 error:NULL];
     __block NSInteger sequenceNumber = 0;
-    
-    [regex enumerateMatchesInString:baseName options:0 range:NSMakeRange(0, [baseName length]) usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop){
-        
-        NSRange range = [match rangeAtIndex:1]; // first capture group
-        NSString *substring= [self substringWithRange:range];
-        
-        sequenceNumber = [substring integerValue];
-        *stop = YES;
-    }];
-    
+
+    [regex enumerateMatchesInString:baseName
+                            options:0
+                              range:NSMakeRange(0, [baseName length])
+                         usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop) {
+
+                             NSRange range       = [match rangeAtIndex:1]; // first capture group
+                             NSString *substring = [self substringWithRange:range];
+
+                             sequenceNumber = [substring integerValue];
+                             *stop          = YES;
+                         }];
+
     NSString *nakedName = [baseName pathByDeletingSequenceNumber];
-    
+
     if ([extension isEqualToString:@""]) {
-        return [nakedName stringByAppendingFormat:@"(%d)", (int)sequenceNumber+1];
+        return [nakedName stringByAppendingFormat:@"(%d)", (int)sequenceNumber + 1];
     }
-    
-    return [[nakedName stringByAppendingFormat:@"(%d)", (int)sequenceNumber+1] stringByAppendingPathExtension:extension];
+
+    return [[nakedName stringByAppendingFormat:@"(%d)", (int)sequenceNumber + 1] stringByAppendingPathExtension:extension];
 }
 
 - (NSString *)pathByDeletingSequenceNumber {
     NSString *baseName = [self stringByDeletingPathExtension];
-    
+
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\([0-9]+\\)$" options:0 error:NULL];
-    __block NSRange range = NSMakeRange(NSNotFound, 0);
-    
-    [regex enumerateMatchesInString:baseName options:0 range:NSMakeRange(0, [baseName length]) usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop) {
-        
-        range = [match range];
-        *stop = YES;
-    }];
-    
+    __block NSRange range      = NSMakeRange(NSNotFound, 0);
+
+    [regex enumerateMatchesInString:baseName
+                            options:0
+                              range:NSMakeRange(0, [baseName length])
+                         usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags, BOOL *stop) {
+
+                             range = [match range];
+                             *stop = YES;
+                         }];
+
     if (range.location != NSNotFound) {
         return [self stringByReplacingCharactersInRange:range withString:@""];
     }
-    
+
     return self;
 }
 
@@ -628,26 +651,25 @@
 @implementation NSString (ZKUTI)
 
 + (NSString *)MIMETypeForFileExtension:(NSString *)extension {
-    CFStringRef typeForExt = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension,(__bridge CFStringRef)extension , NULL);
-    NSString *result = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass(typeForExt, kUTTagClassMIMEType);
+    CFStringRef typeForExt = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)extension, NULL);
+    NSString *result       = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass(typeForExt, kUTTagClassMIMEType);
     CFRelease(typeForExt);
-    if (!result)
-    {
+    if (!result) {
         return @"application/octet-stream";
     }
-    
+
     return result;
 }
 
 + (NSString *)fileTypeDescriptionForFileExtension:(NSString *)extension {
-    CFStringRef typeForExt = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension,(__bridge CFStringRef)extension , NULL);
-    NSString *result = (__bridge_transfer NSString *)UTTypeCopyDescription(typeForExt);
+    CFStringRef typeForExt = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)extension, NULL);
+    NSString *result       = (__bridge_transfer NSString *)UTTypeCopyDescription(typeForExt);
     CFRelease(typeForExt);
     return result;
 }
 
 + (NSString *)universalTypeIdentifierForFileExtension:(NSString *)extension {
-    return (__bridge_transfer NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension,(__bridge CFStringRef)extension , NULL);
+    return (__bridge_transfer NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)extension, NULL);
 }
 
 + (NSString *)fileExtensionForUniversalTypeIdentifier:(NSString *)UTI {
@@ -660,57 +682,53 @@
 
 - (BOOL)isMovieFileName {
     NSString *extension = [self pathExtension];
-    
+
     // without extension we cannot know
-    if (![extension length])
-    {
+    if (![extension length]) {
         return NO;
     }
-    
+
     NSString *uti = [NSString universalTypeIdentifierForFileExtension:extension];
-    
+
     return [uti conformsToUniversalTypeIdentifier:@"public.movie"];
 }
 
 - (BOOL)isAudioFileName {
     NSString *extension = [self pathExtension];
-    
+
     // without extension we cannot know
-    if (![extension length])
-    {
+    if (![extension length]) {
         return NO;
     }
-    
+
     NSString *uti = [NSString universalTypeIdentifierForFileExtension:extension];
-    
+
     return [uti conformsToUniversalTypeIdentifier:@"public.audio"];
 }
 
 - (BOOL)isImageFileName {
     NSString *extension = [self pathExtension];
-    
+
     // without extension we cannot know
-    if (![extension length])
-    {
+    if (![extension length]) {
         return NO;
     }
-    
+
     NSString *uti = [NSString universalTypeIdentifierForFileExtension:extension];
-    
+
     return [uti conformsToUniversalTypeIdentifier:@"public.image"];
 }
 
 - (BOOL)isHTMLFileName {
     NSString *extension = [self pathExtension];
-    
+
     // without extension we cannot know
-    if (![extension length])
-    {
+    if (![extension length]) {
         return NO;
     }
-    
+
     NSString *uti = [NSString universalTypeIdentifierForFileExtension:extension];
-    
+
     return [uti conformsToUniversalTypeIdentifier:@"public.html"];
 }
 

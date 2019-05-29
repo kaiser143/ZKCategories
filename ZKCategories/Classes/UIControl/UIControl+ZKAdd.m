@@ -9,7 +9,7 @@
 #import "UIControl+ZKAdd.h"
 #import "NSObject+ZKAdd.h"
 
-@interface _ZKUIControlBlockTarget : NSObject
+@interface _KAIUIControlBlockTarget : NSObject
 
 @property (nonatomic, copy) void (^block)(id sender);
 @property (nonatomic, assign) UIControlEvents events;
@@ -19,12 +19,12 @@
 
 @end
 
-@implementation _ZKUIControlBlockTarget
+@implementation _KAIUIControlBlockTarget
 
 - (id)initWithBlock:(void (^)(id sender))block events:(UIControlEvents)events {
     self = [super init];
     if (self) {
-        _block = [block copy];
+        _block  = [block copy];
         _events = events;
     }
     return self;
@@ -35,7 +35,6 @@
 }
 
 @end
-
 
 @interface UIControl ()
 
@@ -51,7 +50,7 @@
 }
 
 - (void)removeAllTargets {
-    [[self allTargets] enumerateObjectsUsingBlock: ^(id object, BOOL *stop) {
+    [[self allTargets] enumerateObjectsUsingBlock:^(id object, BOOL *stop) {
         [self removeTarget:object action:NULL forControlEvents:UIControlEventAllEvents];
     }];
     [[self kai_allUIControlBlockTargets] removeAllObjects];
@@ -63,8 +62,9 @@
     for (id currentTarget in targets) {
         NSArray *actions = [self actionsForTarget:currentTarget forControlEvent:controlEvents];
         for (NSString *currentAction in actions) {
-            [self removeTarget:currentTarget action:NSSelectorFromString(currentAction)
-              forControlEvents:controlEvents];
+            [self removeTarget:currentTarget
+                          action:NSSelectorFromString(currentAction)
+                forControlEvents:controlEvents];
         }
     }
     [self addTarget:target action:action forControlEvents:controlEvents];
@@ -73,8 +73,7 @@
 - (void)addBlockForControlEvents:(UIControlEvents)controlEvents
                            block:(void (^)(__kindof UIControl *sender))block {
     if (!controlEvents) return;
-    _ZKUIControlBlockTarget *target = [[_ZKUIControlBlockTarget alloc]
-                                       initWithBlock:block events:controlEvents];
+    _KAIUIControlBlockTarget *target = [[_KAIUIControlBlockTarget alloc] initWithBlock:block events:controlEvents];
     [self addTarget:target action:@selector(invoke:) forControlEvents:controlEvents];
     NSMutableArray *targets = [self kai_allUIControlBlockTargets];
     [targets addObject:target];
@@ -88,10 +87,10 @@
 
 - (void)removeAllBlocksForControlEvents:(UIControlEvents)controlEvents {
     if (!controlEvents) return;
-    
+
     NSMutableArray *targets = [self kai_allUIControlBlockTargets];
     NSMutableArray *removes = [NSMutableArray array];
-    for (_ZKUIControlBlockTarget *target in targets) {
+    for (_KAIUIControlBlockTarget *target in targets) {
         if (target.events & controlEvents) {
             UIControlEvents newEvent = target.events & (~controlEvents);
             if (newEvent) {
@@ -146,7 +145,7 @@
         [self kai_sendAction:action to:target forEvent:event];
         return;
     }
-    
+
     NSString *controlName = NSStringFromClass(self.class);
     if ([controlName isEqualToString:@"UIButton"] || [controlName isEqualToString:@"UINavigationButton"]) {
         if (self.isIgnoreEvent) {

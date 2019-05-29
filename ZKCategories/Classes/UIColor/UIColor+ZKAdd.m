@@ -373,13 +373,13 @@ static BOOL hexStrToRGBA(NSString *str,
     static NSString *stringFormat = @"%02x%02x%02x";
     NSString *hex                 = nil;
     if (count == 2) {
-        NSUInteger white = (NSUInteger)(components[ 0 ] * 255.0f);
+        NSUInteger white = (NSUInteger)(components[0] * 255.0f);
         hex              = [NSString stringWithFormat:stringFormat, white, white, white];
     } else if (count == 4) {
         hex = [NSString stringWithFormat:stringFormat,
-                                         (NSUInteger)(components[ 0 ] * 255.0f),
-                                         (NSUInteger)(components[ 1 ] * 255.0f),
-                                         (NSUInteger)(components[ 2 ] * 255.0f)];
+                                         (NSUInteger)(components[0] * 255.0f),
+                                         (NSUInteger)(components[1] * 255.0f),
+                                         (NSUInteger)(components[2] * 255.0f)];
     }
 
     if (hex && withAlpha) {
@@ -392,7 +392,7 @@ static BOOL hexStrToRGBA(NSString *str,
 - (UIColor *)colorByAddColor:(UIColor *)add blendMode:(CGBlendMode)blendMode {
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGBitmapInfo bitmapInfo    = kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big;
-    uint8_t pixel[ 4 ]         = {0};
+    uint8_t pixel[4]           = {0};
     CGContextRef context       = CGBitmapContextCreate(&pixel, 1, 1, 8, 4, colorSpace, bitmapInfo);
     CGContextSetFillColorWithColor(context, self.CGColor);
     CGContextFillRect(context, CGRectMake(0, 0, 1, 1));
@@ -401,7 +401,7 @@ static BOOL hexStrToRGBA(NSString *str,
     CGContextFillRect(context, CGRectMake(0, 0, 1, 1));
     CGContextRelease(context);
     CGColorSpaceRelease(colorSpace);
-    return [UIColor colorWithRed:pixel[ 0 ] / 255.0f green:pixel[ 1 ] / 255.0f blue:pixel[ 2 ] / 255.0f alpha:pixel[ 3 ] / 255.0f];
+    return [UIColor colorWithRed:pixel[0] / 255.0f green:pixel[1] / 255.0f blue:pixel[2] / 255.0f alpha:pixel[3] / 255.0f];
 }
 
 - (UIColor *)colorByChangeHue:(CGFloat)h saturation:(CGFloat)s brightness:(CGFloat)b alpha:(CGFloat)a {

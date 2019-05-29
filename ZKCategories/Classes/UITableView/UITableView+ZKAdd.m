@@ -7,24 +7,19 @@
 //
 
 #import "UITableView+ZKAdd.h"
+#import "UIView+ZKAdd.h"
 
 @implementation UITableView (ZKAdd)
 
 - (UIView *)indexView {
     Class indexViewClass = NSClassFromString(@"UITableViewIndex");
-    NSEnumerator* e = [self.subviews reverseObjectEnumerator];
-    for (UIView* child; child = [e nextObject]; ) {
-        if ([child isKindOfClass:indexViewClass]) {
-            return child;
-        }
-    }
-    return nil;
+    return [self descendantOrSelfWithClass:indexViewClass];
 }
 
 - (CGFloat)tableCellMargin {
     if (self.style == UITableViewStyleGrouped) {
         return 10;
-        
+
     } else {
         return 0;
     }
@@ -32,36 +27,39 @@
 
 - (void)scrollToFirstRow:(BOOL)animated {
     if ([self numberOfSections] > 0 && [self numberOfRowsInSection:0] > 0) {
-        NSIndexPath* indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-        [self scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+        [self scrollToRowAtIndexPath:indexPath
+                    atScrollPosition:UITableViewScrollPositionTop
                             animated:NO];
     }
 }
 
 - (void)scrollToLastRow:(BOOL)animated {
     if ([self numberOfSections] > 0) {
-        NSInteger section = [self numberOfSections]-1;
+        NSInteger section  = [self numberOfSections] - 1;
         NSInteger rowCount = [self numberOfRowsInSection:section];
         if (rowCount > 0) {
-            NSIndexPath* indexPath = [NSIndexPath indexPathForRow:rowCount-1 inSection:section];
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:rowCount - 1 inSection:section];
             [self scrollToRowAtIndexPath:indexPath
-                        atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+                        atScrollPosition:UITableViewScrollPositionBottom
+                                animated:NO];
         }
     }
 }
 
-- (void)touchRowAtIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated {
+- (void)touchRowAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated {
     if (![self cellForRowAtIndexPath:indexPath]) {
         [self reloadData];
     }
-    
+
     if ([self.delegate respondsToSelector:@selector(tableView:willSelectRowAtIndexPath:)]) {
         [self.delegate tableView:self willSelectRowAtIndexPath:indexPath];
     }
-    
-    [self selectRowAtIndexPath:indexPath animated:animated
+
+    [self selectRowAtIndexPath:indexPath
+                      animated:animated
                 scrollPosition:UITableViewScrollPositionTop];
-    
+
     if ([self.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]) {
         [self.delegate tableView:self didSelectRowAtIndexPath:indexPath];
     }
@@ -71,11 +69,11 @@
     // Because we set delaysContentTouches = NO, we return YES for UIButtons
     // so that scrolling works correctly when the scroll gesture
     // starts in the UIButtons.
-    
+
     if ([view isKindOfClass:[UIControl class]]) {
         return YES;
     }
-    
+
     return [super touchesShouldCancelInContentView:view];
 }
 
@@ -134,13 +132,13 @@
 
 - (void)clearSelectedRowsAnimated:(BOOL)animated {
     NSArray *indexs = [self indexPathsForSelectedRows];
-    [indexs enumerateObjectsUsingBlock:^(NSIndexPath* path, NSUInteger idx, BOOL *stop) {
+    [indexs enumerateObjectsUsingBlock:^(NSIndexPath *path, NSUInteger idx, BOOL *stop) {
         [self deselectRowAtIndexPath:path animated:animated];
     }];
 }
 
 - (void)extraCellLineHidden {
-    UIView *v = [[UIView alloc] initWithFrame:CGRectZero];
+    UIView *v         = [[UIView alloc] initWithFrame:CGRectZero];
     v.backgroundColor = [UIColor clearColor];
     [self setTableFooterView:v];
 }

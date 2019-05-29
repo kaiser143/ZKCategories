@@ -10,16 +10,16 @@
 
 @implementation NSDecimalNumber (ZKAdd)
 
-- (NSDecimalNumber *)decimalNumberWithDecimals:(NSUInteger)decimals{
+- (NSDecimalNumber *)decimalNumberWithDecimals:(NSUInteger)decimals {
     return [self decimalNumberWithDecimals:decimals mode:NSRoundPlain];
 }
 
-- (NSDecimalNumber *)decimalNumberWithDecimals:(NSUInteger)decimals mode:(NSRoundingMode)roundingMode{
+- (NSDecimalNumber *)decimalNumberWithDecimals:(NSUInteger)decimals mode:(NSRoundingMode)roundingMode {
     NSDecimalNumberHandler *handler = [[NSDecimalNumberHandler alloc] initWithRoundingMode:roundingMode scale:decimals raiseOnExactness:NO raiseOnOverflow:YES raiseOnUnderflow:YES raiseOnDivideByZero:YES];
     return [self decimalNumberByRoundingAccordingToBehavior:handler];
 }
 
-- (NSDecimalNumber*)decimalNumberWithPercentage:(float)percent {
+- (NSDecimalNumber *)decimalNumberWithPercentage:(float)percent {
     NSDecimalNumber *percentage = [NSDecimalNumber decimalNumberWithDecimal:[[NSNumber numberWithFloat:percent] decimalValue]];
     return [self decimalNumberByMultiplyingBy:percentage];
 }
@@ -31,12 +31,12 @@
 }
 
 - (NSDecimalNumber *)decimalNumberWithDiscountPercentage:(NSDecimalNumber *)discountPercentage decimals:(NSUInteger)decimals {
-    NSDecimalNumber * value = [self decimalNumberWithDiscountPercentage:discountPercentage];
+    NSDecimalNumber *value = [self decimalNumberWithDiscountPercentage:discountPercentage];
     return [value decimalNumberWithDecimals:decimals];
 }
 
 - (NSDecimalNumber *)discountPercentageWithBaseValue:(NSDecimalNumber *)baseValue {
-    NSDecimalNumber *hundred = [NSDecimalNumber decimalNumberWithString:@"100"];
+    NSDecimalNumber *hundred    = [NSDecimalNumber decimalNumberWithString:@"100"];
     NSDecimalNumber *percentage = [[self decimalNumberByDividingBy:baseValue] decimalNumberByMultiplyingBy:hundred];
     return [hundred decimalNumberBySubtracting:percentage];
 }

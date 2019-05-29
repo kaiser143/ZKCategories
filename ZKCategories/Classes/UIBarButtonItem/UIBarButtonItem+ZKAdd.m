@@ -20,7 +20,7 @@
 
 @implementation _KAIBarButtonItemBlockTarget
 
-- (id)initWithBlock:(void (^)(id sender))block{
+- (id)initWithBlock:(void (^)(id sender))block {
     self = [super init];
     if (self) {
         _block = [block copy];
@@ -43,7 +43,7 @@
 - (void)setActionBlock:(void (^)(id sender))block {
     _KAIBarButtonItemBlockTarget *target = [[_KAIBarButtonItemBlockTarget alloc] initWithBlock:block];
     [self setAssociateValue:target withKey:_cmd];
-    
+
     [self setTarget:target];
     [self setAction:@selector(invoke:)];
 }

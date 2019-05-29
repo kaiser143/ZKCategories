@@ -17,7 +17,7 @@
 
 static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef source, size_t index) {
     NSTimeInterval delay = 0;
-    CFDictionaryRef dic = CGImageSourceCopyPropertiesAtIndex(source, index, NULL);
+    CFDictionaryRef dic  = CGImageSourceCopyPropertiesAtIndex(source, index, NULL);
     if (dic) {
         CFDictionaryRef dicGIF = CFDictionaryGetValue(dic, kCGImagePropertyGIFDictionary);
         if (dicGIF) {
@@ -29,7 +29,7 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
         }
         CFRelease(dic);
     }
-    
+
     // http://nullsleep.tumblr.com/post/16524517190/animated-gif-minimum-frame-delay-browser-compatibility
     if (delay < 0.02) delay = 0.1;
     return delay;
@@ -39,13 +39,13 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
 
 - (NSData *)compressQualityWithMaxLength:(NSInteger)maxLength {
     CGFloat compression = 1;
-    NSData *data = UIImageJPEGRepresentation(self, compression);
+    NSData *data        = UIImageJPEGRepresentation(self, compression);
     if (data.length < maxLength) return data;
     CGFloat max = 1;
     CGFloat min = 0;
     for (int i = 0; i < 6; ++i) {
         compression = (max + min) / 2;
-        data = UIImageJPEGRepresentation(self, compression);
+        data        = UIImageJPEGRepresentation(self, compression);
         if (data.length < maxLength * 0.9) {
             min = compression;
         } else if (data.length > maxLength) {
@@ -58,13 +58,13 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
 }
 
 - (NSData *)compressBySizeWithMaxLength:(NSUInteger)maxLength {
-    UIImage *resultImage = self;
-    NSData *data = UIImageJPEGRepresentation(resultImage, 1);
+    UIImage *resultImage      = self;
+    NSData *data              = UIImageJPEGRepresentation(resultImage, 1);
     NSUInteger lastDataLength = 0;
     while (data.length > maxLength && data.length != lastDataLength) {
         lastDataLength = data.length;
-        CGFloat ratio = (CGFloat)maxLength / data.length;
-        CGSize size = CGSizeMake((NSUInteger)(resultImage.size.width * sqrtf(ratio)),
+        CGFloat ratio  = (CGFloat)maxLength / data.length;
+        CGSize size    = CGSizeMake((NSUInteger)(resultImage.size.width * sqrtf(ratio)),
                                  (NSUInteger)(resultImage.size.height * sqrtf(ratio))); // Use NSUInteger to prevent white blank
         UIGraphicsBeginImageContext(size);
         // Use image to draw (drawInRect:), image is larger but more compression time
@@ -80,35 +80,38 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
 + (UIImage *)imageWithSmallGIFData:(NSData *)data scale:(CGFloat)scale {
     CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFTypeRef)(data), NULL);
     if (!source) return nil;
-    
+
     size_t count = CGImageSourceGetCount(source);
     if (count <= 1) {
         CFRelease(source);
         return [self.class imageWithData:data scale:scale];
     }
-    
+
     NSUInteger frames[count];
-    double oneFrameTime = 1 / 50.0; // 50 fps
+    double oneFrameTime      = 1 / 50.0; // 50 fps
     NSTimeInterval totalTime = 0;
-    NSUInteger totalFrame = 0;
-    NSUInteger gcdFrame = 0;
+    NSUInteger totalFrame    = 0;
+    NSUInteger gcdFrame      = 0;
     for (size_t i = 0; i < count; i++) {
         NSTimeInterval delay = _kai_CGImageSourceGetGIFFrameDelayAtIndex(source, i);
         totalTime += delay;
-        NSInteger frame = lrint(delay / oneFrameTime);
+        NSInteger frame      = lrint(delay / oneFrameTime);
         if (frame < 1) frame = 1;
-        frames[i] = frame;
+        frames[i]            = frame;
         totalFrame += frames[i];
-        if (i == 0) gcdFrame = frames[i];
+        if (i == 0)
+            gcdFrame = frames[i];
         else {
             NSUInteger frame = frames[i], tmp;
             if (frame < gcdFrame) {
-                tmp = frame; frame = gcdFrame; gcdFrame = tmp;
+                tmp      = frame;
+                frame    = gcdFrame;
+                gcdFrame = tmp;
             }
             while (true) {
                 tmp = frame % gcdFrame;
                 if (tmp == 0) break;
-                frame = gcdFrame;
+                frame    = gcdFrame;
                 gcdFrame = tmp;
             }
         }
@@ -120,16 +123,16 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
             CFRelease(source);
             return nil;
         }
-        size_t width = CGImageGetWidth(imageRef);
+        size_t width  = CGImageGetWidth(imageRef);
         size_t height = CGImageGetHeight(imageRef);
         if (width == 0 || height == 0) {
             CFRelease(source);
             CFRelease(imageRef);
             return nil;
         }
-        
+
         CGImageAlphaInfo alphaInfo = CGImageGetAlphaInfo(imageRef) & kCGBitmapAlphaInfoMask;
-        BOOL hasAlpha = NO;
+        BOOL hasAlpha              = NO;
         if (alphaInfo == kCGImageAlphaPremultipliedLast ||
             alphaInfo == kCGImageAlphaPremultipliedFirst ||
             alphaInfo == kCGImageAlphaLast ||
@@ -141,7 +144,7 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
         CGBitmapInfo bitmapInfo = kCGBitmapByteOrder32Host;
         bitmapInfo |= hasAlpha ? kCGImageAlphaPremultipliedFirst : kCGImageAlphaNoneSkipFirst;
         CGColorSpaceRef space = CGColorSpaceCreateDeviceRGB();
-        CGContextRef context = CGBitmapContextCreate(NULL, width, height, 8, 0, space, bitmapInfo);
+        CGContextRef context  = CGBitmapContextCreate(NULL, width, height, 8, 0, space, bitmapInfo);
         CGColorSpaceRelease(space);
         if (!context) {
             CFRelease(source);
@@ -187,10 +190,10 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
 + (BOOL)isAnimatedGIFFile:(NSString *)path {
     if (path.length == 0) return NO;
     const char *cpath = path.UTF8String;
-    FILE *fd = fopen(cpath, "rb");
+    FILE *fd          = fopen(cpath, "rb");
     if (!fd) return NO;
-    
-    BOOL isGIF = NO;
+
+    BOOL isGIF   = NO;
     UInt32 magic = 0;
     if (fread(&magic, sizeof(UInt32), 1, fd) == 1) {
         if ((magic & 0xFFFFFF) == '\0FIG') isGIF = YES;
@@ -210,28 +213,28 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
 + (UIImage *)imageWithEmoji:(NSString *)emoji size:(CGFloat)size {
     if (emoji.length == 0) return nil;
     if (size < 1) return nil;
-    
-    CGFloat scale = [UIScreen mainScreen].scale;
+
+    CGFloat scale  = [UIScreen mainScreen].scale;
     CTFontRef font = CTFontCreateWithName(CFSTR("AppleColorEmoji"), size * scale, NULL);
     if (!font) return nil;
-    
-    NSAttributedString *str = [[NSAttributedString alloc] initWithString:emoji attributes:@{ (__bridge id)kCTFontAttributeName:(__bridge id)font, (__bridge id)kCTForegroundColorAttributeName:(__bridge id)[UIColor whiteColor].CGColor }];
+
+    NSAttributedString *str    = [[NSAttributedString alloc] initWithString:emoji attributes:@{(__bridge id)kCTFontAttributeName: (__bridge id)font, (__bridge id)kCTForegroundColorAttributeName: (__bridge id)[UIColor whiteColor].CGColor}];
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef ctx = CGBitmapContextCreate(NULL, size * scale, size * scale, 8, 0, colorSpace, kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedFirst);
+    CGContextRef ctx           = CGBitmapContextCreate(NULL, size * scale, size * scale, 8, 0, colorSpace, kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedFirst);
     CGContextSetInterpolationQuality(ctx, kCGInterpolationHigh);
     CTLineRef line = CTLineCreateWithAttributedString((__bridge CFTypeRef)str);
-    CGRect bounds = CTLineGetBoundsWithOptions(line, kCTLineBoundsUseGlyphPathBounds);
+    CGRect bounds  = CTLineGetBoundsWithOptions(line, kCTLineBoundsUseGlyphPathBounds);
     CGContextSetTextPosition(ctx, 0, -bounds.origin.y);
     CTLineDraw(line, ctx);
     CGImageRef imageRef = CGBitmapContextCreateImage(ctx);
-    UIImage *image = [[UIImage alloc] initWithCGImage:imageRef scale:scale orientation:UIImageOrientationUp];
-    
+    UIImage *image      = [[UIImage alloc] initWithCGImage:imageRef scale:scale orientation:UIImageOrientationUp];
+
     CFRelease(font);
     CGColorSpaceRelease(colorSpace);
     CGContextRelease(ctx);
-    if (line)CFRelease(line);
+    if (line) CFRelease(line);
     if (imageRef) CFRelease(imageRef);
-    
+
     return image;
 }
 
@@ -239,41 +242,41 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
     CGPDFDocumentRef pdf = NULL;
     if ([dataOrPath isKindOfClass:[NSData class]]) {
         CGDataProviderRef provider = CGDataProviderCreateWithCFData((__bridge CFDataRef)dataOrPath);
-        pdf = CGPDFDocumentCreateWithProvider(provider);
+        pdf                        = CGPDFDocumentCreateWithProvider(provider);
         CGDataProviderRelease(provider);
     } else if ([dataOrPath isKindOfClass:[NSString class]]) {
         pdf = CGPDFDocumentCreateWithURL((__bridge CFURLRef)[NSURL fileURLWithPath:dataOrPath]);
     }
     if (!pdf) return nil;
-    
+
     CGPDFPageRef page = CGPDFDocumentGetPage(pdf, 1);
     if (!page) {
         CGPDFDocumentRelease(pdf);
         return nil;
     }
-    
-    CGRect pdfRect = CGPDFPageGetBoxRect(page, kCGPDFCropBox);
-    CGSize pdfSize = resize ? size : pdfRect.size;
-    CGFloat scale = [UIScreen mainScreen].scale;
+
+    CGRect pdfRect             = CGPDFPageGetBoxRect(page, kCGPDFCropBox);
+    CGSize pdfSize             = resize ? size : pdfRect.size;
+    CGFloat scale              = [UIScreen mainScreen].scale;
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef ctx = CGBitmapContextCreate(NULL, pdfSize.width * scale, pdfSize.height * scale, 8, 0, colorSpace, kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedFirst);
+    CGContextRef ctx           = CGBitmapContextCreate(NULL, pdfSize.width * scale, pdfSize.height * scale, 8, 0, colorSpace, kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedFirst);
     if (!ctx) {
         CGColorSpaceRelease(colorSpace);
         CGPDFDocumentRelease(pdf);
         return nil;
     }
-    
+
     CGContextScaleCTM(ctx, scale, scale);
     CGContextTranslateCTM(ctx, -pdfRect.origin.x, -pdfRect.origin.y);
     CGContextDrawPDFPage(ctx, page);
     CGPDFDocumentRelease(pdf);
-    
-    CGImageRef image = CGBitmapContextCreateImage(ctx);
+
+    CGImageRef image  = CGBitmapContextCreateImage(ctx);
     UIImage *pdfImage = [[UIImage alloc] initWithCGImage:image scale:scale orientation:UIImageOrientationUp];
     CGImageRelease(image);
     CGContextRelease(ctx);
     CGColorSpaceRelease(colorSpace);
-    
+
     return pdfImage;
 }
 
@@ -311,10 +314,10 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
 
 + (UIImage *)createNonInterpolatedUIImageFormCIImage:(CIImage *)image size:(CGSize)size image:(UIImage *)extra {
     CGRect extent = CGRectIntegral(image.extent);
-    CGFloat scale = MIN(size.width/CGRectGetWidth(extent), size.height/CGRectGetHeight(extent));
-    
+    CGFloat scale = MIN(size.width / CGRectGetWidth(extent), size.height / CGRectGetHeight(extent));
+
     // 1.创建bitmap;//
-    size_t width = CGRectGetWidth(extent) * scale;
+    size_t width  = CGRectGetWidth(extent) * scale;
     size_t height = CGRectGetHeight(extent) * scale;
     //创建一个DeviceGray颜色空间
     CGColorSpaceRef cs = CGColorSpaceCreateDeviceGray();
@@ -324,31 +327,31 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
     //bitsPerComponent：每个颜色的比特值，例如在rgba-32模式下为8
     //bitmapInfo：指定的位图应该包含一个alpha通道。
     CGContextRef bitmapRef = CGBitmapContextCreate(nil, width, height, 8, 0, cs, (CGBitmapInfo)kCGImageAlphaNone);
-    CIContext *context = [CIContext contextWithOptions:nil];
+    CIContext *context     = [CIContext contextWithOptions:nil];
     //创建CoreGraphics image
     CGImageRef bitmapImage = [context createCGImage:image fromRect:extent];
-    
+
     CGContextSetInterpolationQuality(bitmapRef, kCGInterpolationNone);
     CGContextScaleCTM(bitmapRef, scale, scale);
     CGContextDrawImage(bitmapRef, extent, bitmapImage);
-    
+
     // 2.保存bitmap到图片
     CGImageRef scaledImage = CGBitmapContextCreateImage(bitmapRef);
     CGContextRelease(bitmapRef);
     CGImageRelease(bitmapImage);
-    
+
     //原图
     UIImage *outputImage = [UIImage imageWithCGImage:scaledImage];
-    
+
     if (extra == nil) return outputImage;
-    
+
     //给二维码加 logo 图
     UIGraphicsBeginImageContextWithOptions(outputImage.size, NO, [[UIScreen mainScreen] scale]);
-    [outputImage drawInRect:CGRectMake(0,0 , size.width, size.height)];
+    [outputImage drawInRect:CGRectMake(0, 0, size.width, size.height)];
     CGFloat waterImagesizeWidth  = size.width * 0.2;
     CGFloat waterImagesizeHeight = size.height * 0.2;
     //把logo图画到生成的二维码图片上，注意尺寸不要太大（最大不超过二维码图片的%30），太大会造成扫不出来
-    [extra drawInRect:CGRectMake((size.width - waterImagesizeWidth)/2.0, (size.height - waterImagesizeHeight)/2.0, waterImagesizeWidth, waterImagesizeHeight)];
+    [extra drawInRect:CGRectMake((size.width - waterImagesizeWidth) / 2.0, (size.height - waterImagesizeHeight) / 2.0, waterImagesizeWidth, waterImagesizeHeight)];
     UIImage *result = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return result;
@@ -362,11 +365,11 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
     // 3. 将字符串转换成NSData
     NSData *data = [strings dataUsingEncoding:NSUTF8StringEncoding];
     // 4. 通过KVO设置滤镜inputMessage数据
-    [filter setValue:data forKey:@"inputMessage"];//通过kvo方式给一个字符串，生成二维码
-    [filter setValue:@"H" forKey:@"inputCorrectionLevel"];//设置二维码的纠错水平，越高纠错水平越高，可以污损的范围越大
+    [filter setValue:data forKey:@"inputMessage"];         //通过kvo方式给一个字符串，生成二维码
+    [filter setValue:@"H" forKey:@"inputCorrectionLevel"]; //设置二维码的纠错水平，越高纠错水平越高，可以污损的范围越大
     // 5. 获得滤镜输出的图像
-    CIImage *outPutImage = [filter outputImage];//拿到二维码图片
-    
+    CIImage *outPutImage = [filter outputImage]; //拿到二维码图片
+
     // 6. 将CIImage转换成UIImage，并放大显示
     // (此时获取到的二维码比较模糊,所以需要用下面的createNonInterpolatedUIImageFormCIImage方法重绘二维码)
     //    UIImage *codeImage = [UIImage imageWithCIImage:outputImage scale:1.0 orientation:UIImageOrientationUp];
@@ -382,7 +385,7 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
             alpha == kCGImageAlphaPremultipliedLast);
 }
 
-- (void)drawInRect:(CGRect)rect withContentMode:(UIViewContentMode)contentMode clipsToBounds:(BOOL)clips{
+- (void)drawInRect:(CGRect)rect withContentMode:(UIViewContentMode)contentMode clipsToBounds:(BOOL)clips {
     CGRect drawRect = ZKCGRectFitWithContentMode(rect, self.size, contentMode);
     if (drawRect.size.width == 0 || drawRect.size.height == 0) return;
     if (clips) {
@@ -424,7 +427,7 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
     rect.size.height *= self.scale;
     if (rect.size.width <= 0 || rect.size.height <= 0) return nil;
     CGImageRef imageRef = CGImageCreateWithImageInRect(self.CGImage, rect);
-    UIImage *image = [UIImage imageWithCGImage:imageRef scale:self.scale orientation:self.imageOrientation];
+    UIImage *image      = [UIImage imageWithCGImage:imageRef scale:self.scale orientation:self.imageOrientation];
     CGImageRelease(imageRef);
     return image;
 }
@@ -471,7 +474,7 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
                           borderWidth:(CGFloat)borderWidth
                           borderColor:(UIColor *)borderColor
                        borderLineJoin:(CGLineJoin)borderLineJoin {
-    
+
     if (corners != UIRectCornerAllCorners) {
         UIRectCorner tmp = 0;
         if (corners & UIRectCornerTopLeft) tmp |= UIRectCornerBottomLeft;
@@ -480,50 +483,50 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
         if (corners & UIRectCornerBottomRight) tmp |= UIRectCornerTopRight;
         corners = tmp;
     }
-    
+
     UIGraphicsBeginImageContextWithOptions(self.size, NO, self.scale);
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGRect rect = CGRectMake(0, 0, self.size.width, self.size.height);
+    CGRect rect          = CGRectMake(0, 0, self.size.width, self.size.height);
     CGContextScaleCTM(context, 1, -1);
     CGContextTranslateCTM(context, 0, -rect.size.height);
-    
+
     CGFloat minSize = MIN(self.size.width, self.size.height);
     if (borderWidth < minSize / 2) {
         UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectInset(rect, borderWidth, borderWidth) byRoundingCorners:corners cornerRadii:CGSizeMake(radius, borderWidth)];
         [path closePath];
-        
+
         CGContextSaveGState(context);
         [path addClip];
         CGContextDrawImage(context, rect, self.CGImage);
         CGContextRestoreGState(context);
     }
-    
+
     if (borderColor && borderWidth < minSize / 2 && borderWidth > 0) {
-        CGFloat strokeInset = (floor(borderWidth * self.scale) + 0.5) / self.scale;
-        CGRect strokeRect = CGRectInset(rect, strokeInset, strokeInset);
+        CGFloat strokeInset  = (floor(borderWidth * self.scale) + 0.5) / self.scale;
+        CGRect strokeRect    = CGRectInset(rect, strokeInset, strokeInset);
         CGFloat strokeRadius = radius > self.scale / 2 ? radius - self.scale / 2 : 0;
-        UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:strokeRect byRoundingCorners:corners cornerRadii:CGSizeMake(strokeRadius, borderWidth)];
+        UIBezierPath *path   = [UIBezierPath bezierPathWithRoundedRect:strokeRect byRoundingCorners:corners cornerRadii:CGSizeMake(strokeRadius, borderWidth)];
         [path closePath];
-        
-        path.lineWidth = borderWidth;
+
+        path.lineWidth     = borderWidth;
         path.lineJoinStyle = borderLineJoin;
         [borderColor setStroke];
         [path stroke];
     }
-    
+
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
 }
 
 - (UIImage *)imageByRotate:(CGFloat)radians fitSize:(BOOL)fitSize {
-    size_t width = (size_t)CGImageGetWidth(self.CGImage);
-    size_t height = (size_t)CGImageGetHeight(self.CGImage);
+    size_t width   = (size_t)CGImageGetWidth(self.CGImage);
+    size_t height  = (size_t)CGImageGetHeight(self.CGImage);
     CGRect newRect = CGRectApplyAffineTransform(CGRectMake(0., 0., width, height),
                                                 fitSize ? CGAffineTransformMakeRotation(radians) : CGAffineTransformIdentity);
-    
+
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef context = CGBitmapContextCreate(NULL,
+    CGContextRef context       = CGBitmapContextCreate(NULL,
                                                  (size_t)newRect.size.width,
                                                  (size_t)newRect.size.height,
                                                  8,
@@ -532,17 +535,17 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
                                                  kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedFirst);
     CGColorSpaceRelease(colorSpace);
     if (!context) return nil;
-    
+
     CGContextSetShouldAntialias(context, true);
     CGContextSetAllowsAntialiasing(context, true);
     CGContextSetInterpolationQuality(context, kCGInterpolationHigh);
-    
+
     CGContextTranslateCTM(context, +(newRect.size.width * 0.5), +(newRect.size.height * 0.5));
     CGContextRotateCTM(context, radians);
-    
+
     CGContextDrawImage(context, CGRectMake(-(width * 0.5), -(height * 0.5), width, height), self.CGImage);
     CGImageRef imgRef = CGBitmapContextCreateImage(context);
-    UIImage *img = [UIImage imageWithCGImage:imgRef scale:self.scale orientation:self.imageOrientation];
+    UIImage *img      = [UIImage imageWithCGImage:imgRef scale:self.scale orientation:self.imageOrientation];
     CGImageRelease(imgRef);
     CGContextRelease(context);
     return img;
@@ -550,22 +553,22 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
 
 - (UIImage *)kai_flipHorizontal:(BOOL)horizontal vertical:(BOOL)vertical {
     if (!self.CGImage) return nil;
-    size_t width = (size_t)CGImageGetWidth(self.CGImage);
-    size_t height = (size_t)CGImageGetHeight(self.CGImage);
-    size_t bytesPerRow = width * 4;
+    size_t width               = (size_t)CGImageGetWidth(self.CGImage);
+    size_t height              = (size_t)CGImageGetHeight(self.CGImage);
+    size_t bytesPerRow         = width * 4;
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef context = CGBitmapContextCreate(NULL, width, height, 8, bytesPerRow, colorSpace, kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedFirst);
+    CGContextRef context       = CGBitmapContextCreate(NULL, width, height, 8, bytesPerRow, colorSpace, kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedFirst);
     CGColorSpaceRelease(colorSpace);
     if (!context) return nil;
-    
+
     CGContextDrawImage(context, CGRectMake(0, 0, width, height), self.CGImage);
     UInt8 *data = (UInt8 *)CGBitmapContextGetData(context);
     if (!data) {
         CGContextRelease(context);
         return nil;
     }
-    vImage_Buffer src = { data, height, width, bytesPerRow };
-    vImage_Buffer dest = { data, height, width, bytesPerRow };
+    vImage_Buffer src  = {data, height, width, bytesPerRow};
+    vImage_Buffer dest = {data, height, width, bytesPerRow};
     if (vertical) {
         vImageVerticalReflect_ARGB8888(&src, &dest, kvImageBackgroundColorFill);
     }
@@ -632,8 +635,8 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
 
 - (UIImage *)imageByBlurWithTint:(UIColor *)tintColor {
     const CGFloat EffectColorAlpha = 0.6;
-    UIColor *effectColor = tintColor;
-    size_t componentCount = CGColorGetNumberOfComponents(tintColor.CGColor);
+    UIColor *effectColor           = tintColor;
+    size_t componentCount          = CGColorGetNumberOfComponents(tintColor.CGColor);
     if (componentCount == 2) {
         CGFloat b;
         if ([tintColor getWhite:&b alpha:NULL]) {
@@ -665,35 +668,34 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
         NSLog(@"UIImage+ZKAdd error: effectMaskImage must be backed by a CGImage: %@", maskImage);
         return nil;
     }
-    
+
     // iOS7 and above can use new func.
-    BOOL hasNewFunc = (long)vImageBuffer_InitWithCGImage != 0 && (long)vImageCreateCGImageFromBuffer != 0;
-    BOOL hasBlur = blurRadius > __FLT_EPSILON__;
+    BOOL hasNewFunc    = (long)vImageBuffer_InitWithCGImage != 0 && (long)vImageCreateCGImageFromBuffer != 0;
+    BOOL hasBlur       = blurRadius > __FLT_EPSILON__;
     BOOL hasSaturation = fabs(saturation - 1.0) > __FLT_EPSILON__;
-    
-    CGSize size = self.size;
-    CGRect rect = { CGPointZero, size };
-    CGFloat scale = self.scale;
+
+    CGSize size         = self.size;
+    CGRect rect         = {CGPointZero, size};
+    CGFloat scale       = self.scale;
     CGImageRef imageRef = self.CGImage;
-    BOOL opaque = NO;
-    
+    BOOL opaque         = NO;
+
     if (!hasBlur && !hasSaturation) {
         return [self kai_mergeImageRef:imageRef tintColor:tintColor tintBlendMode:tintBlendMode maskImage:maskImage opaque:opaque];
     }
-    
-    vImage_Buffer effect = { 0 }, scratch = { 0 };
+
+    vImage_Buffer effect = {0}, scratch = {0};
     vImage_Buffer *input = NULL, *output = NULL;
-    
+
     vImage_CGImageFormat format = {
         .bitsPerComponent = 8,
-        .bitsPerPixel = 32,
-        .colorSpace = NULL,
-        .bitmapInfo = kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little, //requests a BGRA buffer.
-        .version = 0,
-        .decode = NULL,
-        .renderingIntent = kCGRenderingIntentDefault
-    };
-    
+        .bitsPerPixel     = 32,
+        .colorSpace       = NULL,
+        .bitmapInfo       = kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little, //requests a BGRA buffer.
+        .version          = 0,
+        .decode           = NULL,
+        .renderingIntent  = kCGRenderingIntentDefault};
+
     if (hasNewFunc) {
         vImage_Error err;
         err = vImageBuffer_InitWithCGImage(&effect, &format, NULL, imageRef, kvImagePrintDiagnosticsToConsole);
@@ -716,18 +718,18 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
         effect.width    = CGBitmapContextGetWidth(effectCtx);
         effect.height   = CGBitmapContextGetHeight(effectCtx);
         effect.rowBytes = CGBitmapContextGetBytesPerRow(effectCtx);
-        
+
         UIGraphicsBeginImageContextWithOptions(size, opaque, scale);
         CGContextRef scratchCtx = UIGraphicsGetCurrentContext();
-        scratch.data     = CGBitmapContextGetData(scratchCtx);
-        scratch.width    = CGBitmapContextGetWidth(scratchCtx);
-        scratch.height   = CGBitmapContextGetHeight(scratchCtx);
-        scratch.rowBytes = CGBitmapContextGetBytesPerRow(scratchCtx);
+        scratch.data            = CGBitmapContextGetData(scratchCtx);
+        scratch.width           = CGBitmapContextGetWidth(scratchCtx);
+        scratch.height          = CGBitmapContextGetHeight(scratchCtx);
+        scratch.rowBytes        = CGBitmapContextGetBytesPerRow(scratchCtx);
     }
-    
-    input = &effect;
+
+    input  = &effect;
     output = &scratch;
-    
+
     if (hasBlur) {
         // A description of how to compute the box kernel width from the Gaussian
         // radius (aka standard deviation) appears in the SVG spec:
@@ -741,33 +743,32 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
         //
         // ... if d is odd, use three box-blurs of size 'd', centered on the output pixel.
         //
-        CGFloat inputRadius = blurRadius * scale;
+        CGFloat inputRadius                                  = blurRadius * scale;
         if (inputRadius - 2.0 < __FLT_EPSILON__) inputRadius = 2.0;
-        uint32_t radius = floor((inputRadius * 3.0 * sqrt(2 * M_PI) / 4 + 0.5) / 2);
+        uint32_t radius                                      = floor((inputRadius * 3.0 * sqrt(2 * M_PI) / 4 + 0.5) / 2);
         radius |= 1; // force radius to be odd so that the three box-blur methodology works.
         int iterations;
-        if (blurRadius * scale < 0.5) iterations = 1;
-        else if (blurRadius * scale < 1.5) iterations = 2;
-        else iterations = 3;
+        if (blurRadius * scale < 0.5)
+            iterations = 1;
+        else if (blurRadius * scale < 1.5)
+            iterations = 2;
+        else
+            iterations     = 3;
         NSInteger tempSize = vImageBoxConvolve_ARGB8888(input, output, NULL, 0, 0, radius, radius, NULL, kvImageGetTempBufferSize | kvImageEdgeExtend);
-        void *temp = malloc(tempSize);
+        void *temp         = malloc(tempSize);
         for (int i = 0; i < iterations; i++) {
             vImageBoxConvolve_ARGB8888(input, output, temp, 0, 0, radius, radius, NULL, kvImageEdgeExtend);
             ZK_SWAP(input, output);
         }
         free(temp);
     }
-    
-    
+
     if (hasSaturation) {
         // These values appear in the W3C Filter Effects spec:
         // https://dvcs.w3.org/hg/FXTF/raw-file/default/filters/Publish.html#grayscaleEquivalent
-        CGFloat s = saturation;
+        CGFloat s             = saturation;
         CGFloat matrixFloat[] = {
-            0.0722 + 0.9278 * s,  0.0722 - 0.0722 * s,  0.0722 - 0.0722 * s,  0,
-            0.7152 - 0.7152 * s,  0.7152 + 0.2848 * s,  0.7152 - 0.7152 * s,  0,
-            0.2126 - 0.2126 * s,  0.2126 - 0.2126 * s,  0.2126 + 0.7873 * s,  0,
-            0,                    0,                    0,                    1,
+            0.0722 + 0.9278 * s, 0.0722 - 0.0722 * s, 0.0722 - 0.0722 * s, 0, 0.7152 - 0.7152 * s, 0.7152 + 0.2848 * s, 0.7152 - 0.7152 * s, 0, 0.2126 - 0.2126 * s, 0.2126 - 0.2126 * s, 0.2126 + 0.7873 * s, 0, 0, 0, 0, 1,
         };
         const int32_t divisor = 256;
         NSUInteger matrixSize = sizeof(matrixFloat) / sizeof(matrixFloat[0]);
@@ -778,11 +779,11 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
         vImageMatrixMultiply_ARGB8888(input, output, matrix, divisor, NULL, NULL, kvImageNoFlags);
         ZK_SWAP(input, output);
     }
-    
+
     UIImage *outputImage = nil;
     if (hasNewFunc) {
         CGImageRef effectCGImage = NULL;
-        effectCGImage = vImageCreateCGImageFromBuffer(input, &format, &kai_cleanupBuffer, NULL, kvImageNoAllocate, NULL);
+        effectCGImage            = vImageCreateCGImageFromBuffer(input, &format, &kai_cleanupBuffer, NULL, kvImageNoAllocate, NULL);
         if (effectCGImage == NULL) {
             effectCGImage = vImageCreateCGImageFromBuffer(input, &format, NULL, NULL, kvImageNoFlags, NULL);
             free(input->data);
@@ -798,7 +799,7 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
         if (input == &effect) effectImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         effectCGImage = effectImage.CGImage;
-        outputImage = [self kai_mergeImageRef:effectCGImage tintColor:tintColor tintBlendMode:tintBlendMode maskImage:maskImage opaque:opaque];
+        outputImage   = [self kai_mergeImageRef:effectCGImage tintColor:tintColor tintBlendMode:tintBlendMode maskImage:maskImage opaque:opaque];
     }
     return outputImage;
 }
@@ -814,16 +815,16 @@ static void kai_cleanupBuffer(void *userData, void *buf_data) {
                  tintBlendMode:(CGBlendMode)tintBlendMode
                      maskImage:(UIImage *)maskImage
                         opaque:(BOOL)opaque {
-    BOOL hasTint = tintColor != nil && CGColorGetAlpha(tintColor.CGColor) > __FLT_EPSILON__;
-    BOOL hasMask = maskImage != nil;
-    CGSize size = self.size;
-    CGRect rect = { CGPointZero, size };
+    BOOL hasTint  = tintColor != nil && CGColorGetAlpha(tintColor.CGColor) > __FLT_EPSILON__;
+    BOOL hasMask  = maskImage != nil;
+    CGSize size   = self.size;
+    CGRect rect   = {CGPointZero, size};
     CGFloat scale = self.scale;
-    
+
     if (!hasTint && !hasMask) {
         return [UIImage imageWithCGImage:effectCGImage];
     }
-    
+
     UIGraphicsBeginImageContextWithOptions(size, opaque, scale);
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextScaleCTM(context, 1.0, -1.0);

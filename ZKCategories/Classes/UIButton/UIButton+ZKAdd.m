@@ -12,7 +12,7 @@
 @implementation UIButton (ZKAdd)
 
 - (UIEdgeInsets)touchAreaInsets {
-//    return [objc_getAssociatedObject(self, @selector(touchAreaInsets)) UIEdgeInsetsValue];
+    //    return [objc_getAssociatedObject(self, @selector(touchAreaInsets)) UIEdgeInsetsValue];
     return [[self associatedValueForKey:_cmd] UIEdgeInsetsValue];
 }
 
@@ -26,8 +26,8 @@
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
     UIEdgeInsets touchAreaInsets = self.touchAreaInsets;
-    CGRect bounds = self.bounds;
-    bounds = CGRectMake(bounds.origin.x - touchAreaInsets.left,
+    CGRect bounds                = self.bounds;
+    bounds                       = CGRectMake(bounds.origin.x - touchAreaInsets.left,
                         bounds.origin.y - touchAreaInsets.top,
                         bounds.size.width + touchAreaInsets.left + touchAreaInsets.right,
                         bounds.size.height + touchAreaInsets.top + touchAreaInsets.bottom);

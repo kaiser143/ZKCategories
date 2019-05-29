@@ -263,7 +263,7 @@ static char DTRuntimeDeallocBlocks;
     unsigned int outCount;
     objc_property_t *props = class_copyPropertyList([self class], &outCount);
     for (int i = 0; i < outCount; i++) {
-        objc_property_t prop = props[ i ];
+        objc_property_t prop = props[i];
         NSString *propName   = [[NSString alloc] initWithCString:property_getName(prop) encoding:NSUTF8StringEncoding];
         id propValue         = [self valueForKey:propName];
         [dict setObject:propValue ?: [NSNull null] forKey:propName];
@@ -281,7 +281,7 @@ static char DTRuntimeDeallocBlocks;
     objc_property_t *properties   = class_copyPropertyList(self, &propertyCount);
     NSMutableArray *propertyNames = [NSMutableArray array];
     for (unsigned int i = 0; i < propertyCount; ++i) {
-        objc_property_t property = properties[ i ];
+        objc_property_t property = properties[i];
         const char *name         = property_getName(property);
         [propertyNames addObject:[NSString stringWithUTF8String:name]];
     }
@@ -305,7 +305,7 @@ static char DTRuntimeDeallocBlocks;
     for (int i = 0; i < propertyCount; i++) {
         [propertieArray addObject:({
 
-                            NSDictionary *dictionary = [self dictionaryWithProperty:properties[ i ]];
+                            NSDictionary *dictionary = [self dictionaryWithProperty:properties[i]];
 
                             dictionary;
                         })];
@@ -365,7 +365,7 @@ static char DTRuntimeDeallocBlocks;
     NSMutableArray *methodList = [NSMutableArray array];
     Method *methods            = class_copyMethodList([self class], &count);
     for (int i = 0; i < count; i++) {
-        SEL name          = method_getName(methods[ i ]);
+        SEL name          = method_getName(methods[i]);
         NSString *strName = [NSString stringWithCString:sel_getName(name) encoding:NSUTF8StringEncoding];
         [methodList addObject:strName];
     }
@@ -380,7 +380,7 @@ static char DTRuntimeDeallocBlocks;
     for (int i = 0; i < count; i++) {
         NSMutableDictionary *info = [NSMutableDictionary dictionary];
 
-        Method method = methods[ i ];
+        Method method = methods[i];
         //        IMP imp = method_getImplementation(method);
         SEL name = method_getName(method);
         // 返回方法的参数的个数
@@ -419,7 +419,7 @@ static char DTRuntimeDeallocBlocks;
     NSMutableArray *methodList = [NSMutableArray array];
     Method *methods            = class_copyMethodList([self class], &count);
     for (int i = 0; i < count; i++) {
-        SEL name          = method_getName(methods[ i ]);
+        SEL name          = method_getName(methods[i]);
         NSString *strName = [NSString stringWithCString:sel_getName(name) encoding:NSUTF8StringEncoding];
         [methodList addObject:strName];
     }
@@ -465,9 +465,9 @@ static char DTRuntimeDeallocBlocks;
         unsigned int attributeCount;
         objc_property_attribute_t *attrs = property_copyAttributeList(property, &attributeCount);
 
-        for (int i          = 0; i < attributeCount; i++) {
-            NSString *name  = [NSString stringWithCString:attrs[ i ].name encoding:NSUTF8StringEncoding];
-            NSString *value = [NSString stringWithCString:attrs[ i ].value encoding:NSUTF8StringEncoding];
+        for (int i = 0; i < attributeCount; i++) {
+            NSString *name  = [NSString stringWithCString:attrs[i].name encoding:NSUTF8StringEncoding];
+            NSString *value = [NSString stringWithCString:attrs[i].value encoding:NSUTF8StringEncoding];
             [dictionary setObject:value forKey:name];
         }
 
@@ -737,10 +737,10 @@ static char DTRuntimeDeallocBlocks;
     if (!keyPath || !block) return;
     _KAIKVOBlockTarget *target = [[_KAIKVOBlockTarget alloc] initWithBlock:block];
     NSMutableDictionary *dic   = [self _kai_allNSObjectObserverBlocks];
-    NSMutableArray *arr        = dic[ keyPath ];
+    NSMutableArray *arr        = dic[keyPath];
     if (!arr) {
-        arr            = [NSMutableArray new];
-        dic[ keyPath ] = arr;
+        arr          = [NSMutableArray new];
+        dic[keyPath] = arr;
     }
     [arr addObject:target];
     [self addObserver:target forKeyPath:keyPath options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
@@ -749,7 +749,7 @@ static char DTRuntimeDeallocBlocks;
 - (void)removeObserverBlocksForKeyPath:(NSString *)keyPath {
     if (!keyPath) return;
     NSMutableDictionary *dic = [self _kai_allNSObjectObserverBlocks];
-    NSMutableArray *arr      = dic[ keyPath ];
+    NSMutableArray *arr      = dic[keyPath];
     [arr enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [self removeObserver:obj forKeyPath:keyPath];
     }];
@@ -768,7 +768,7 @@ static char DTRuntimeDeallocBlocks;
     [dic removeAllObjects];
 }
 
-- (NSMutableDictionary *)_kai_allNSObjectObserverBlocks {
+- (NSMutableDictionary<NSString *, NSMutableArray *> *)_kai_allNSObjectObserverBlocks {
     NSMutableDictionary *targets = [self associatedValueForKey:_cmd];
     if (!targets) {
         targets = [NSMutableDictionary new];
@@ -792,35 +792,34 @@ static char DTRuntimeDeallocBlocks;
 
     _KAIKVOInfo *info        = [[_KAIKVOInfo alloc] initWithObserver:observer forKeyPath:keyPath];
     NSMutableDictionary *dic = [self _kai_allObserverInfos];
-    NSMutableArray *arr      = dic[ keyPath ];
+    NSMutableArray *arr      = dic[keyPath];
     if (!arr) {
-        arr            = [NSMutableArray new];
-        dic[ keyPath ] = arr;
+        arr          = NSMutableArray.new;
+        dic[keyPath] = arr;
     }
     [arr addObject:info];
     [self _kai_addObserver:observer forKeyPath:keyPath options:options context:context];
 }
 
 - (void)_kai_removeObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath context:(void *)context {
-    if (![self _kai_observerKeyPath:keyPath observer:observer]) return;
+    _KAIKVOInfo *info;
+    if (!(info = [self _kai_observerKeyPath:keyPath observer:observer])) return;
 
     [self _kai_removeObserver:observer forKeyPath:keyPath context:context];
 
     NSMutableDictionary *dic = [self _kai_allObserverInfos];
-    NSMutableArray *array    = dic[ keyPath ];
-    _KAIKVOInfo *info        = [array objectPassingTest:^BOOL(_KAIKVOInfo *obj) {
-        return ([observer isEqual:obj.observer] && [keyPath isEqualToString:obj.keyPath]);
-    }];
-    if (info) [array removeObject:info];
+    NSMutableArray *array    = dic[keyPath];
+    [array removeObject:info];
 }
 
-- (BOOL)_kai_observerKeyPath:(NSString *)keyPath observer:(id)observer {
+- (_KAIKVOInfo *)_kai_observerKeyPath:(NSString *)keyPath observer:(id)observer {
     NSMutableDictionary *dic = [self _kai_allObserverInfos];
-    NSArray *array           = dic[ keyPath ];
+    NSArray *array           = dic[keyPath];
     _KAIKVOInfo *info        = [array objectPassingTest:^BOOL(_KAIKVOInfo *obj) {
         return (observer == obj.observer && [keyPath isEqualToString:obj.keyPath]);
     }];
-    return info ? YES : NO;
+
+    return info;
 }
 
 // AVPlayerLayer 类在调用 observationInfo 会引起闪退“*** -[AVPlayerLayer release]: message sent to deallocated instance 0x600002da1f20”

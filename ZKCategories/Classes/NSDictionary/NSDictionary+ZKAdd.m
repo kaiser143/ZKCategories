@@ -20,7 +20,7 @@
 }
 
 - (instancetype)initWithData:(NSData *)data {
-    self = super.init;
+    self                = super.init;
     NSXMLParser *parser = [[NSXMLParser alloc] initWithData:data];
     [parser setDelegate:self];
     [parser parse];
@@ -46,7 +46,7 @@
     _text = _text.stringByTrim.mutableCopy;
     if (_text.length) {
         NSMutableDictionary *top = _stack.lastObject;
-        id existing = top[XMLText];
+        id existing              = top[XMLText];
         if ([existing isKindOfClass:[NSArray class]]) {
             [existing addObject:_text];
         } else if (existing) {
@@ -60,14 +60,14 @@
 
 - (void)parser:(__unused NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(__unused NSString *)namespaceURI qualifiedName:(__unused NSString *)qName attributes:(NSDictionary *)attributeDict {
     [self textEnd];
-    
+
     NSMutableDictionary *node = [NSMutableDictionary new];
     if (!_root) node[XMLName] = elementName;
     if (attributeDict.count) [node addEntriesFromDictionary:attributeDict];
-    
+
     if (_root) {
         NSMutableDictionary *top = _stack.lastObject;
-        id existing = top[elementName];
+        id existing              = top[elementName];
         if ([existing isKindOfClass:[NSArray class]]) {
             [existing addObject:node];
         } else if (existing) {
@@ -77,17 +77,17 @@
         }
         [_stack addObject:node];
     } else {
-        _root = node;
+        _root  = node;
         _stack = [NSMutableArray arrayWithObject:node];
     }
 }
 
 - (void)parser:(__unused NSXMLParser *)parser didEndElement:(__unused NSString *)elementName namespaceURI:(__unused NSString *)namespaceURI qualifiedName:(__unused NSString *)qName {
     [self textEnd];
-    
+
     NSMutableDictionary *top = _stack.lastObject;
     [_stack removeLastObject];
-    
+
     NSMutableDictionary *left = top.mutableCopy;
     [left removeObjectsForKeys:@[XMLText, XMLName]];
     for (NSString *key in left.allKeys) {
@@ -97,7 +97,7 @@
         }
     }
     if (left.count) return;
-    
+
     NSMutableDictionary *children = top.mutableCopy;
     [children removeObjectsForKeys:@[XMLText, XMLName]];
     for (NSString *key in children.allKeys) {
@@ -106,27 +106,29 @@
         }
     }
     if (children.count) return;
-    
+
     NSMutableDictionary *topNew = _stack.lastObject;
-    NSString *nodeName = top[XMLName];
+    NSString *nodeName          = top[XMLName];
     if (!nodeName) {
         for (NSString *name in topNew) {
             id object = topNew[name];
             if (object == top) {
-                nodeName = name; break;
+                nodeName = name;
+                break;
             } else if ([object isKindOfClass:[NSArray class]] && [object containsObject:top]) {
-                nodeName = name; break;
+                nodeName = name;
+                break;
             }
         }
     }
     if (!nodeName) return;
-    
+
     id inner = top[XMLText];
     if ([inner isKindOfClass:[NSArray class]]) {
         inner = [inner componentsJoinedByString:@"\n"];
     }
     if (!inner) return;
-    
+
     id parent = topNew[nodeName];
     if ([parent isKindOfClass:[NSArray class]]) {
         parent[[parent count] - 1] = inner;
@@ -136,14 +138,18 @@
 }
 
 - (void)parser:(__unused NSXMLParser *)parser foundCharacters:(NSString *)string {
-    if (_text) [_text appendString:string];
-    else _text = [NSMutableString stringWithString:string];
+    if (_text)
+        [_text appendString:string];
+    else
+        _text = [NSMutableString stringWithString:string];
 }
 
 - (void)parser:(__unused NSXMLParser *)parser foundCDATA:(NSData *)CDATABlock {
     NSString *string = [[NSString alloc] initWithData:CDATABlock encoding:NSUTF8StringEncoding];
-    if (_text) [_text appendString:string];
-    else _text = [NSMutableString stringWithString:string];
+    if (_text)
+        [_text appendString:string];
+    else
+        _text = [NSMutableString stringWithString:string];
 }
 
 #undef XMLText
@@ -169,30 +175,30 @@
     if (self.count < 1) {
         return @"";
     }
-    
+
     NSEnumerator *keyEnum = [self keyEnumerator];
     NSString *currentKey;
-    
+
     BOOL appendAmpersand = NO;
-    
+
     NSMutableString *parameterString = [[NSMutableString alloc] init];
-    
+
     while ((currentKey = (NSString *)[keyEnum nextObject]) != nil) {
-        id currentValue = [self objectForKey:currentKey];
+        id currentValue       = [self objectForKey:currentKey];
         NSString *stringValue = [currentValue URLParameterStringValue];
-        
+
         if (stringValue != nil) {
             if (appendAmpersand) {
-                [parameterString appendString: @"&"];
+                [parameterString appendString:@"&"];
             }
-            
+
             NSString *escapedStringValue = [stringValue stringByEscapingQueryParameters];
-            [parameterString appendFormat: @"%@=%@", currentKey, escapedStringValue];
+            [parameterString appendFormat:@"%@=%@", currentKey, escapedStringValue];
         }
-        
+
         appendAmpersand = YES;
     }
-    
+
     return parameterString;
 }
 
@@ -224,7 +230,7 @@
 - (NSDictionary *)entriesForKeys:(NSArray *)keys {
     NSMutableDictionary *dic = [NSMutableDictionary new];
     for (id key in keys) {
-        id value = self[key];
+        id value            = self[key];
         if (value) dic[key] = value;
     }
     return dic;
@@ -234,7 +240,7 @@
     if ([NSJSONSerialization isValidJSONObject:self]) {
         NSError *error;
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self options:0 error:&error];
-        NSString *json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSString *json   = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         return json;
     }
     return nil;
@@ -244,7 +250,7 @@
     if ([NSJSONSerialization isValidJSONObject:self]) {
         NSError *error;
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self options:NSJSONWritingPrettyPrinted error:&error];
-        NSString *json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSString *json   = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         return json;
     }
     return nil;
@@ -296,14 +302,14 @@
 }
 
 - (id)objectForKeyPath:(NSString *)keyPath {
-    id object = self;
+    id object         = self;
     NSArray *keyPaths = [keyPath componentsSeparatedByString:@"."];
     for (NSString *currentKeyPath in keyPaths) {
         if (![object isKindOfClass:[NSDictionary class]])
             object = nil;
-        
+
         object = [object objectForKey:currentKeyPath];
-        
+
         if (object == nil)
             break;
     }
@@ -313,7 +319,6 @@
 - (NSString *)stringForKeyPath:(id)keyPath {
     id obj = [self objectForKeyPath:keyPath];
     return [self stringWithObject:obj];
-    
 }
 
 - (NSNumber *)numberForKeyPath:(id)keyPath {
@@ -321,7 +326,7 @@
     return [self numberWithObject:obj usingFormatter:[[self class] posixNumberFormatter]];
 }
 
-- (NSNumber *)numberForKeyPath:(id)keyPath usingFormatter:(NSNumberFormatter *)numberFormatter{
+- (NSNumber *)numberForKeyPath:(id)keyPath usingFormatter:(NSNumberFormatter *)numberFormatter {
     id obj = [self objectForKeyPath:keyPath];
     return [self numberWithObject:obj usingFormatter:numberFormatter];
 }
@@ -359,13 +364,13 @@ static NSNumber *NSNumberFromID(id value) {
     return nil;
 }
 
-#define RETURN_VALUE(_type_)                                                     \
-if (!key) return def;                                                            \
-id value = self[key];                                                            \
-if (!value || value == [NSNull null]) return def;                                \
-if ([value isKindOfClass:[NSNumber class]]) return ((NSNumber *)value)._type_;   \
-if ([value isKindOfClass:[NSString class]]) return NSNumberFromID(value)._type_; \
-return def;
+#define RETURN_VALUE(_type_)                                                         \
+    if (!key) return def;                                                            \
+    id value = self[key];                                                            \
+    if (!value || value == [NSNull null]) return def;                                \
+    if ([value isKindOfClass:[NSNumber class]]) return ((NSNumber *)value)._type_;   \
+    if ([value isKindOfClass:[NSString class]]) return NSNumberFromID(value)._type_; \
+    return def;
 
 - (BOOL)boolValueForKey:(NSString *)key default:(BOOL)def {
     RETURN_VALUE(boolValue);
@@ -447,14 +452,14 @@ return def;
 
 - (NSString *)XMLString {
     NSString *xmlStr = @"<xml>";
-    
+
     for (NSString *key in self.allKeys) {
         NSString *value = [self objectForKey:key];
-        xmlStr = [xmlStr stringByAppendingString:[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key]];
+        xmlStr          = [xmlStr stringByAppendingString:[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key]];
     }
-    
+
     xmlStr = [xmlStr stringByAppendingString:@"</xml>"];
-    
+
     return xmlStr;
 }
 
@@ -478,67 +483,66 @@ return def;
 
 - (NSString *)stringWithObject:(id)obj {
     NSString *string = obj;
-    
+
     if (![string isKindOfClass:[NSString class]] && [string respondsToSelector:@selector(stringValue)])
         string = [string performSelector:@selector(stringValue)];
-    
+
     if (![string isKindOfClass:[NSString class]])
         string = nil;
-    
+
     return string;
 }
 
-- (NSNumber *)numberWithObject:(id)obj usingFormatter:(NSNumberFormatter *)numberFormatter{
-    
+- (NSNumber *)numberWithObject:(id)obj usingFormatter:(NSNumberFormatter *)numberFormatter {
+
     if ([obj isKindOfClass:[NSNumber class]]) {
         return (NSNumber *)obj;
     }
-    
+
     if ([obj isKindOfClass:[NSString class]]) {
         NSNumber *number = [numberFormatter numberFromString:(NSString *)obj];
         return number;
     }
-    
+
     return nil;
 }
 
 - (NSArray *)arrayWithObject:(id)obj {
     NSArray *array = obj;
-    
+
     if (![array isKindOfClass:[NSArray class]]) {
         array = nil;
     }
-    
+
     return array;
 }
 
 - (NSDictionary *)dictionaryWithObject:(id)obj {
     NSDictionary *dictionary = obj;
-    
+
     if (![dictionary isKindOfClass:[NSDictionary class]]) {
         dictionary = nil;
     }
-    
+
     return dictionary;
 }
 
 - (NSString *)XMLString {
     NSString *xmlStr = @"<xml>";
-    
+
     for (NSString *key in self.allKeys) {
-        
+
         NSString *value = [self objectForKey:key];
-        
+
         xmlStr = [xmlStr stringByAppendingString:[NSString stringWithFormat:@"<%@>%@</%@>", key, value, key]];
     }
-    
+
     xmlStr = [xmlStr stringByAppendingString:@"</xml>"];
-    
+
     return xmlStr;
 }
 
 @end
-
 
 @implementation NSMutableDictionary (ZKAdd)
 

@@ -35,11 +35,11 @@
 }
 
 - (NSString *)stringWithDecimals:(NSInteger)decimals {
-    NSNumberFormatter *formatter = NSNumberFormatter.new;
-    formatter.locale = [NSLocale currentLocale];
+    NSNumberFormatter *formatter    = NSNumberFormatter.new;
+    formatter.locale                = [NSLocale currentLocale];
     formatter.maximumFractionDigits = decimals;
     formatter.minimumFractionDigits = decimals;
-    formatter.minimumIntegerDigits = 1;
+    formatter.minimumIntegerDigits  = 1;
     return [formatter stringFromNumber:self];
 }
 
@@ -61,32 +61,34 @@
     if (!str || !str.length) {
         return nil;
     }
-    
+
     static NSDictionary *dic;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        dic = @{@"true" :   @(YES),
-                @"yes" :    @(YES),
-                @"false" :  @(NO),
-                @"no" :     @(NO),
-                @"nil" :    [NSNull null],
-                @"null" :   [NSNull null],
-                @"<null>" : [NSNull null]};
+        dic = @{ @"true": @(YES),
+                 @"yes": @(YES),
+                 @"false": @(NO),
+                 @"no": @(NO),
+                 @"nil": [NSNull null],
+                 @"null": [NSNull null],
+                 @"<null>": [NSNull null] };
     });
     NSNumber *num = dic[str];
     if (num) {
         if (num == (id)[NSNull null]) return nil;
         return num;
     }
-    
+
     // hex number
     int sign = 0;
-    if ([str hasPrefix:@"0x"]) sign = 1;
-    else if ([str hasPrefix:@"-0x"]) sign = -1;
+    if ([str hasPrefix:@"0x"])
+        sign = 1;
+    else if ([str hasPrefix:@"-0x"])
+        sign = -1;
     if (sign != 0) {
         NSScanner *scan = [NSScanner scannerWithString:str];
-        unsigned num = -1;
-        BOOL suc = [scan scanHexInt:&num];
+        unsigned num    = -1;
+        BOOL suc        = [scan scanHexInt:&num];
         if (suc)
             return [NSNumber numberWithLong:((long)num * sign)];
         else

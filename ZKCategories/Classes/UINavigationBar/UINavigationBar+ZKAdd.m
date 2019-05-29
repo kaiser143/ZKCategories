@@ -77,28 +77,27 @@
         if (![view isMemberOfClass:[UIView class]])
             [barSubviews addObject:view];
     }
-    
+
     if (alpha == 0 && backgroundColor) {
         const CGFloat *components = CGColorGetComponents(backgroundColor.CGColor);
-        alpha = MAX(1, components[ 3 ] ?: 1);
+        alpha                     = MAX(1, components[3] ?: 1);
     }
-    
+
     Ivar backgroundOpacityVar = class_getInstanceVariable([UINavigationBar class], "__backgroundOpacity");
     if (backgroundOpacityVar)
         [self setValue:@(alpha) forKey:@"__backgroundOpacity"];
-    
+
     UIView *barBackgroundView = [barSubviews firstObject];
-    barBackgroundView.alpha = alpha;
+    barBackgroundView.alpha   = alpha;
     if (backgroundColor)
         barBackgroundView.backgroundColor = backgroundColor;
-    
+
     if (isAlpha) {
         UINavigationController *superNav = (UINavigationController *)[self viewController];
         if (superNav && superNav.topViewController)
             [superNav.topViewController setAssociateCopyValue:@(alpha) withKey:@"navigationBarAlpha"];
     }
 }
-
 
 - (void)setTranslationY:(CGFloat)translationY {
     self.transform = CGAffineTransformMakeTranslation(0, translationY);
@@ -115,18 +114,18 @@
     [[self valueForKey:@"_leftViews"] enumerateObjectsUsingBlock:^(UIView *view, NSUInteger i, BOOL *stop) {
         view.alpha = alpha;
     }];
-    
+
     [[self valueForKey:@"_rightViews"] enumerateObjectsUsingBlock:^(UIView *view, NSUInteger i, BOOL *stop) {
         view.alpha = alpha;
     }];
-    
+
     UIView *titleView = [self valueForKey:@"_titleView"];
-    titleView.alpha = alpha;
+    titleView.alpha   = alpha;
     //    when viewController first load, the titleView maybe nil
     [[self subviews] enumerateObjectsUsingBlock:^(UIView *obj, NSUInteger idx, BOOL *stop) {
         if ([obj isKindOfClass:NSClassFromString(@"UINavigationItemView")]) {
             obj.alpha = alpha;
-            *stop = YES;
+            *stop     = YES;
         }
     }];
 }
