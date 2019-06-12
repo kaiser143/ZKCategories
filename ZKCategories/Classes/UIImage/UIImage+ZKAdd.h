@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  *    @brief    压缩图片质量达到指定大小
- *    @param    maxLength     压缩后图片大小小于这个值
+ *    @param    maxLength     压缩后图片大小小于这个值单位字节 1024 -> 1kb
  */
 - (NSData *)compressQualityWithMaxLength:(NSInteger)maxLength;
 

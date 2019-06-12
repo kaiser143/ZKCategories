@@ -729,8 +729,9 @@ static char DTRuntimeDeallocBlocks;
 @implementation NSObject (ZKAddForKVO)
 
 + (void)load {
-    [self swizzleMethod:@selector(addObserver:forKeyPath:options:context:) withMethod:@selector(_kai_addObserver:forKeyPath:options:context:)];
-    [self swizzleMethod:@selector(removeObserver:forKeyPath:context:) withMethod:@selector(_kai_removeObserver:forKeyPath:context:)];
+    // 功能不稳定，会出现一些闪退 “[xxx release]: message sent to deallocated instance”
+//    [self swizzleMethod:@selector(addObserver:forKeyPath:options:context:) withMethod:@selector(_kai_addObserver:forKeyPath:options:context:)];
+//    [self swizzleMethod:@selector(removeObserver:forKeyPath:context:) withMethod:@selector(_kai_removeObserver:forKeyPath:context:)];
 }
 
 - (void)addObserverBlockForKeyPath:(NSString *)keyPath block:(void (^)(__weak id obj, id oldVal, id newVal))block {
