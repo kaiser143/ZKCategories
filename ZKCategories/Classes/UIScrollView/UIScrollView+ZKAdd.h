@@ -158,6 +158,11 @@ typedef void (^KeyboardWillChangeBlock)(CGRect keyboardRect, UIViewAnimationOpti
  */
 @property (nonatomic, assign) CGFloat messageInputBarHeight;
 
+/**
+ *  截长图
+ */
+- (void)snapshotImageWithBlock:(void(^)(UIImage *_Nullable image))block;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -10,6 +10,7 @@
 #import "ZKCategoriesMacro.h"
 #import "NSObject+ZKAdd.h"
 #import "NSNumber+ZKAdd.h"
+#import "UIView+ZKAdd.h"
 
 ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 
@@ -240,7 +241,6 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 
 - (void)setKeyboardDidChange:(KeyboardDidShowBlock)keyboardDidChange {
     [self setAssociateCopyValue:keyboardDidChange withKey:@selector(keyboardDidChange)];
-    ;
 }
 
 - (KeyboardDidShowBlock)keyboardDidChange {
@@ -500,5 +500,32 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
             return kNilOptions;
     }
 }
+
+- (void)snapshotImageWithBlock:(void(^)(UIImage *))block {
+    if (!block) return;
+    
+    //保存offset
+    CGPoint oldContentOffset = self.contentOffset;
+    //保存frame
+    CGRect oldFrame = self.frame;
+    
+    if (self.contentSize.height > self.frame.size.height) {
+        self.contentOffset = CGPointMake(0, self.contentSize.height - self.frame.size.height);
+    }
+    self.frame = CGRectMake(0, 0, self.contentSize.width, self.contentSize.height);
+    
+    //延迟0.3秒，避免有时候渲染不出来的情况
+    [NSThread sleepForTimeInterval:0.3];
+    
+    self.contentOffset = CGPointZero;
+    UIImage *snapshotImage = self.snapshotImage;
+    
+    self.frame = oldFrame;
+    //还原
+    self.contentOffset = oldContentOffset;
+    
+    !block ?: block(snapshotImage);
+}
+
 @end
 

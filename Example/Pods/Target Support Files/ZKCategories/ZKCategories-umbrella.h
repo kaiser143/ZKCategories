@@ -47,6 +47,7 @@
 #import "UIView+ZKAdd.h"
 #import "UIViewController+ZKAdd.h"
 #import "UIWindow+ZKAdd.h"
+#import "WKWebView+ZKAdd.h"
 #import "ZKCategories.h"
 #import "ZKCategoriesMacro.h"
 #import "ZKCGUtilities.h"
