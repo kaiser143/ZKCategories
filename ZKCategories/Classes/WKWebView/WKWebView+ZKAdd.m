@@ -51,7 +51,7 @@
         weakSelf.frame = oldFrame;
         weakSelf.scrollView.contentOffset = oldOffset;
         
-        finishBlock(snapshotImage);
+        !block ?: block(snapshotImage);
     }];
 }
 
@@ -68,9 +68,7 @@
     self.frame = myFrame;
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(300 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
-        
         [snapshotView drawViewHierarchyInRect:snapshotFrame afterScreenUpdates:YES];
-        
         if(index < maxIndex){
             [self scrollToDraw:index + 1 maxIndex:maxIndex finishBlock:finishBlock];
         }else{
