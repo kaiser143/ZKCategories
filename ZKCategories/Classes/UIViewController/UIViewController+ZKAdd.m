@@ -325,14 +325,15 @@
         return YES;
     }
     
+    UIView *barBackIndicatorView = navigationBar.subviews.lastObject;
+    barBackIndicatorView.alpha = 1;
+    
     UIViewController *topViewController = self.topViewController;
     void (^callback)(UIViewController *vc) = [topViewController backButtonHandler];
-    if (callback) {
-        callback(topViewController);
-        return NO;
-    }
+    !callback ?: callback(topViewController);
+    if (!callback) [self popViewControllerAnimated:YES];
     
-    return YES;
+    return NO;
 }
 
 @end
