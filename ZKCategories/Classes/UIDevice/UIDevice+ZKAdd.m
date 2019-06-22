@@ -235,6 +235,7 @@ static kai_net_interface_counter kai_get_net_interface_counter() {
     return model;
 }
 
+/// https://support.hockeyapp.net/kb/client-integration-ios-mac-os-x-tvos/ios-device-types
 - (NSString *)machineModelName {
     static dispatch_once_t one;
     static NSString *name;
@@ -274,10 +275,16 @@ static kai_net_interface_counter kai_get_net_interface_counter() {
             @"iPhone8,1": @"iPhone 6s",
             @"iPhone8,2": @"iPhone 6s Plus",
             @"iPhone8,4": @"iPhone SE",
-            @"iPhone9,1": @"iPhone 7",
-            @"iPhone9,2": @"iPhone 7 Plus",
-            @"iPhone9,3": @"iPhone 7",
-            @"iPhone9,4": @"iPhone 7 Plus",
+            @"iPhone9,1": @"iPhone 7 (CDMA)",
+            @"iPhone9,2": @"iPhone 7 Plus (CDMA)",
+            @"iPhone9,3": @"iPhone 7 (GSM)",
+            @"iPhone9,4": @"iPhone 7 Plus (GSM)",
+            @"iPhone10,1": @"iPhone 8",
+            @"iPhone10,4": @"iPhone 8",
+            @"iPhone10,2": @"iPhone 8 Plus",
+            @"iPhone10,5": @"iPhone 8 Plus",
+            @"iPhone10,3": @"iPhone X",
+            @"iPhone10,6": @"iPhone X",
 
             @"iPad1,1": @"iPad 1",
             @"iPad2,1": @"iPad 2 (WiFi)",
