@@ -319,7 +319,7 @@ NS_ASSUME_NONNULL_BEGIN
  Returns a new UUID NSString
  e.g. "D1178E50-2A4D-4F1F-9BD3-F6AAB00E06B1"
  */
-+ (NSString *)stringWithUUID;
++ (NSString *)UUIDString;
 
 /**
  Returns a string containing the characters in a given UTF32Char.

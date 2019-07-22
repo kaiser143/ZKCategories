@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSDictionary<__covariant KeyType, __covariant ValueType> (ZKAdd)
 
+#pragma mark :. URL Parameter Strings
+
 - (NSString *)URLEncodedStringValue;
 
 /// Merges the keys and values from the given dictionary into the receiver. If

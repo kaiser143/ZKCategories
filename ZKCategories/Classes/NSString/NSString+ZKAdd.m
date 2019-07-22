@@ -475,7 +475,7 @@
     return self.numberValue.unsignedIntegerValue;
 }
 
-+ (NSString *)stringWithUUID {
++ (NSString *)UUIDString {
     CFUUIDRef uuid     = CFUUIDCreate(NULL);
     CFStringRef string = CFUUIDCreateString(NULL, uuid);
     CFRelease(uuid);
