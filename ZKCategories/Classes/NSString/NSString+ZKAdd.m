@@ -646,6 +646,10 @@
     return self;
 }
 
+- (NSMutableAttributedString *)mutableAttributedString {
+    return [[NSMutableAttributedString alloc] initWithString:self];
+}
+
 @end
 
 @implementation NSString (ZKUTI)

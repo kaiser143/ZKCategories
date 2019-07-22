@@ -482,6 +482,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSString *_Nonnull)pathByDeletingSequenceNumber;
 
+- (NSMutableAttributedString *)mutableAttributedString;
+
 @end
 
 @interface NSString (ZKUTI)
