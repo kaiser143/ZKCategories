@@ -650,6 +650,10 @@
     return [[NSMutableAttributedString alloc] initWithString:self];
 }
 
+- (NSMutableAttributedString *)mutableAttributedStringWithAttributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attrs {
+    return [[NSMutableAttributedString alloc] initWithString:self attributes:attrs];
+}
+
 @end
 
 @implementation NSString (ZKUTI)

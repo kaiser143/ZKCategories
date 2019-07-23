@@ -483,6 +483,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *_Nonnull)pathByDeletingSequenceNumber;
 
 - (NSMutableAttributedString *)mutableAttributedString;
+- (NSMutableAttributedString *)mutableAttributedStringWithAttributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attrs;
 
 @end
 
