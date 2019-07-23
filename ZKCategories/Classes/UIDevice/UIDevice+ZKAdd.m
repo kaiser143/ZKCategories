@@ -69,7 +69,7 @@ ZKSYNTH_DUMMY_CLASS(UIDevice_ZKAdd)
         return YES;
     }
 
-    NSString *path = [NSString stringWithFormat:@"/private/%@", [NSString stringWithUUID]];
+    NSString *path = [NSString stringWithFormat:@"/private/%@", [NSString UUIDString]];
     if ([@"test" writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:NULL]) {
         [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
         return YES;
