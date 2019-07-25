@@ -10,6 +10,7 @@
 #import "NSDate+ZKAdd.h"
 #import "NSArray+ZKAdd.h"
 #import <objc/runtime.h>
+#import <objc/message.h>
 
 static inline dispatch_time_t dTimeDelay(NSTimeInterval time) {
     int64_t delta = (int64_t)(NSEC_PER_SEC * time);
@@ -705,33 +706,64 @@ static char DTRuntimeDeallocBlocks;
 
 @interface _KAIKVOInfo : NSObject
 
-@property (nonatomic, copy) NSString *keyPath;
-@property (nonatomic, weak) NSObject *observer;
+@property (nonatomic, weak) NSObject *target;
+@property (nonatomic, copy) NSString *targetAddress;
+@property (nonatomic, copy) NSString *targetClassName;
 
-- (instancetype)initWithObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath;
+@property (nonatomic, weak) NSObject *observer;
+@property (nonatomic, copy) NSString *observerAddress;
+@property (nonatomic, copy) NSString *observerClassName;
+
+@property (nonatomic, copy) NSString *keyPath;
+@property (nonatomic, assign) void *context;
 
 @end
 
-@implementation _KAIKVOInfo
+@implementation _KAIKVOInfo @end
 
-- (instancetype)initWithObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath {
-    self = [super init];
-    if (self == nil) return nil;
 
-    self.observer = observer;
-    self.keyPath  = keyPath;
+@interface _KAIRecursiveLock : NSRecursiveLock @end
+@implementation _KAIRecursiveLock @end
 
-    return self;
+
+@interface NSObject ()
+
+@property (nonatomic, strong) _KAIKVOInfo *kai_willRemoveObserverInfo;
+//dealloc时标记有多少没移除，然后手动替他移除，比如有7个 我都替他移除掉，数量还是7，然后用户手动移除时，数量会减少，然后计算最终剩多少就是用户没有移除的，提示用户有没移除的KVO  默认为YES dealloc时改为NO
+@property (nonatomic,assign) BOOL kai_notNeedRemoveKeypathFromCrashArray;
+@property (nonatomic,strong) _KAIRecursiveLock *kai_lock;
+@end
+
+@implementation NSObject (ZKKVOSafe)
+
+static NSMutableSet *KVOSafeSwizzledClasses() {
+    static dispatch_once_t onceToken;
+    static NSMutableSet *swizzledClasses = nil;
+    dispatch_once(&onceToken, ^{
+        swizzledClasses = [[NSMutableSet alloc] init];
+    });
+    return swizzledClasses;
 }
 
-@end
+static NSMutableDictionary *KVOSafeDeallocCrashes() {
+    static dispatch_once_t onceToken;
+    static NSMutableDictionary *KVOSafeDeallocCrashes = nil;
+    dispatch_once(&onceToken, ^{
+        KVOSafeDeallocCrashes = [[NSMutableDictionary alloc] init];
+    });
+    return KVOSafeDeallocCrashes;
+}
 
-@implementation NSObject (ZKAddForKVO)
+NSString * KAIFormatterStringFromObject(id object) {
+    return   [NSString stringWithFormat:@"%p-%@",object,NSStringFromClass([object class])];
+}
 
 + (void)load {
     // 功能不稳定，会出现一些闪退 “[xxx release]: message sent to deallocated instance”
-//    [self swizzleMethod:@selector(addObserver:forKeyPath:options:context:) withMethod:@selector(_kai_addObserver:forKeyPath:options:context:)];
-//    [self swizzleMethod:@selector(removeObserver:forKeyPath:context:) withMethod:@selector(_kai_removeObserver:forKeyPath:context:)];
+    [self swizzleMethod:@selector(addObserver:forKeyPath:options:context:) withMethod:@selector(kai_addObserver:forKeyPath:options:context:)];
+    [self swizzleMethod:@selector(observeValueForKeyPath:ofObject:change:context:) withMethod:@selector(kai_observeValueForKeyPath:ofObject:change:context:)];
+    [self swizzleMethod:@selector(removeObserver:forKeyPath:) withMethod:@selector(kai_removeObserver:forKeyPath:)];
+    [self swizzleMethod:@selector(removeObserver:forKeyPath:context:) withMethod:@selector(kai_removeObserver:forKeyPath:context:)];
 }
 
 - (void)addObserverBlockForKeyPath:(NSString *)keyPath block:(void (^)(__weak id obj, id oldVal, id newVal))block {
@@ -788,55 +820,405 @@ static char DTRuntimeDeallocBlocks;
     return infos;
 }
 
-- (void)_kai_addObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context {
-    if (!observer || !keyPath) return;
-
-    _KAIKVOInfo *info        = [[_KAIKVOInfo alloc] initWithObserver:observer forKeyPath:keyPath];
-    NSMutableDictionary *dic = [self _kai_allObserverInfos];
-    NSMutableArray *arr      = dic[keyPath];
-    if (!arr) {
-        arr          = NSMutableArray.new;
-        dic[keyPath] = arr;
+-(void)kai_observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+    @try{
+        [self kai_observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }@catch (NSException *exception){
+        
+    }@finally{
+        
     }
-    [arr addObject:info];
-    [self _kai_addObserver:observer forKeyPath:keyPath options:options context:context];
 }
 
-- (void)_kai_removeObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath context:(void *)context {
-    _KAIKVOInfo *info;
-    if (!(info = [self _kai_observerKeyPath:keyPath observer:observer])) return;
-
-    [self _kai_removeObserver:observer forKeyPath:keyPath context:context];
-
-    NSMutableDictionary *dic = [self _kai_allObserverInfos];
-    NSMutableArray *array    = dic[keyPath];
-    [array removeObject:info];
+- (void)kai_addObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context {
+    if(!observer||!keyPath||([keyPath isKindOfClass:[NSString class]]&&keyPath.length<=0)){
+        return ;
+    }
+    observer.kai_notNeedRemoveKeypathFromCrashArray=YES;
+    _KAIRecursiveLock *lock;
+    @synchronized(self){
+        lock = self.kai_lock;
+        if (lock == nil) {
+            lock = [[_KAIRecursiveLock alloc] init];
+            lock.name = [NSString stringWithFormat:@"%@", [self class]];
+            self.kai_lock=lock;
+        }
+    }
+    [lock lock];
+    
+    _KAIKVOInfo *info=[self kai_canAddOrRemoveObserverWithKeypathWithObserver:observer keyPath:keyPath context:context haveContext:YES isAdd:YES];
+    
+    if(info != nil){
+        //如果添加过了直接return
+        [lock unlock];
+        return;
+    }
+    @try {
+        NSString *targetAddress=[NSString stringWithFormat:@"%p",self];
+        NSString *observerAddress=[NSString stringWithFormat:@"%p",observer];
+        _KAIKVOInfo *info=[_KAIKVOInfo new];
+        info.target=self;
+        info.observer=observer;
+        info.keyPath=keyPath;
+        info.context=context;
+        info.targetAddress=targetAddress;
+        info.observerAddress=observerAddress;
+        info.targetClassName=NSStringFromClass([self class]);
+        info.observerClassName=NSStringFromClass([observer class]);
+        @synchronized(self.kai_downObservedKeyPathArray){
+            [self.kai_downObservedKeyPathArray addObject:info];
+        }
+        @synchronized(observer.kai_upObservedArray){
+            [observer.kai_upObservedArray addObject:info];
+        }
+        [self kai_addObserver:observer forKeyPath:keyPath options:options context:context];
+        
+        //交换dealloc方法
+        [observer kai_KVOChangeDidDeallocSignal];
+        [self kai_KVOChangeDidDeallocSignal];
+    }
+    @catch (NSException *exception) {
+        
+    }
+    @finally {
+        [lock unlock];
+    }
 }
 
-- (_KAIKVOInfo *)_kai_observerKeyPath:(NSString *)keyPath observer:(id)observer {
-    NSMutableDictionary *dic = [self _kai_allObserverInfos];
-    NSArray *array           = dic[keyPath];
-    _KAIKVOInfo *info        = [array objectPassingTest:^BOOL(_KAIKVOInfo *obj) {
-        return (observer == obj.observer && [keyPath isEqualToString:obj.keyPath]);
+//以下两个方法的区别
+//带context参数的方法，苹果是倒序遍历数组，然后判断keypath和context是否都相等，如果都相等则移除，如果没有都相等的则崩溃，如果context参数=NULL，也是相同逻辑，判断keypath是否相等，context是否等于NULL，有则移除，没有相等的则崩溃
+//不带context，苹果也是倒序遍历数组，然后判断keypath是否相等(不管context是啥)，如果相等则移除，如果没有相等的则崩溃
+//移除时不但要把 有哪些对象监听了自己字典移除，还要把observer的监听了哪些人字典移除
+- (void)kai_removeObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath {
+    [self kai_allRemoveObserver:observer forKeyPath:keyPath context:nil isContext:NO];
+}
+
+- (void)kai_removeObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath context:(void *)context {
+    [self kai_allRemoveObserver:observer forKeyPath:keyPath context:context isContext:YES];
+}
+
+- (void)kai_allRemoveObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath context:(void *)context isContext:(BOOL)isContext{
+    if(!observer||!keyPath||([keyPath isKindOfClass:[NSString class]]&&keyPath.length<=0)){
+        return ;
+    }
+    _KAIRecursiveLock *lock;
+    @synchronized(self){
+        lock =self.kai_lock;
+        if (lock==nil) {
+            lock=observer.kai_lock;
+            if (lock==nil) {
+                lock=[[_KAIRecursiveLock alloc]init];
+                lock.name=[NSString stringWithFormat:@"%@",[observer class]];
+                observer.kai_lock=lock;
+            }
+        }
+    }
+    
+    [lock lock];
+    _KAIKVOInfo *info=[self kai_canAddOrRemoveObserverWithKeypathWithObserver:observer keyPath:keyPath context:context haveContext:isContext isAdd:NO];
+    if (info==nil) {
+        // 重复删除观察者或不含有 或者keypath=nil  observer=nil
+        NSString *text=@"";
+        if (observer.kai_notNeedRemoveKeypathFromCrashArray) {
+        }else{
+            //observer走完了dealloc，然后去移除，事实上我已经替他移除完了
+            text=@"主动";
+        }
+        [lock unlock];
+        return;
+    }
+    
+    @try {
+        if (isContext) {
+            NSString *targetAddress=[NSString stringWithFormat:@"%p",self];
+            NSString *observerAddress=[NSString stringWithFormat:@"%p",observer];
+            //此处是因为remove  keypath context调用的还是remove keypath方法
+            _KAIKVOInfo *info=[_KAIKVOInfo new];
+            info.keyPath=keyPath;
+            info.context=context;
+            info.targetAddress=targetAddress;
+            info.observerAddress=observerAddress;
+            self.kai_willRemoveObserverInfo = info;
+            [self kai_removeObserver:observer forKeyPath:keyPath context:context];
+        } else {
+            //kai_removeObserver:observer forKeyPath:keyPath context:
+            //newContext是上面方法的参数值，因为上面方法底层调用的方法是不带context参数的remove方法
+            void *newContext = NULL;
+            if (self.kai_willRemoveObserverInfo) {
+                newContext = self.kai_willRemoveObserverInfo.context;
+            }
+            [self kai_removeObserver:observer forKeyPath:keyPath];
+        }
+    }
+    @catch (NSException *exception) {
+
+    }
+    @finally {
+        if (isContext) {
+            self.kai_willRemoveObserverInfo = nil;
+        }
+        [self kai_removeSuccessObserver:observer info:info];
+        [lock unlock];
+    }
+}
+
+- (void)kai_removeSuccessObserver:(NSObject *)observer info:(_KAIKVOInfo *)info {
+    //    NSString *key =[NSString stringWithFormat:@"%p",self];
+    //哪些对象监听了自己
+    NSMutableArray *downArray = self.kai_downObservedKeyPathArray;
+
+    //observer监听了哪些对象
+    NSMutableArray *upArray = observer.kai_upObservedArray;
+
+    if (info) {
+        @synchronized(downArray) {
+            if ([downArray containsObject:info]) {
+                [downArray removeObject:info];
+            }
+        }
+        @synchronized(upArray) {
+            if ([upArray containsObject:info]) {
+                [upArray removeObject:info];
+            }
+        }
+    }
+}
+
+//为什么判断能否移除 而不是直接remove try catch 捕获异常，因为有的类remove keypath两次，try直接就崩溃了
+- (_KAIKVOInfo *)kai_canAddOrRemoveObserverWithKeypathWithObserver:(NSObject *)observer keyPath:(NSString *)keyPath context:(void *)context haveContext:(BOOL)haveContext isAdd:(BOOL)isAdd {
+    if (observer.kai_notNeedRemoveKeypathFromCrashArray == NO) {
+        NSString *observerKey    = KAIFormatterStringFromObject(observer);
+        NSMutableDictionary *dic = KVOSafeDeallocCrashes()[observerKey];
+        NSMutableArray *array    = dic[@"keyPaths"];
+        __block NSMutableDictionary *willRemoveDic;
+        if (array.count > 0) {
+            [[array copy] enumerateObjectsUsingBlock:^(NSMutableDictionary *obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                if ([obj[@"targetName"] isEqualToString:NSStringFromClass([self class])] && [obj[@"targetAddress"] isEqualToString:[NSString stringWithFormat:@"%p", self]] && [keyPath isEqualToString:obj[@"keyPath"]]) {
+                    willRemoveDic = obj;
+                    *stop         = YES;
+                }
+            }];
+            if (willRemoveDic) {
+                [array removeObject:willRemoveDic];
+                if (array.count <= 0) {
+                    @synchronized(KVOSafeDeallocCrashes()) {
+                        [KVOSafeDeallocCrashes() removeObjectForKey:observerKey];
+                    }
+                }
+            }
+        }
+    }
+
+    if (haveContext == NO && self.kai_willRemoveObserverInfo) {
+        context = self.kai_willRemoveObserverInfo.context;
+    }
+    if (self.kai_willRemoveObserverInfo) {
+        haveContext = YES;
+    }
+
+    //哪些对象监听了自己
+    NSMutableArray *downArray = self.kai_downObservedKeyPathArray;
+
+    //返回已重复的KVO，或者将要移除的KVO
+    __block _KAIKVOInfo *info;
+
+    //处理添加的逻辑
+    if (isAdd) {
+        //判断是否完全相等
+        [downArray enumerateObjectsUsingBlock:^(_KAIKVOInfo *  obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj.observerAddress isEqualToString:[NSString stringWithFormat:@"%p",observer]]&&[obj.keyPath isEqualToString:keyPath]) {
+                if(obj.context==context){
+                    info=obj;
+                    *stop=YES;
+                }
+            }
+        }];
+        if (info) {
+            return info;
+        }
+        return nil;
+    }
+    
+    
+    //处理移除的逻辑
+    [downArray enumerateObjectsWithOptions:(NSEnumerationReverse) usingBlock:^(_KAIKVOInfo *  obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj.observerAddress isEqualToString:[NSString stringWithFormat:@"%p",observer]]&&[obj.keyPath isEqualToString:keyPath]) {
+            if(haveContext){
+                if(obj.context==context){
+                    info=obj;
+                    *stop=YES;
+                }
+            }else{
+                info=obj;
+                *stop=YES;
+            }
+        }
     }];
-
-    return info;
+    if (info) {
+        return info;
+    }
+    return nil;
 }
 
-// AVPlayerLayer 类在调用 observationInfo 会引起闪退“*** -[AVPlayerLayer release]: message sent to deallocated instance 0x600002da1f20”
-//- (BOOL)_kai_observerKeyPath:(NSString *)key observer:(id)observer {
-//    id info = self.observationInfo;
-//    NSArray *array = [info valueForKey:@"_observances"];
-//    for (id objc in array) {
-//        id Properties = [objc valueForKeyPath:@"_property"];
-//        id newObserver = [objc valueForKeyPath:@"_observer"];
-//
-//        NSString *keyPath = [Properties valueForKeyPath:@"_keyPath"];
-//        if ([key isEqualToString:keyPath] && [newObserver isEqual:observer]) {
-//            return YES;
+/* 防止此种崩溃所以新创建个NSArray 和 NSMutableDictionary遍历
+ Terminating app due to uncaught exception 'NSGenericException', reason: '*** Collection <__NSArrayM: 0x61800024f7b0> was mutated while being enumerated.'
+ 
+ Terminating app due to uncaught exception 'NSGenericException', reason: '*** Collection <__NSDictionaryM: 0x170640de0> was mutated while being enumerated.'
+ */
+-(void)kai_KVODealloc {
+    if (self.kai_upObservedArray.count>0) {
+        @synchronized(KVOSafeDeallocCrashes()){
+            NSString *currentKey = KAIFormatterStringFromObject(self);
+            NSMutableDictionary *crashDic=[NSMutableDictionary dictionary];
+            NSMutableArray *array=[NSMutableArray array];
+            crashDic[@"keyPaths"]=array;
+            crashDic[@"className"]=NSStringFromClass([self class]);
+            KVOSafeDeallocCrashes()[currentKey]=crashDic;
+            for (_KAIKVOInfo *info in self.kai_upObservedArray) {
+                NSMutableDictionary *newDic=[NSMutableDictionary dictionary];
+                newDic[@"targetName"]=info.targetClassName;
+                newDic[@"targetAddress"]=info.targetAddress;
+                newDic[@"keyPath"]=info.keyPath;
+                newDic[@"context"]=[NSString stringWithFormat:@"%p",info.context];
+                [array addObject:newDic];
+            }
+        }
+    }
+
+    //A->B A先销毁 B的kai_upObservedArray 里的info.target=nil,然后在B dealloc里在remove会导致移除不了，然后系统会报销毁时还持有某keypath的crash
+    //A->B B先销毁 此时A remove 但事实上的A的kai_downObservedArray里info.observer=nil  所以B remove里会判断observer是否有值，如果没值则不remove导致没有remove
+
+    //监听了哪些人 让那些人移除自己
+    NSMutableArray *newUpArray = [[[self.kai_upObservedArray reverseObjectEnumerator] allObjects] mutableCopy];
+
+    for (_KAIKVOInfo *upInfo in newUpArray) {
+        id target = upInfo.target;
+        if (target) {
+            [target kai_allRemoveObserver:self forKeyPath:upInfo.keyPath context:upInfo.context isContext:upInfo.context != NULL];
+        } else if ([upInfo.targetAddress isEqualToString:[NSString stringWithFormat:@"%p", self]]) {
+            [self kai_allRemoveObserver:self forKeyPath:upInfo.keyPath context:upInfo.context isContext:upInfo.context != NULL];
+        }
+    }
+
+    //谁监听了自己 移除他们 这块必须处理  不然 A->B   A先销毁了 在B里面调用A remove就无效了，因为A=nil
+    NSMutableArray *downNewArray=[[[self.kai_downObservedKeyPathArray reverseObjectEnumerator]allObjects] mutableCopy];
+    for (_KAIKVOInfo *downInfo in downNewArray) {
+        [self kai_allRemoveObserver:downInfo.observer forKeyPath:downInfo.keyPath context:downInfo.context isContext:downInfo.context!=NULL];
+    }
+    self.kai_notNeedRemoveKeypathFromCrashArray=NO;
+}
+
++ (void)kai_dealloc_crash:(NSString*)classAddress {
+    //比如A先释放了然后走到此处，然后地址又被B重新使用了，A又释放了走了kai_KVODealloc方法，KVOSafeDeallocCrashes以地址为key的值又被重新赋值，导致误报(A还监听着B监听的内容)，赋值KVOSafeDeallocCrashes以地址为kay的字典的时候，导致字典被释放其他地方又使用，导致野指针
+    @synchronized(KVOSafeDeallocCrashes()){
+        NSString *currentKey=[NSString stringWithFormat:@"%@-%@",classAddress,NSStringFromClass(self)];
+//        NSDictionary *crashDic = KVOSafeDeallocCrashes()[currentKey];
+//        NSArray *array = [crashDic[@"keyPaths"] copy];
+//        for (NSMutableDictionary *dic in array) {
+//            NSString *reason = [NSString stringWithFormat:@"%@:(%@） dealloc时仍然监听着 %@:%@ 的 keyPath of %@ context:%@",crashDic[@"className"],classAddress,dic[@"targetName"],dic[@"targetAddress"],dic[@"keyPath"],dic[@"context"]];
+//            NSException *exception = [NSException exceptionWithName:@"KVO crash" reason:reason userInfo:nil];
 //        }
-//    }
-//    return NO;
-//}
+        [KVOSafeDeallocCrashes() removeObjectForKey:currentKey];
+    }
+}
+
+//最后替换的dealloc 会最先调用倒序
+- (void)kai_KVOChangeDidDeallocSignal {
+    //此处交换dealloc方法是借鉴RAC源码
+    Class classToSwizzle=[self class];
+    @synchronized (KVOSafeSwizzledClasses()) {
+        NSString *className = NSStringFromClass(classToSwizzle);
+        if ([KVOSafeSwizzledClasses() containsObject:className]) return;
+        
+        SEL deallocSelector = sel_registerName("dealloc");
+        
+        __block void (*originalDealloc)(__unsafe_unretained id, SEL) = NULL;
+        
+        id newDealloc = ^(__unsafe_unretained id self) {
+            [self kai_KVODealloc];
+            NSString *classAddress=[NSString stringWithFormat:@"%p",self];
+            if (originalDealloc == NULL) {
+                struct objc_super superInfo = {
+                    .receiver = self,
+                    .super_class = class_getSuperclass(classToSwizzle)
+                };
+                void (*msgSend)(struct objc_super *, SEL) = (__typeof__(msgSend))objc_msgSendSuper;
+                msgSend(&superInfo, deallocSelector);
+            } else {
+                originalDealloc(self, deallocSelector);
+            }
+            [NSClassFromString(className) kai_dealloc_crash:classAddress];
+        };
+        
+        IMP newDeallocIMP = imp_implementationWithBlock(newDealloc);
+        
+        if (!class_addMethod(classToSwizzle, deallocSelector, newDeallocIMP, "v@:")) {
+            // The class already contains a method implementation.
+            Method deallocMethod = class_getInstanceMethod(classToSwizzle, deallocSelector);
+            
+            // We need to store original implementation before setting new implementation
+            // in case method is called at the time of setting.
+            originalDealloc = (__typeof__(originalDealloc))method_getImplementation(deallocMethod);
+            
+            // We need to store original implementation again, in case it just changed.
+            originalDealloc = (__typeof__(originalDealloc))method_setImplementation(deallocMethod, newDeallocIMP);
+        }
+        
+        [KVOSafeSwizzledClasses() addObject:className];
+    }
+}
+
+- (NSMutableArray *)kai_downObservedKeyPathArray{
+    NSMutableArray *array = [self associatedValueForKey:_cmd];
+    if (!array) {
+        array = [NSMutableArray new];
+        [self setAssociateValue:array withKey:_cmd];
+    }
+    return array;
+}
+
+- (void)setkai_downObservedKeyPathArray:(NSMutableArray *)kai_downObservedKeyPathArray{
+    [self setAssociateValue:kai_downObservedKeyPathArray withKey:@selector(kai_downObservedKeyPathArray)];
+}
+
+- (NSMutableArray *)kai_upObservedArray{
+    @synchronized(self){
+        NSMutableArray *array = [self associatedValueForKey:_cmd];
+        if (!array) {
+            array = [NSMutableArray array];
+            [self setkai_upObservedArray:array];
+        }
+        return array;
+    }
+}
+
+- (void)setkai_upObservedArray:(NSMutableArray *)kai_upObservedArray {
+    [self setAssociateValue:kai_upObservedArray withKey:@selector(kai_upObservedArray)];
+}
+
+- (void)setkai_willRemoveObserverInfo:(_KAIKVOInfo *)kai_willRemoveObserverInfo{
+    [self setAssociateValue:kai_willRemoveObserverInfo withKey:@selector(kai_willRemoveObserverInfo)];
+}
+
+- (_KAIKVOInfo *)kai_willRemoveObserverInfo{
+    return [self associatedValueForKey:_cmd];
+}
+
+- (void)setkai_notNeedRemoveKeypathFromCrashArray:(BOOL)kai_notNeedRemoveKeypathFromCrashArray {
+    [self setAssociateValue:@(kai_notNeedRemoveKeypathFromCrashArray) withKey:@selector(kai_notNeedRemoveKeypathFromCrashArray)];
+}
+
+- (BOOL)kai_notNeedRemoveKeypathFromCrashArray{
+    return [[self associatedValueForKey:_cmd] boolValue];
+}
+
+- (void)setkai_lock:(_KAIRecursiveLock *)kai_lock{
+    [self setAssociateValue:kai_lock withKey:@selector(kai_lock)];
+}
+
+- (_KAIRecursiveLock *)kai_lock {
+    _KAIRecursiveLock *lock = [self associatedValueForKey:_cmd];
+    return lock;
+}
 
 @end
