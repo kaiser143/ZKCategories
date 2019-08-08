@@ -291,6 +291,7 @@
 @implementation UIView (ZKActionHandlers)
 
 - (void)setTapActionWithBlock:(void (^)(void))block {
+    self.userInteractionEnabled = YES;
     UITapGestureRecognizer *gesture = [self associatedValueForKey:_cmd];
 
     if (!gesture) {
@@ -312,6 +313,7 @@
 }
 
 - (void)setLongPressActionWithBlock:(void (^)(void))block {
+    self.userInteractionEnabled = YES;
     UILongPressGestureRecognizer *gesture = [self associatedValueForKey:_cmd];
 
     if (!gesture) {
