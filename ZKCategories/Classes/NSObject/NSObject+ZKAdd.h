@@ -175,7 +175,7 @@ typedef void (^ZKNSObjectDelayBlock)(BOOL cancel);
 
 @end
 
-@interface NSObject (ZKKVOSafe)
+@interface NSObject (ZKKVOBlock)
 
 /**
  Registers a block to receive KVO notifications for the specified key-path
