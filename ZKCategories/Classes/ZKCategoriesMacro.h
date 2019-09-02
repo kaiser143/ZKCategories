@@ -563,13 +563,13 @@ ZK_EXTERN_C_BEGIN
 #define CRATE_TYPE_CODING(INDEX,VALUE) \
     __CREATE_ARGS_DELETE_PAREN(CRATE_TYPE_CODING_DEL_VAR VALUE)
 
-#define __XXHookType__void ,
+#define __KAIHookType__void ,
 
-#define __XXHookTypeIsVoidType(...)  \
+#define __KAIHookTypeIsVoidType(...)  \
     metamacro_if_eq(metamacro_argcount(__VA_ARGS__),2)
 
-#define XXHookTypeIsVoidType(TYPE) \
-    __XXHookTypeIsVoidType(__XXHookType__ ## TYPE)
+#define KAIHookTypeIsVoidType(TYPE) \
+    __KAIHookTypeIsVoidType(__KAIHookType__ ## TYPE)
 
 
 // 调用原始函数
@@ -612,14 +612,14 @@ ZK_EXTERN_C_BEGIN
                                                SEL _cmd                                                         \
                                                FOREACH_ARGS(CREATE_ARGS,1,##__VA_ARGS__ ))                      \
                     = (void*)method_getImplementation(method);                                                  \
-                    XXHookTypeIsVoidType(returnType)                                                            \
+                    KAIHookTypeIsVoidType(returnType)                                                           \
                     ()                                                                                          \
                     (return )                                                                                   \
                     superFunction(self,__xxHookSel,##__VA_ARGS__);                                              \
                 }                                                                                               \
                 else                                                                                            \
                 {                                                                                               \
-                    XXHookTypeIsVoidType(returnType)                                                            \
+                    KAIHookTypeIsVoidType(returnType)                                                           \
                     (return;)                                                                                   \
                     (return returnValue;)                                                                       \
                 }                                                                                               \
@@ -648,7 +648,7 @@ ZK_EXTERN_C_BEGIN
             metamacro_if_eq(notWorkSubClass,1)                                                                  \
             (if (!kai_hook_check_block(object_getClass(self),__xxHookClass,&associatedKey))                     \
              {                                                                                                  \
-              XXHookTypeIsVoidType(returnType)                                                                  \
+              KAIHookTypeIsVoidType(returnType)                                                                 \
               (KAIHookOrgin(__VA_ARGS__ ); return;)                                                             \
               (return KAIHookOrgin(__VA_ARGS__ );)                                                              \
             })                                                                                                  \
