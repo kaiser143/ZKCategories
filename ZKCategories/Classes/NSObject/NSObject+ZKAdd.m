@@ -818,7 +818,7 @@ static char DTRuntimeDeallocBlocks;
 @implementation NSObject (ZKKVOBlock)
 
 + (void)load {
-    kai_hook_load_group(XXForOCString(ProtectKVO));
+    kai_hook_load_group(XXForOCString(KVOSafe));
 }
 
 - (void)addObserverBlockForKeyPath:(NSString *)keyPath block:(void (^)(__weak id obj, id oldVal, id newVal))block {
@@ -951,7 +951,7 @@ static char DTRuntimeDeallocBlocks;
 
 #pragma mark - :. hook KVO
 
-KAIStaticHookClass(NSObject, ProtectKVO, void, @selector(addObserver:forKeyPath:options:context:),
+KAIStaticHookClass(NSObject, KVOSafe, void, @selector(addObserver:forKeyPath:options:context:),
                   (NSObject *)observer, (NSString *)keyPath,(NSKeyValueObservingOptions)options, (void *)context) {
     @KVOADDIgnoreMarco()
     
@@ -980,7 +980,7 @@ KAIStaticHookClass(NSObject, ProtectKVO, void, @selector(addObserver:forKeyPath:
 }
 KAIStaticHookEnd
 
-KAIStaticHookClass(NSObject, ProtectKVO, void, @selector(removeObserver:forKeyPath:),
+KAIStaticHookClass(NSObject, KVOSafe, void, @selector(removeObserver:forKeyPath:),
                   (NSObject *)observer, (NSString *)keyPath) {
     @KVORemoveIgnoreMarco()
     NSHashTable<NSObject *> *os = self.KVOProxy.KVOInfoMap[keyPath];
