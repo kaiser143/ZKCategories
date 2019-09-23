@@ -21,7 +21,8 @@
 
 - (void)kai_layoutSubviews {
     [self kai_layoutSubviews];
-    if (@available(iOS 11.0, *)) {
+    if (@available(iOS 13.0, *)) {
+    } else if (@available(iOS 11.0, *)) {
         self.layoutMargins = UIEdgeInsetsZero;
         for (UIView *view in self.subviews) {
             if ([NSStringFromClass(view.classForCoder) containsString:@"ContentView"]) {
