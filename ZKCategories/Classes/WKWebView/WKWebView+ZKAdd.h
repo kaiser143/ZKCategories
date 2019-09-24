@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  截长图
  */
-- (void)snapshotImageWithBlock:(void(^)(UIImage *_Nullable image))block;
+- (void)KAIContentScrollCaptureCompletionHandler:(void(^)(UIImage *_Nullable capturedImage))completionHandler;
 
 @end
 
