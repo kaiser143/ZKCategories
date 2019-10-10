@@ -11,38 +11,40 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
-#define NAVBAR_CHANGE_POINT 50
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView  {
-    UIColor * color = [UIColor colorWithRed:0/255.0 green:175/255.0 blue:240/255.0 alpha:1]; //导航栏背景色
-    CGFloat offsetY = scrollView.contentOffset.y;
-    if (offsetY > NAVBAR_CHANGE_POINT) {
-        CGFloat alpha = MIN(1, 1 - ((NAVBAR_CHANGE_POINT + 64 - offsetY) / 64));
-        [self.navigationController.navigationBar setbarbackgroundView:[color colorWithAlphaComponent:alpha]];
-    } else {
-        [self.navigationController.navigationBar setbarbackgroundView:[color colorWithAlphaComponent:0]];
-    }
-}
-
-导航栏缩进
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat offsetY = scrollView.contentOffset.y;
-    if (offsetY > 0) {
-        if (offsetY >= 44) {
-            [self setNavigationBarTransformProgress:1];
+ * @code
+ #define NAVBAR_CHANGE_POINT 50
+ - (void)scrollViewDidScroll:(UIScrollView *)scrollView  {
+        UIColor * color = [UIColor colorWithRed:0/255.0 green:175/255.0 blue:240/255.0 alpha:1]; //导航栏背景色
+        CGFloat offsetY = scrollView.contentOffset.y;
+        if (offsetY > NAVBAR_CHANGE_POINT) {
+            CGFloat alpha = MIN(1, 1 - ((NAVBAR_CHANGE_POINT + 64 - offsetY) / 64));
+            [self.navigationController.navigationBar setbarbackgroundView:[color colorWithAlphaComponent:alpha]];
         } else {
-            [self setNavigationBarTransformProgress:(offsetY / 44)];
+            [self.navigationController.navigationBar setbarbackgroundView:[color colorWithAlphaComponent:0]];
         }
-    } else {
-        [self setNavigationBarTransformProgress:0];
-        self.navigationController.navigationBar.backIndicatorImage = [UIImage new];
-    }
-}
+ }
 
-- (void)setNavigationBarTransformProgress:(CGFloat)progress {
-    [self.navigationController.navigationBar setTranslationY:(-44 * progress)];
-    [self.navigationController.navigationBar setElementsAlpha:(1-progress)];
-}
-*/
+ 导航栏缩进
+ - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+        CGFloat offsetY = scrollView.contentOffset.y;
+        if (offsetY > 0) {
+            if (offsetY >= 44) {
+                [self setNavigationBarTransformProgress:1];
+            } else {
+                [self setNavigationBarTransformProgress:(offsetY / 44)];
+            }
+        } else {
+            [self setNavigationBarTransformProgress:0];
+            self.navigationController.navigationBar.backIndicatorImage = [UIImage new];
+        }
+ }
+
+ - (void)setNavigationBarTransformProgress:(CGFloat)progress {
+        [self.navigationController.navigationBar setTranslationY:(-44 * progress)];
+        [self.navigationController.navigationBar setElementsAlpha:(1-progress)];
+ }
+ * @endcode
+ */
 
 @interface UINavigationBar (ZKAdd)
 

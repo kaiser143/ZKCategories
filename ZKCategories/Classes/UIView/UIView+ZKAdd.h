@@ -207,15 +207,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /*
-- (id)initWithFrame:(CGRect)frame {
+ * @code
+ - (id)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self loadContentsFromNib];
         [self awakeFromNib];
     }
     
     return self;
-}
-*/
+ }
+ * @code
+ */
 @interface UIView (ZKNibLoading)
 
 - (void)loadContentsFromNibNamed:(NSString *)nibName bundle:(NSBundle *)bundle;

@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-/* 使用
-- (void)testPerformBlockAndWait {
+/**
+ * @code
+ - (void)testPerformBlockAndWait {
     // 1
     __block BOOL flag = NO;
  
@@ -26,8 +27,9 @@
  
     // 3
     XCTAssertTrue(flag);
-}
-*/
+ }
+ * @endcode
+ */
 
 extern NSString *const NSRunloopTimeoutException;
 

@@ -38,7 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSInteger)getInputLengthWithText:(NSString *)text;
 
 /*
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+ * @code
+ - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     NSInteger textLength = [textView getInputLengthWithText:text];
     if (textLength > 20) {
         //超过20个字可以删除
@@ -48,13 +49,14 @@ NS_ASSUME_NONNULL_BEGIN
         return NO;
     }
     return YES;
-}
+ }
 
-- (void)textViewDidChange:(UITextView *)textView {
+ - (void)textViewDidChange:(UITextView *)textView {
     if ([textView getInputLengthWithText:nil] > 20) {
         textView.text = [textView.text substringToIndex:20];
     }
-}
+ }
+ * @endcode
  */
 
 @end

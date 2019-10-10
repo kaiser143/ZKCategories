@@ -43,15 +43,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSURL *)URLForKey:(NSString *)defaultName;
 
-#pragma mark --- WRITE FOR STANDARD
+#pragma mark - :. WRITE FOR STANDARD
 
 + (void)setObject:(id)value forKey:(NSString *)defaultName;
 
-#pragma mark --- READ ARCHIVE FOR STANDARD
+#pragma mark - :. READ ARCHIVE FOR STANDARD
 
 + (id)arcObjectForKey:(NSString *)defaultName;
 
-#pragma mark --- WRITE ARCHIVE FOR STANDARD
+#pragma mark - :. WRITE ARCHIVE FOR STANDARD
 
 + (void)setArcObject:(id)value forKey:(NSString *)defaultName;
 
