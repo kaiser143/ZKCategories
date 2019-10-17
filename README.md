@@ -1,23 +1,24 @@
-# ZKCategories
-
 [![CI Status](http://img.shields.io/travis/Kaiser/ZKCategories.svg?style=flat)](https://travis-ci.org/Kaiser/ZKCategories)
 [![Version](https://img.shields.io/cocoapods/v/ZKCategories.svg?style=flat)](http://cocoapods.org/pods/ZKCategories)
 [![License](https://img.shields.io/cocoapods/l/ZKCategories.svg?style=flat)](http://cocoapods.org/pods/ZKCategories)
 [![Platform](https://img.shields.io/cocoapods/p/ZKCategories.svg?style=flat)](http://cocoapods.org/pods/ZKCategories)
 
-## Example
+# ZKCategories
+开发中常用的工具类
+* 新增了KVO 防闪退，使用的时候需要在framework中添加宏 `KVOSAFE=1`
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+## 如何安装
+__Requirements__
+* iOS 7.0+
+* macOS 10.7+
 
-## Requirements
-
-## Installation
-
-ZKCategories is available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:
-
+__Podfile__
 ```ruby
 pod 'ZKCategories', :git => 'https://github.com/kaiser143/ZKCategories.git', :tag => '0.2.3'
+```
+
+```ruby
+pod 'ZKCategories', :git => 'https://github.com/kaiser143/ZKCategories.git', :commit => 'xxxx'
 ```
 
 ## Author
