@@ -818,7 +818,7 @@ static char DTRuntimeDeallocBlocks;
 @implementation NSObject (ZKKVOBlock)
 
 + (void)load {
-    kai_hook_load_group(XXForOCString(KVOSafe));
+//    kai_hook_load_group(XXForOCString(KVOSafe));
 }
 
 - (void)addObserverBlockForKeyPath:(NSString *)keyPath block:(void (^)(__weak id obj, id oldVal, id newVal))block {
