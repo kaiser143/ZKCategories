@@ -15,9 +15,7 @@ __Requirements__
 __Podfile__
 ```ruby
 pod 'ZKCategories', :git => 'https://github.com/kaiser143/ZKCategories.git', :tag => '0.2.3'
-```
 
-```ruby
 pod 'ZKCategories', :git => 'https://github.com/kaiser143/ZKCategories.git', :commit => 'xxxx'
 ```
 
