@@ -8,6 +8,7 @@
 
 #import "ZKViewController.h"
 #import "ZKCategories.h"
+#import "ZKKVOViewController.h"
 
 @interface ZKViewController () <UIScrollViewDelegate>
 
@@ -34,10 +35,11 @@
     if (i == 0) {
         UIButton *next = [UIButton buttonWithType:UIButtonTypeCustom];
         next.top = 100;
+        next.size = CGSizeMake(80, 50);
         next.centerX = self.view.centerX;
-        next.size = CGSizeMake(50, 50);
         kai_view_border_radius(next, 8.f, 1, [UIColor colorWithHexString:@"#eeeeee"]);
         [next setTitle:@"下一页" forState:UIControlStateNormal];
+        [next setTitleColor:UIColor.blackColor];
         [self.view addSubview:next];
         
         @weakify(self, next);
@@ -59,6 +61,22 @@
 //            [self kai_popViewControllerAnimated];
         }];
     }
+    
+    @weakify(self);
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setTitle:@"KVO 测试"];
+    [button setTitleColor:UIColor.blackColor];
+    button.top = 200;
+    button.size = CGSizeMake(80, 50);
+    button.centerX = self.view.centerX;
+    kai_view_border_radius(button, 8.f, 1, [UIColor colorWithHexString:@"#eeeeee"]);
+    [self.view addSubview:button];
+    [button addBlockForControlEvents:UIControlEventTouchUpInside
+                               block:^(__kindof UIControl * _Nonnull sender) {
+        @strongify(self);
+        ZKKVOViewController *controller = [[ZKKVOViewController alloc] init];
+        [self kai_pushViewController:controller];
+    }];
     
     i++;
 }

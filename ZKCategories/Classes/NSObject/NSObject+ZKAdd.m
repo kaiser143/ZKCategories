@@ -10,123 +10,13 @@
 #import "NSDate+ZKAdd.h"
 #import "NSArray+ZKAdd.h"
 #import <objc/runtime.h>
-#import <mach-o/dyld.h>
-#import <mach-o/getsect.h>
 #import <objc/message.h>
 #import "ZKCategoriesMacro.h"
-
-static void(*__kai_hook_orgin_function_removeObserver)(NSObject* self, SEL _cmd ,NSObject *observer ,NSString *keyPath) = ((void*)0);
-
-#define XXForOCString(_) @#_
-
-#define KVOADDIgnoreMarco()  \
-    autoreleasepool {} \
-    if (object_getClass(observer) == objc_getClass("RACKVOProxy") ) { \
-        KAIHookOrgin(observer, keyPath, options, context); \
-        return; \
-    }
-
-
-#define KVORemoveIgnoreMarco()  \
-    autoreleasepool {} \
-    if (object_getClass(observer) == objc_getClass("RACKVOProxy") ) {  \
-        KAIHookOrgin(observer, keyPath);\
-        return;  \
-    }
-
-#ifndef __LP64__
-
-#define mach_header_ mach_header
-
-#else
-
-#define mach_header_ mach_header_64
-
-#endif
 
 static inline dispatch_time_t dTimeDelay(NSTimeInterval time) {
     int64_t delta = (int64_t)(NSEC_PER_SEC * time);
     return dispatch_time(DISPATCH_TIME_NOW, delta);
 }
-
-void kai_hook_load_group(NSString *groupName) {
-    uint32_t count = _dyld_image_count();
-    for (uint32_t i = 0 ; i < count ; i ++) {
-        const struct mach_header_* header = (void*)_dyld_get_image_header(i);
-        NSString *string = [NSString stringWithFormat:@"__sh%@",groupName];
-        unsigned long size = 0;
-        uint8_t *data = getsectiondata(header, "__DATA", [string UTF8String],&size);
-        if (data && size > 0) {
-            void **pointers = (void**)data;
-            uint32_t count = (uint32_t)(size / sizeof(void*));
-            for (uint32_t i = 0 ; i < count ; i ++) {
-                void(*pointer)(void) = pointers[i];
-                pointer();
-            }
-            break;
-        }
-    }
-}
-
-BOOL defaultSwizzlingOCMethod(Class self, SEL origSel_, SEL altSel_) {
-    Method origMethod = class_getInstanceMethod(self, origSel_);
-    if (!origMethod) {
-        return NO;
-    }
-    
-    Method altMethod = class_getInstanceMethod(self, altSel_);
-    if (!altMethod) {
-        return NO;
-    }
-    
-    class_addMethod(self,
-                    origSel_,
-                    class_getMethodImplementation(self, origSel_),
-                    method_getTypeEncoding(origMethod));
-    class_addMethod(self,
-                    altSel_,
-                    class_getMethodImplementation(self, altSel_),
-                    method_getTypeEncoding(altMethod));
-    
-    method_exchangeImplementations(class_getInstanceMethod(self, origSel_), class_getInstanceMethod(self, altSel_));
-    return YES;
-    
-}
-
-void* kai_hook_imp_function(Class clazz,
-                               SEL   sel,
-                               void  *newFunction) {
-    Method oldMethod = class_getInstanceMethod(clazz, sel);
-    BOOL succeed = class_addMethod(clazz,
-                                   sel,
-                                   (IMP)newFunction,
-                                   method_getTypeEncoding(oldMethod));
-    if (succeed) {
-        return nil;
-    } else {
-        return method_setImplementation(oldMethod, (IMP)newFunction);
-    }
-}
-
-BOOL kai_hook_check_block(Class objectClass, Class hookClass,void* associatedKey) {
-    while (objectClass && objectClass != hookClass) {
-        if (objc_getAssociatedObject(objectClass, associatedKey)) {
-            return NO;
-        }
-        objectClass = class_getSuperclass(objectClass);
-    }
-    return YES;
-}
-
-Class kai_hook_getClassFromObject(id object) {
-    // 如果不是class
-    if (!object_isClass(object)) {
-        return object_getClass(object);
-    } else {
-        return object;
-    }
-}
-
 
 @interface _KAIBlockExecutor : NSObject
 
@@ -818,7 +708,13 @@ static char DTRuntimeDeallocBlocks;
 @implementation NSObject (ZKKVOBlock)
 
 + (void)load {
-//    kai_hook_load_group(XXForOCString(KVOSafe));
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+#ifdef KVOSAFE
+    [self swizzleMethod:@selector(addObserver:forKeyPath:options:context:) withMethod:@selector(_kai_addObserver:forKeyPath:options:context:)];
+    [self swizzleMethod:@selector(removeObserver:forKeyPath:) withMethod:@selector(_kai_removeObserver:forKeyPath:)];
+#endif
+#pragma clang diagnostic pop
 }
 
 - (void)addObserverBlockForKeyPath:(NSString *)keyPath block:(void (^)(__weak id obj, id oldVal, id newVal))block {
@@ -878,9 +774,9 @@ static char DTRuntimeDeallocBlocks;
 @end
 
 
-@interface _KAIKVOProxy : NSObject {
-    __unsafe_unretained NSObject *_observed;
-}
+@interface _KAIKVOProxy : NSObject
+
+@property (nonatomic, weak) NSObject *observed;
 
 /**
  {keypath : [ob1,ob2](NSHashTable)}
@@ -904,7 +800,7 @@ static char DTRuntimeDeallocBlocks;
     @autoreleasepool {
         NSDictionary<NSString *, NSHashTable<NSObject *> *> *KVOInfos = self.KVOInfoMap.copy;
         for (NSString *keyPath in KVOInfos) {
-            __kai_hook_orgin_function_removeObserver(_observed, @selector(removeObserver:forKeyPath:), self, keyPath);
+            [self.observed removeObserver:self forKeyPath:keyPath];
         }
     }
 }
@@ -921,10 +817,7 @@ static char DTRuntimeDeallocBlocks;
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     NSHashTable<NSObject *> *os = self.KVOInfoMap[keyPath];
     for (NSObject *observer in os) {
-        @try {
-            [observer observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-        } @catch (NSException *exception) {
-        }
+        if ([observer respondsToSelector:_cmd]) [observer observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
 
@@ -938,6 +831,61 @@ static char DTRuntimeDeallocBlocks;
 
 @implementation NSObject (ZKKVOSafe)
 
+- (void)_kai_addObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context {
+    if (object_getClass(observer) == objc_getClass("RACKVOProxy")) {
+        [self _kai_addObserver:observer forKeyPath:keyPath options:options context:context];
+        return;
+    }
+    
+    if (!self.KVOProxy) {
+        @autoreleasepool {
+            self.KVOProxy = [[_KAIKVOProxy alloc] initWithObserverd:self];
+        }
+    }
+    
+    NSHashTable<NSObject *> *os = self.KVOProxy.KVOInfoMap[keyPath];
+        if (os.count == 0) {
+            os = [[NSHashTable alloc] initWithOptions:(NSPointerFunctionsWeakMemory) capacity:0];
+            [os addObject:observer];
+
+            [self _kai_addObserver:self.KVOProxy forKeyPath:keyPath options:options context:context];
+            self.KVOProxy.KVOInfoMap[keyPath] = os;
+            return ;
+        }
+
+        if ([os containsObject:observer]) {
+    //        NSString *reason = [NSString stringWithFormat:@"target is %@ method is %@, reason : KVO add Observer to many timers.",
+    //                            [self class], XXSEL2Str(@selector(addObserver:forKeyPath:options:context:))];
+        } else {
+            [os addObject:observer];
+        }
+}
+
+- (void)_kai_removeObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath {
+    if (object_getClass(observer) == objc_getClass("RACKVOProxy")) {
+        [self _kai_removeObserver:observer forKeyPath:keyPath];
+        return;
+    }
+    
+    NSHashTable<NSObject *> *os = self.KVOProxy.KVOInfoMap[keyPath];
+    if (os.count == 0) {
+        //        NSString *reason = [NSString stringWithFormat:@"target is %@ method is %@, reason : KVO remove Observer to many times.",
+        //                            [self class], XXSEL2Str(@selector(removeObserver:forKeyPath:))];
+        return;
+    }
+    
+    [os removeObject:observer];
+    
+    if (os.count == 0) {
+        [self _kai_removeObserver:self.KVOProxy forKeyPath:keyPath];
+        [self.KVOProxy.KVOInfoMap removeObjectForKey:keyPath];
+    }
+    
+//    [self _kai_removeObserver:observer forKeyPath:keyPath];
+}
+
+#pragma mark - :. getters and setters
+
 - (void)setKVOProxy:(_KAIKVOProxy *)KVOProxy {
     [self setAssociateValue:KVOProxy withKey:@selector(KVOProxy)];
 }
@@ -947,55 +895,3 @@ static char DTRuntimeDeallocBlocks;
 }
 
 @end
-
-
-#pragma mark - :. hook KVO
-
-KAIStaticHookClass(NSObject, KVOSafe, void, @selector(addObserver:forKeyPath:options:context:),
-                  (NSObject *)observer, (NSString *)keyPath,(NSKeyValueObservingOptions)options, (void *)context) {
-    @KVOADDIgnoreMarco()
-    
-    if (!self.KVOProxy) {
-        @autoreleasepool {
-            self.KVOProxy = [[_KAIKVOProxy alloc] initWithObserverd:self];
-        }
-    }
-
-    NSHashTable<NSObject *> *os = self.KVOProxy.KVOInfoMap[keyPath];
-    if (os.count == 0) {
-        os = [[NSHashTable alloc] initWithOptions:(NSPointerFunctionsWeakMemory) capacity:0];
-        [os addObject:observer];
-
-        KAIHookOrgin(self.KVOProxy, keyPath, options, context);
-        self.KVOProxy.KVOInfoMap[keyPath] = os;
-        return ;
-    }
-
-    if ([os containsObject:observer]) {
-//        NSString *reason = [NSString stringWithFormat:@"target is %@ method is %@, reason : KVO add Observer to many timers.",
-//                            [self class], XXSEL2Str(@selector(addObserver:forKeyPath:options:context:))];
-    } else {
-        [os addObject:observer];
-    }
-}
-KAIStaticHookEnd
-
-KAIStaticHookClass(NSObject, KVOSafe, void, @selector(removeObserver:forKeyPath:),
-                  (NSObject *)observer, (NSString *)keyPath) {
-    @KVORemoveIgnoreMarco()
-    NSHashTable<NSObject *> *os = self.KVOProxy.KVOInfoMap[keyPath];
-
-    if (os.count == 0) {
-//        NSString *reason = [NSString stringWithFormat:@"target is %@ method is %@, reason : KVO remove Observer to many times.",
-//                            [self class], XXSEL2Str(@selector(removeObserver:forKeyPath:))];
-        return;
-    }
-
-    [os removeObject:observer];
-
-    if (os.count == 0) {
-        KAIHookOrgin(self.KVOProxy, keyPath);
-        [self.KVOProxy.KVOInfoMap removeObjectForKey:keyPath];
-    }
-}
-KAIStaticHookEnd_SaveOri(__kai_hook_orgin_function_removeObserver)

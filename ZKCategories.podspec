@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ZKCategories'
-  s.version          = '0.2.3'
+  s.version          = "0.2.3"
   s.summary          = 'A short description of ZKCategories.'
 
 # This description is used to generate tags and improve search results.
