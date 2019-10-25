@@ -26,5 +26,8 @@ static __weak id ___currentFirstResponder;
     ___currentFirstResponder = self;
 }
 
+- (void)routerWithEventName:(NSString *)eventName userInfo:(nullable NSDictionary *)userInfo {
+    [self.nextResponder routerWithEventName:eventName userInfo:userInfo];
+}
 
 @end
