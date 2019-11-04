@@ -26,8 +26,46 @@ static __weak id ___currentFirstResponder;
     ___currentFirstResponder = self;
 }
 
-- (void)routerWithEventName:(NSString *)eventName userInfo:(nullable NSDictionary *)userInfo {
-    [self.nextResponder routerWithEventName:eventName userInfo:userInfo];
+- (void)sendEventWithName:(NSString *)eventName userInfo:(id)userInfo {
+    [self.nextResponder dispatchEventWithName:eventName userInfo:userInfo];
+}
+
+- (void)dispatchEventWithName:(NSString *)eventName userInfo:(id)userInfo {
+    BOOL shouldDispatchToNextResponder = [self responderDidReceiveEvent:eventName userInfo:userInfo];
+    if (shouldDispatchToNextResponder) {
+        [self.nextResponder dispatchEventWithName:eventName userInfo:userInfo];
+    }
+}
+
+- (BOOL)responderDidReceiveEvent:(NSString *)eventName userInfo:(id)userInfo {
+    return YES;
+}
+
+- (NSString *)responderChainDescription {
+    NSMutableArray *responderChainStrings = [NSMutableArray array];
+    [responderChainStrings addObject:[self class]];
+    UIResponder *nextResponder = self;
+    while ((nextResponder = [nextResponder nextResponder])) {
+        [responderChainStrings addObject:[nextResponder class]];
+    }
+    __block NSString *returnString = @"Responder Chain:\n";
+    __block int tabCount = 0;
+    [responderChainStrings enumerateObjectsWithOptions:NSEnumerationReverse
+                                            usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                                                if (tabCount) {
+                                                    returnString = [returnString stringByAppendingString:@"|"];
+                                                    for (int i = 0; i < tabCount; i++) {
+                                                        returnString = [returnString stringByAppendingString:@"----"];
+                                                    }
+                                                    returnString = [returnString stringByAppendingString:@" "];
+                                                }
+                                                else {
+                                                    returnString = [returnString stringByAppendingString:@"| "];
+                                                }
+                                                returnString = [returnString stringByAppendingFormat:@"%@ (%@)\n", obj, @(idx)];
+                                                tabCount++;
+                                            }];
+    return returnString;
 }
 
 @end
