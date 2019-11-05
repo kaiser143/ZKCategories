@@ -9,6 +9,49 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 
+/*!
+ * @code
+
+ @interface ZKViewController : UIViewController
+ @property (nonatomic, strong) NSDictionary<NSString *, NSInvocation *> *eventStrategy;
+ @end
+
+ @implementation ZKViewController
+
+ - (BOOL)responderDidReceiveEvent:(nonnull NSString *)eventName userInfo:(nullable id)userInfo {
+     NSInvocation *invocation = self.eventStrategy[eventName];
+     [invocation setArgument:&userInfo atIndex:2];
+     [invocation invokeWithTarget:self];
+     return NO;
+ }
+
+ - (NSInvocation *)createInvocationWithSelector:(SEL)selector {
+     NSMethodSignature *sig = [[self class] instanceMethodSignatureForSelector:selector];
+     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
+     [invocation setSelector:selector];
+    
+     return invocation;
+ }
+
+ - (NSDictionary<NSString *, NSInvocation *> *)eventStrategy {
+     if (_eventStrategy == nil) {
+         _eventStrategy = @{
+                                kBLGoodsDetailTicketEvent:[self createInvocationWithSelector:@selector(ticketEvent:)],
+                                kBLGoodsDetailPromotionEvent:[self createInvocationWithSelector:@selector(promotionEvent:)],
+                                kBLGoodsDetailScoreEvent:[self createInvocationWithSelector:@selector(scoreEvent:)],
+                                kBLGoodsDetailTargetAddressEvent:[self createInvocationWithSelector:@selector(targetAddressEvent:)],
+                                kBLGoodsDetailServiceEvent:[self createInvocationWithSelector:@selector(serviceEvent:)],
+                                kBLGoodsDetailSKUSelectionEvent:[self createInvocationWithSelector:@selector(skuSelectionEvent:)],
+                                };
+     }
+     return _eventStrategy;
+ }
+
+ @end
+ 
+ * @endcode
+ */
+
 @interface UIResponder (ZKAdd)
 
 /**
