@@ -232,3 +232,23 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+
+
+#if __has_include("Masonry.h") || __has_include(<Masonry/Masonry.h>)
+
+#if __has_include(<Masonry/Masonry.h>)
+    #import <Masonry/Masonry.h>
+#else
+    #import "Masonry.h"
+#endif
+
+@interface UIView (Masonry)
+
+- (id _Nonnull)kai_safeAreaLayoutGuideTop;
+- (id _Nonnull)kai_safeAreaLayoutGuideBottom;
+- (id _Nonnull)kai_safeAreaLayoutGuideLeft;
+- (id _Nonnull)kai_safeAreaLayoutGuideRight;
+
+@end
+
+#endif

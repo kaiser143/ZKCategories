@@ -556,3 +556,41 @@ static char ZKNibLoadingOutletsKey;
 }
 
 @end
+
+
+@implementation UIView (Masonry)
+
+- (id)kai_safeAreaLayoutGuideTop {
+    if (@available(iOS 11.0, *)) {
+        return [self safePerform:NSSelectorFromString(@"mas_safeAreaLayoutGuideTop")];
+    } else {
+        return [self safePerform:NSSelectorFromString(@"mas_top")];
+    }
+}
+
+- (id)kai_safeAreaLayoutGuideBottom {
+    if (@available(iOS 11.0, *)) {
+        return [self safePerform:NSSelectorFromString(@"mas_safeAreaLayoutGuideBottom")];
+    } else {
+        return [self safePerform:NSSelectorFromString(@"mas_bottom")];
+    }
+}
+
+- (id)kai_safeAreaLayoutGuideLeft {
+    if (@available(iOS 11.0, *)) {
+        return [self safePerform:NSSelectorFromString(@"mas_safeAreaLayoutGuideLeft")];
+    } else {
+        return [self safePerform:NSSelectorFromString(@"mas_left")];
+    }
+}
+
+- (id)kai_safeAreaLayoutGuideRight {
+    if (@available(iOS 11.0, *)) {
+        return [self safePerform:NSSelectorFromString(@"mas_safeAreaLayoutGuideRight")];
+    } else {
+        return [self safePerform:NSSelectorFromString(@"mas_right")];
+    }
+}
+
+@end
+
