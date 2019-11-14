@@ -58,7 +58,7 @@
         [self backButtonTouched:^(UIViewController * _Nonnull viewController) {
             NSLog(@"back");
             
-//            [self kai_popViewControllerAnimated];
+            [self kai_popViewControllerAnimated];
         }];
     }
     
