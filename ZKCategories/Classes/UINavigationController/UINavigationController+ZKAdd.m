@@ -100,25 +100,22 @@ typedef void (^_KAIViewControllerWillAppearInjectBlock)(UIViewController *viewCo
 @implementation UIViewController (KAIFullscreenPopGesturePrivate)
 
 + (void)load {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [self swizzleMethod:@selector(viewWillAppear:) withMethod:@selector(kai_viewWillAppear:)];
-        [self swizzleMethod:@selector(viewWillDisappear:) withMethod:@selector(kai_viewWillDisappear:)];
-    });
+    [self swizzleMethod:@selector(viewWillAppear:) withMethod:@selector(__kai_viewWillAppear:)];
+    [self swizzleMethod:@selector(viewWillDisappear:) withMethod:@selector(__kai_viewWillDisappear:)];
 }
 
-- (void)kai_viewWillAppear:(BOOL)animated {
+- (void)__kai_viewWillAppear:(BOOL)animated {
     // Forward to primary implementation.
-    [self kai_viewWillAppear:animated];
+    [self __kai_viewWillAppear:animated];
     
     if (self.kai_willAppearInjectBlock) {
         self.kai_willAppearInjectBlock(self, animated);
     }
 }
 
-- (void)kai_viewWillDisappear:(BOOL)animated {
+- (void)__kai_viewWillDisappear:(BOOL)animated {
     // Forward to primary implementation.
-    [self kai_viewWillDisappear:animated];
+    [self __kai_viewWillDisappear:animated];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         UIViewController *viewController = self.navigationController.viewControllers.lastObject;

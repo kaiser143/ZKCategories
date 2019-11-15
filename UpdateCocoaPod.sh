@@ -80,8 +80,8 @@ echo "Current version: ${currentVersion}, New version: ${newVersion}"
 
 #Push ZKCategories.podspec
 
-git add ZKCategories.podspec
-git commit -m ${newVersion}
+# git add ZKCategories.podspec
+git commit -am ${newVersion}
 
 git tag ${newVersion}
 git push origin master --tags
