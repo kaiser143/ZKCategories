@@ -86,12 +86,6 @@
     
     UIScrollView *scrollView = (UIScrollView *)[self.view descendantOrSelfWithClass:UIScrollView.class];
 //    if (scrollView) [self navigationColor:scrollView.contentOffsetY];
-    
-    /// 设置导航栏背景色
-    if (scrollView) {
-        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithColor:UIColor.redColor] forBarMetrics:UIBarMetricsDefault];
-    } else
-        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithColor:UIColor.orangeColor] forBarMetrics:UIBarMetricsDefault];
 }
 
 #pragma mark - :. UIScrollViewDelegate
