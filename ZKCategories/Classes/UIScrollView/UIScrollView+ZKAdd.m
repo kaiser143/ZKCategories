@@ -11,6 +11,7 @@
 #import "NSObject+ZKAdd.h"
 #import "NSNumber+ZKAdd.h"
 #import "UIView+ZKAdd.h"
+#import "ZKCGUtilities.h"
 
 ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 
@@ -221,7 +222,7 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 #pragma mark -
 #pragma mark :. keyboardControl
 
-#pragma mark--- Setters
+#pragma mark - :. Setters
 
 - (void)setKeyboardWillBeDismissed:(KeyboardWillBeDismissedBlock)keyboardWillBeDismissed {
     [self setAssociateCopyValue:keyboardWillBeDismissed withKey:@selector(keyboardWillBeDismissed)];
@@ -295,7 +296,7 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
     return [[self associatedValueForKey:_cmd] CGFloatValue];
 }
 
-#pragma mark--- Helper Method
+#pragma mark - :. Helper Method
 
 + (UIView *)findKeyboard {
     UIView *keyboardView = nil;
@@ -360,7 +361,7 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
         [self.panGestureRecognizer removeTarget:self action:@selector(handlePanGesture:)];
 }
 
-#pragma mark--- Gestures
+#pragma mark - :. Gestures
 
 - (void)handlePanGesture:(UIPanGestureRecognizer *)pan {
     if (!self.keyboardView || self.keyboardView.hidden)
@@ -445,7 +446,7 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
     }
 }
 
-#pragma mark--- Keyboard notifications
+#pragma mark - :. Keyboard notifications
 
 - (void)handleKeyboardWillShowHideNotification:(NSNotification *)notification {
     BOOL didShowed = YES;
@@ -523,8 +524,39 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
     self.frame = oldFrame;
     //还原
     self.contentOffset = oldContentOffset;
-    
+
     !block ?: block(snapshotImage);
+}
+
+#pragma mark - :. 解决手势返回和scrollView的冲突
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return [self __kai_interactivePopEnable:gestureRecognizer];
+}
+
+//location_X可自己定义,其代表的是滑动返回距左边的有效长度
+- (BOOL)__kai_interactivePopEnable:(UIGestureRecognizer *)gestureRecognizer {
+    //是滑动返回距左边的有效长度
+    int location_X = ZKScreenSize().width * 0.15;
+    if (gestureRecognizer == self.panGestureRecognizer) {
+        UIPanGestureRecognizer *pan    = (UIPanGestureRecognizer *)gestureRecognizer;
+        CGPoint point                  = [pan translationInView:self];
+        UIGestureRecognizerState state = gestureRecognizer.state;
+        if (UIGestureRecognizerStateBegan == state || UIGestureRecognizerStatePossible == state) {
+            CGPoint location = [gestureRecognizer locationInView:self];
+
+            //这是允许每张图片都可实现滑动返回
+            int temp1    = location.x;
+            int temp2    = ZKScreenSize().width;
+            NSInteger XX = temp1 % temp2;
+            return (point.x > 0 && XX < location_X);
+        }
+    }
+    return NO;
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    return ![self __kai_interactivePopEnable:gestureRecognizer];
 }
 
 @end
