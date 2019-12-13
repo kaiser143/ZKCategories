@@ -84,7 +84,7 @@ echo "Current version: ${currentVersion}, New version: ${newVersion}"
 git commit -am ${newVersion}
 
 git tag ${newVersion}
-git push origin master --tags
+git push -u origin master --tags
 pod trunk push ./ZKCategories.podspec --verbose --allow-warnings
 
 
