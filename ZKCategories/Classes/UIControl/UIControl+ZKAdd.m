@@ -115,11 +115,11 @@
     return targets;
 }
 
-- (void)setTimeInterval:(NSTimeInterval)timeInterval {
-    [self setAssociateValue:@(timeInterval) withKey:@selector(timeInterval)];
+- (void)setAcceptEventInterval:(NSTimeInterval)timeInterval {
+    [self setAssociateValue:@(timeInterval) withKey:@selector(acceptEventInterval)];
 }
 
-- (NSTimeInterval)timeInterval {
+- (NSTimeInterval)acceptEventInterval {
     NSNumber *interval = [self associatedValueForKey:_cmd];
     return interval ? interval.doubleValue : 0.5;
 }
@@ -150,8 +150,8 @@
     if ([controlName isEqualToString:@"UIButton"] || [controlName isEqualToString:@"UINavigationButton"]) {
         if (self.isIgnoreEvent) {
             return;
-        } else if (self.timeInterval > 0) {
-            [self performSelector:@selector(resetState) withObject:nil afterDelay:self.timeInterval];
+        } else if (self.acceptEventInterval > 0) {
+            [self performSelector:@selector(resetState) withObject:nil afterDelay:self.acceptEventInterval];
         }
     }
     // 此处 methodA和methodB方法IMP互换了，实际上执行 sendAction；所以不会死循环
