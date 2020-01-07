@@ -51,4 +51,10 @@ typedef void (^ZKKeyboardFrameAnimationBlock)(CGRect keyboardFrame);
 
 @end
 
+@interface UIViewController (ZKInteractiveTransitionTableViewDeselection)
+
+@property (nonatomic, weak) UITableView *kai_prefersTableViewDeselectRowWhenViewWillAppear;
+
+@end
+
 NS_ASSUME_NONNULL_END

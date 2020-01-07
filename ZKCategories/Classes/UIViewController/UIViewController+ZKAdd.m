@@ -20,6 +20,26 @@
 - (void)kai_viewWillAppear:(BOOL)animated {
     [self kai_registerForKeyboardNotifications];
     [self kai_viewWillAppear:animated];
+
+    UITableView *tableView = self.kai_prefersTableViewDeselectRowWhenViewWillAppear;
+    if (tableView) {
+        NSIndexPath *selectedIndexPath = [tableView indexPathForSelectedRow];
+        if (selectedIndexPath != nil) {
+            id<UIViewControllerTransitionCoordinator> coordinator = self.transitionCoordinator;
+            if (coordinator != nil) {
+                [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+                    [tableView deselectRowAtIndexPath:selectedIndexPath animated:YES];
+                }
+                    completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+                        if (context.cancelled) {
+                            [tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+                        }
+                    }];
+            } else {
+                [tableView deselectRowAtIndexPath:selectedIndexPath animated:animated];
+            }
+        }
+    }
 }
 
 - (void)kai_viewDidDisappear:(BOOL)animated {
@@ -334,6 +354,18 @@
     if (!callback) [self popViewControllerAnimated:YES];
     
     return NO;
+}
+
+@end
+
+@implementation UIViewController (ZKInteractiveTransitionTableViewDeselection)
+
+- (UITableView *)kai_prefersTableViewDeselectRowWhenViewWillAppear {
+    return [self associatedValueForKey:_cmd];
+}
+
+- (void)setKai_prefersTableViewDeselectRowWhenViewWillAppear:(UITableView *)kai_prefersTableViewDeselectRowWhenViewWillAppear {
+    [self setAssociateWeakValue:kai_prefersTableViewDeselectRowWhenViewWillAppear withKey:@selector(kai_prefersTableViewDeselectRowWhenViewWillAppear)];
 }
 
 @end
