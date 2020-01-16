@@ -289,13 +289,13 @@
 
 #pragma mark - :. Back
 
-- (void)backButtonTouched:(void (^)(UIViewController *_Nonnull))backButtonHandler {
-    if (backButtonHandler) self.kai_interactivePopDisabled = YES;
-
-    [self setAssociateCopyValue:backButtonHandler withKey:@selector(backButtonHandler)];
+- (void)backButtonInjectBlock:(void (^ _Nonnull)(UIViewController * _Nonnull controller))block {
+    self.kai_interactivePopDisabled = block != nil;
+    
+    [self setAssociateCopyValue:block withKey:@selector(backButtonInjectBlock)];
 }
 
-- (void(^)(UIViewController *))backButtonHandler {
+- (void (^)(UIViewController * _Nonnull))backButtonInjectBlock {
     return [self associatedValueForKey:_cmd];
 }
 
@@ -338,22 +338,22 @@
 
 @end
 
-@implementation UINavigationController (ZKAddForNavigation)
+@implementation UINavigationController (__KAINavigationBackItemInjection)
 
 - (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item {
-    if (self.topViewController.navigationItem != item) {
-        return YES;
-    }
+    if (self.topViewController.navigationItem != item) return YES;
+    
+    // Should pop. It appears called the pop view controller methods. We should pop items directly.
+    if ([[self valueForKey:@"_isTransitioning"] boolValue]) return YES;
     
     UIView *barBackIndicatorView = navigationBar.subviews.lastObject;
     barBackIndicatorView.alpha = 1;
     
     UIViewController *topViewController = self.topViewController;
-    void (^callback)(UIViewController *vc) = [topViewController backButtonHandler];
+    void (^callback)(UIViewController *) = [self backButtonInjectBlock];
     !callback ?: callback(topViewController);
-    if (!callback) [self popViewControllerAnimated:YES];
     
-    return NO;
+    return !callback;
 }
 
 @end
