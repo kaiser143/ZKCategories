@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface WKWebView (ZKAdd)
 
++ (void)clearAllWebCache;
+
 /**
  *  截长图
  */
