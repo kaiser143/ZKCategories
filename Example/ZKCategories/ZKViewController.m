@@ -7,7 +7,7 @@
 //
 
 #import "ZKViewController.h"
-#import "ZKCategories.h"
+#import <ZKCategories/ZKCategories.h>
 #import "ZKKVOViewController.h"
 
 @interface ZKViewController () <UIScrollViewDelegate>

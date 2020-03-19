@@ -4,14 +4,16 @@ PODS:
   - FBSnapshotTestCase/Core (2.1.4)
   - FBSnapshotTestCase/SwiftSupport (2.1.4):
     - FBSnapshotTestCase/Core
-  - ZKCategories (0.2.3)
+  - ZKCategories (0.2.9):
+    - ZKCategories/Core (= 0.2.9)
+  - ZKCategories/Core (0.2.9)
 
 DEPENDENCIES:
   - FBSnapshotTestCase
   - ZKCategories (from `../`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://github.com/cocoapods/specs.git:
     - FBSnapshotTestCase
 
 EXTERNAL SOURCES:
@@ -20,8 +22,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
-  ZKCategories: 96f580269e8759f039956ed519c62c69795e2da1
+  ZKCategories: 605414921ee3004dcfbd6b21edc973fb3ced895a
 
-PODFILE CHECKSUM: 1045700aceca1031df4bec77423015345a6f7873
+PODFILE CHECKSUM: de5148210230a7619131822dc6e375c7cb50ce8f
 
-COCOAPODS: 1.8.3
+COCOAPODS: 1.7.5

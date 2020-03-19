@@ -5,7 +5,10 @@
 
 # ZKCategories
 开发中常用的工具类
-* 新增了KVO 防闪退，使用的时候需要在framework中添加宏 `KVOSAFE=1`
+* 新增了KVO 防闪退,
+```ruby
+ pod 'ZKCategories', :subspecs => ['ZKKVOSAFE']
+ ```
 
 ## 如何安装
 __Requirements__
@@ -14,7 +17,7 @@ __Requirements__
 
 __Podfile__
 ```ruby
-pod 'ZKCategories', :git => 'https://github.com/kaiser143/ZKCategories.git', :tag => '0.2.3'
+pod 'ZKCategories', :git => 'https://github.com/kaiser143/ZKCategories.git', :tag => '0.2.x'
 
 pod 'ZKCategories', :git => 'https://github.com/kaiser143/ZKCategories.git', :commit => 'xxxx'
 ```

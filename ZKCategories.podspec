@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ZKCategories'
-  s.version          = "0.2.8"
+  s.version          = "0.2.9"
   s.summary          = 'A short description of ZKCategories.'
 
 # This description is used to generate tags and improve search results.
@@ -30,8 +30,17 @@ TODO: Add long description of the pod here.
 
   s.requires_arc = true
   s.ios.deployment_target = '7.0'
+  s.default_subspec = 'Core'
 
-  s.source_files = 'ZKCategories/Classes/**/*'
+  s.subspec 'Core' do |ss|
+      ss.source_files = 'ZKCategories/Classes/**/*'
+  end
+  
+  #  KVO 防闪退
+  s.subspec 'ZKKVOSAFE' do |ss|
+      ss.dependency 'ZKCategories/Core'
+      ss.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'KVOSAFE=1'}
+  end
   
   # s.resource_bundles = {
   #   'ZKCategories' => ['ZKCategories/Assets/*.png']
