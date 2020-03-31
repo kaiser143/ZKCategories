@@ -47,7 +47,7 @@ typedef void (^ZKKeyboardFrameAnimationBlock)(CGRect keyboardFrame);
 - (void)kai_presentViewController:(UIViewController *)newViewController;
 - (void)kai_presentViewController:(UIViewController *)newViewController animated:(BOOL)animated;
 
-- (void)backButtonInjectBlock:(void (^ _Nonnull)(UIViewController * _Nonnull controller))block;
+@property (nonatomic, copy) void(^prefersPopViewControllerInjectBlock)(UIViewController * _Nonnull controller);
 
 @end
 

@@ -289,13 +289,13 @@
 
 #pragma mark - :. Back
 
-- (void)backButtonInjectBlock:(void (^ _Nonnull)(UIViewController * _Nonnull controller))block {
-    self.kai_interactivePopDisabled = block != nil;
+- (void)setPrefersPopViewControllerInjectBlock:(void (^)(UIViewController * _Nonnull))prefersPopViewControllerInjectBlock {
+    self.kai_interactivePopDisabled = prefersPopViewControllerInjectBlock != nil;
     
-    [self setAssociateCopyValue:block withKey:@selector(backButtonInjectBlock)];
+    [self setAssociateCopyValue:prefersPopViewControllerInjectBlock withKey:@selector(prefersPopViewControllerInjectBlock)];
 }
 
-- (void (^)(UIViewController * _Nonnull))backButtonInjectBlock {
+- (void (^)(UIViewController * _Nonnull))prefersPopViewControllerInjectBlock {
     return [self associatedValueForKey:_cmd];
 }
 
@@ -350,8 +350,9 @@
     barBackIndicatorView.alpha = 1;
     
     UIViewController *topViewController = self.topViewController;
-    void (^callback)(UIViewController *) = [self backButtonInjectBlock];
-    !callback ?: callback(topViewController);
+    void (^callback)(UIViewController *) = self.prefersPopViewControllerInjectBlock;
+    if (!callback) [self popViewControllerAnimated:YES];
+    else callback(topViewController);
     
     return !callback;
 }

@@ -56,10 +56,10 @@
         [self.view addSubview:scrollView];
         
         @weakify(self);
-        [self backButtonInjectBlock:^(UIViewController * _Nonnull controller) {
+        self.prefersPopViewControllerInjectBlock = ^(UIViewController * _Nonnull controller) {
             @strongify(self);
             [self kai_popViewControllerAnimated];
-        }];
+        };
         
 //        [scrollView.panGestureRecognizer requireGestureRecognizerToFail:self.navigationController.interactivePopGestureRecognizer];
     }
