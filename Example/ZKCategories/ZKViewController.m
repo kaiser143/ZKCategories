@@ -56,7 +56,7 @@
         [self.view addSubview:scrollView];
         
         @weakify(self);
-        self.prefersPopViewControllerInjectBlock = ^(UIViewController * _Nonnull controller) {
+        self.kai_prefersPopViewControllerInjectBlock = ^(UIViewController * _Nonnull controller) {
             @strongify(self);
             [self kai_popViewControllerAnimated];
         };
