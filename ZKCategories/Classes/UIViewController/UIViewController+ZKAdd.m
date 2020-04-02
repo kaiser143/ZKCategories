@@ -354,7 +354,7 @@
     if (!callback) [self popViewControllerAnimated:YES];
     else callback(topViewController);
     
-    return !callback;
+    return NO;
 }
 
 @end
