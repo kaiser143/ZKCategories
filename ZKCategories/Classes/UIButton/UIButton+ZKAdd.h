@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param title 标题
  */
-- (void)setTitle:(NSString *)title;
+- (void)kai_setTitle:(NSString *)title;
 
 /**
  *  @brief  设置标题文字颜色普通与高亮

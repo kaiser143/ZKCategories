@@ -34,7 +34,7 @@
     return CGRectContainsPoint(bounds, point);
 }
 
-- (void)setTitle:(NSString *)title {
+- (void)kai_setTitle:(NSString *)title {
     [self setTitle:title forState:UIControlStateNormal];
     [self setTitle:title forState:UIControlStateHighlighted];
 }

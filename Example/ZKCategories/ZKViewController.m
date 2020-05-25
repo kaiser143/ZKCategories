@@ -66,7 +66,7 @@
     
     @weakify(self);
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setTitle:@"KVO 测试"];
+    [button kai_setTitle:@"KVO 测试"];
     [button setTitleColor:UIColor.blackColor];
     button.top = 200;
     button.size = CGSizeMake(80, 50);
