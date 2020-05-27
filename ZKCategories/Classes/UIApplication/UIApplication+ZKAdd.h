@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// Application's Bundle Name (show in SpringBoard).
 @property (nullable, nonatomic, readonly) NSString *appBundleName;
 
-/// Application's Bundle ID.  e.g. "com.ibireme.MyApp"
+/// Application's Bundle ID.  e.g. "com.kaiser.MyApp"
 @property (nullable, nonatomic, readonly) NSString *appBundleID;
 
 /// Application's Version.  e.g. "1.2.0"
