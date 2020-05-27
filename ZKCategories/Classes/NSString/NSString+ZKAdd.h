@@ -60,6 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - :. URL
 
+- (NSString *)stringByURLEncoding;
 - (NSString *)stringByEscapingQueryParameters;
 - (NSString *)stringByReplacingPercentEscapes;
 

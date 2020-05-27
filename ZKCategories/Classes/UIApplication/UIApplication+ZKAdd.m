@@ -15,14 +15,7 @@
 #import <mach/mach.h>
 #import <objc/runtime.h>
 
-#define kNetworkIndicatorDelay (1 / 30.0)
-@interface _ZKUIApplicationNetworkIndicatorInfo : NSObject
-@property (nonatomic, assign) NSInteger count;
-@property (nonatomic, strong) NSTimer *timer;
-@end
-
-@implementation _ZKUIApplicationNetworkIndicatorInfo
-@end
+static NSUInteger __internalOperationCount = 0;
 
 @implementation UIApplication (ZKAdd)
 
@@ -176,40 +169,37 @@
     return tot_cpu;
 }
 
-ZKSYNTH_DYNAMIC_PROPERTY_OBJECT(networkActivityInfo, setNetworkActivityInfo, RETAIN_NONATOMIC, _ZKUIApplicationNetworkIndicatorInfo *);
-
-- (void)_delaySetActivity:(NSTimer *)timer {
-    NSNumber *visiable = timer.userInfo;
-    if (self.networkActivityIndicatorVisible != visiable.boolValue) {
-        [self setNetworkActivityIndicatorVisible:visiable.boolValue];
-    }
-    [timer invalidate];
-}
-
-- (void)_changeNetworkActivityCount:(NSInteger)delta {
+- (void)pushActiveNetworkOperation {
     @synchronized(self) {
-        dispatch_async_on_main_queue(^{
-            _ZKUIApplicationNetworkIndicatorInfo *info = [self networkActivityInfo];
-            if (!info) {
-                info = [_ZKUIApplicationNetworkIndicatorInfo new];
-                [self setNetworkActivityInfo:info];
+        __internalOperationCount++;
+
+#if !TARGET_OS_TV
+        dispatch_async(dispatch_get_main_queue(), ^{
+
+            if (!self.isNetworkActivityIndicatorVisible && __internalOperationCount) {
+                self.networkActivityIndicatorVisible = YES;
             }
-            NSInteger count = info.count;
-            count += delta;
-            info.count = count;
-            [info.timer invalidate];
-            info.timer = [NSTimer timerWithTimeInterval:kNetworkIndicatorDelay target:self selector:@selector(_delaySetActivity:) userInfo:@(info.count > 0) repeats:NO];
-            [[NSRunLoop mainRunLoop] addTimer:info.timer forMode:NSRunLoopCommonModes];
         });
+#endif
     }
 }
 
-- (void)incrementNetworkActivityCount {
-    [self _changeNetworkActivityCount:1];
-}
+- (void)popActiveNetworkOperation {
+    @synchronized(self) {
+        if (__internalOperationCount == 0) {
+            // nothing to do
+            return;
+        }
 
-- (void)decrementNetworkActivityCount {
-    [self _changeNetworkActivityCount:-1];
+        __internalOperationCount--;
+#if !TARGET_OS_TV
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (self.isNetworkActivityIndicatorVisible && !__internalOperationCount) {
+                self.networkActivityIndicatorVisible = NO;
+            }
+        });
+#endif
+    }
 }
 
 + (BOOL)isAppExtension {

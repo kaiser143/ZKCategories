@@ -53,22 +53,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- Increments the number of active network requests.
- If this number was zero before incrementing, this will start animating the 
- status bar network activity indicator.
- 
- This method is thread safe.
+ Increments the number of active network operations
  */
-- (void)incrementNetworkActivityCount;
+- (void)pushActiveNetworkOperation;
 
 /**
- Decrements the number of active network requests. 
- If this number becomes zero after decrementing, this will stop animating the 
- status bar network activity indicator.
- 
- This method is thread safe.
+ Decrements the number of active network operations
  */
-- (void)decrementNetworkActivityCount;
+- (void)popActiveNetworkOperation;
 
 
 /// Returns YES in App Extension.

@@ -85,6 +85,26 @@
 
 #pragma mark URL Escaping
 
+- (NSString *)stringByURLEncoding {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_9_0
+    return CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, CFSTR("!*'();:@&=+$,/?%#[]%"), kCFStringEncodingUTF8));
+#else
+    
+    static NSCharacterSet *allowedCharacters = nil;
+    static dispatch_once_t onceToken;
+    
+    dispatch_once(&onceToken, ^{
+        NSMutableCharacterSet *tmpSet = [[NSCharacterSet URLQueryAllowedCharacterSet] mutableCopy];
+        
+        // add some characters that might have special meaning
+        [tmpSet  removeCharactersInString: @"!*'();:@&=+$,/?%#[]"];
+        allowedCharacters = [tmpSet copy];
+    });
+    
+    return [self stringByAddingPercentEncodingWithAllowedCharacters:allowedCharacters];
+#endif
+}
+
 - (NSString *)stringByEscapingQueryParameters {
     return CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, CFSTR("!*'();:@&=+$,/?%#[]%"), kCFStringEncodingUTF8));
 }
