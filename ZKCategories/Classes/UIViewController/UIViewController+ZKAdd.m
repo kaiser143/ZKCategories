@@ -340,7 +340,12 @@
 
 @implementation UINavigationController (__KAINavigationBackItemInjection)
 
-- (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item {
++ (void)load {
+    [self swizzleMethod:@selector(navigationBar:shouldPopItem:) withMethod:@selector(_kai_navigationBar:shouldPopItem:)];
+}
+
+// 修复Xcode11 iOS13 `navigationBar:shouldPopItem:` 不运行的问题
+- (BOOL)_kai_navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item {
     if (self.topViewController.navigationItem != item) return YES;
     
     // Should pop. It appears called the pop view controller methods. We should pop items directly.
