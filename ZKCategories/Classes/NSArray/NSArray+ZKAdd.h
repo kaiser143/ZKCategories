@@ -42,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSArray *)flattenMap:(NSString *)key block:(id (^)(ValueType obj, NSUInteger idx))block;
 
+// 参与运算的属性必须是NSNumber对象
 - (NSNumber *)sum;
 - (NSNumber *)sum:(NSString *)keypath;
 - (NSNumber *)avg;

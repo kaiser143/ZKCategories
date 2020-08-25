@@ -68,6 +68,8 @@
 //==============================================
 #pragma mark - Operators
 //==============================================
+// 你可以简单的通过把 self 作为操作符后面的 key path 来获取一个由NSNumber组成的数组或者集合的总值
+// https://nshipster.cn/kvc-collection-operators/
 - (NSNumber *)operator:(NSString *)operator keypath:(NSString *)keypath {
     NSString *finalKeyPath;
     if (keypath != nil)
