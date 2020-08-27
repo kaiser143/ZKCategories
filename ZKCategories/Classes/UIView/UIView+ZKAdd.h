@@ -115,6 +115,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) CGPoint origin;  ///< Shortcut for frame.origin.
 @property (nonatomic) CGSize size;     ///< Shortcut for frame.size.
 
+@property (nonatomic, copy) void(^didSubviewLayoutBlock)(UIView *view);
+
 @end
 
 @interface UIView (ZKActionHandlers)

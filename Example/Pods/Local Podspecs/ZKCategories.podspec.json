@@ -1,6 +1,6 @@
 {
   "name": "ZKCategories",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "summary": "A short description of ZKCategories.",
   "description": "TODO: Add long description of the pod here.",
   "homepage": "https://github.com/kaiser143/ZKCategories",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/kaiser143/ZKCategories.git",
-    "tag": "0.3.4"
+    "tag": "0.3.5"
   },
   "requires_arc": true,
   "platforms": {

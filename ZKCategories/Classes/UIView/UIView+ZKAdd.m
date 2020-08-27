@@ -11,6 +11,10 @@
 
 @implementation UIView (ZKAdd)
 
++ (void)load {
+    [self swizzleMethod:@selector(layoutSubviews) withMethod:@selector(_kai_layoutSubviews)];
+}
+
 - (UIView *)descendantOrSelfWithClass:(Class)cls {
     if ([self isKindOfClass:cls])
         return self;
@@ -284,6 +288,20 @@
     CGRect frame = self.frame;
     frame.size   = size;
     self.frame   = frame;
+}
+
+- (void)setDidSubviewLayoutBlock:(void (^)(UIView * _Nonnull))didSubviewLayoutBlock {
+    [self setAssociateValue:didSubviewLayoutBlock withKey:@selector(didSubviewLayoutBlock)];
+}
+
+- (void (^)(UIView * _Nonnull))didSubviewLayoutBlock {
+    return [self associatedValueForKey:_cmd];
+}
+
+- (void)_kai_layoutSubviews {
+    [self _kai_layoutSubviews];
+    
+    !self.didSubviewLayoutBlock ?: self.didSubviewLayoutBlock(self);
 }
 
 @end

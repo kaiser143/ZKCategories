@@ -1,7 +1,7 @@
 use_frameworks!
 
 target 'ZKCategories_Example' do
-  pod 'ZKCategories', :subspecs => ['ZKKVOSAFE'], :path => '../'
+  pod 'ZKCategories', :path => '../', :subspecs => ['ZKKVOSAFE']
 
   target 'ZKCategories_Tests' do
     inherit! :search_paths
