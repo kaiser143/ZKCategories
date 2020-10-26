@@ -119,7 +119,7 @@ typedef void (^_KAIViewControllerWillAppearInjectBlock)(UIViewController *viewCo
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         UIViewController *viewController = self.navigationController.viewControllers.lastObject;
-        if (viewController && !viewController.kai_prefersNavigationBarHidden) {
+        if (viewController && viewController.kai_willAppearInjectBlock && !viewController.kai_prefersNavigationBarHidden) {
             [self.navigationController setNavigationBarHidden:NO animated:NO];
         }
     });
