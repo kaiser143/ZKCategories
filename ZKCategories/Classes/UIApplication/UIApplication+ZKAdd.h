@@ -51,6 +51,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// Current thread CPU usage, 1.0 means 100%. (-1 when error occurs)
 @property (nonatomic, readonly) float cpuUsage;
 
+@property (nonatomic, assign, readonly, getter=isRunningTestFlightBeta) BOOL runningTestFlightBeta;
+
 
 /**
  Increments the number of active network operations

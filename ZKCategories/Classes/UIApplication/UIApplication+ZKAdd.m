@@ -169,6 +169,13 @@ static NSUInteger __internalOperationCount = 0;
     return tot_cpu;
 }
 
+- (BOOL)isRunningTestFlightBeta {
+    NSURL *receiptURL = [[NSBundle mainBundle] appStoreReceiptURL];
+    NSString *receiptURLString = [receiptURL path];
+    BOOL isRunningTestFlightBeta =  ([receiptURLString rangeOfString:@"sandboxReceipt"].location != NSNotFound);
+    return isRunningTestFlightBeta;
+}
+
 - (void)pushActiveNetworkOperation {
     @synchronized(self) {
         __internalOperationCount++;
