@@ -1,9 +1,20 @@
-[![CI Status](http://img.shields.io/travis/Kaiser/ZKCategories.svg?style=flat)](https://travis-ci.org/Kaiser/ZKCategories)
-[![Version](https://img.shields.io/cocoapods/v/ZKCategories.svg?style=flat)](http://cocoapods.org/pods/ZKCategories)
-[![License](https://img.shields.io/cocoapods/l/ZKCategories.svg?style=flat)](http://cocoapods.org/pods/ZKCategories)
-[![Platform](https://img.shields.io/cocoapods/p/ZKCategories.svg?style=flat)](http://cocoapods.org/pods/ZKCategories)
+<h1 align="center">
+ZKCategories
+<h5 align="center", style="color, #666">
+a categories for cocoa
+</h5>
+</h1>
+<p align="center">
+<img src="https://img.shields.io/cocoapods/v/ZKCategories.svg?style=flat" />
+<img src="https://img.shields.io/badge/supporting-objectiveC-yellow.svg" />
+<img src="https://img.shields.io/badge/license-MIT-brightgreen.svg" />
+<img src="https://img.shields.io/cocoapods/p/ZKCategories.svg?style=flat" />
+<img src="https://img.shields.io/badge/support-iOS 7+ -blue.svg?style=flat" />
+</p>
+<br>
+<br>
 
-# ZKCategories
+
 开发中常用的工具类
 * 新增了KVO 防闪退,
 ```ruby
