@@ -256,6 +256,7 @@ static kai_net_interface_counter kai_get_net_interface_counter() {
             @"iPod4,1": @"iPod touch 4",
             @"iPod5,1": @"iPod touch 5",
             @"iPod7,1": @"iPod touch 6",
+            @"iPod9,1": @"iPod touch 7",
 
             @"iPhone1,1": @"iPhone 1G",
             @"iPhone1,2": @"iPhone 3G",
@@ -285,6 +286,13 @@ static kai_net_interface_counter kai_get_net_interface_counter() {
             @"iPhone10,5": @"iPhone 8 Plus",
             @"iPhone10,3": @"iPhone X",
             @"iPhone10,6": @"iPhone X",
+            @"iPhone11,2": @"iPhone XS",
+            @"iPhone11,6": @"iPhone XS Max",
+            @"iPhone11,8": @"iPhone XR",
+            @"iPhone12,1": @"iPhone 11",
+            @"iPhone12,3": @"iPhone 11 Pro",
+            @"iPhone12,5": @"iPhone 11 Pro Max",
+            @"iPhone12,8": @"iPhone SE (2nd generation)",
 
             @"iPad1,1": @"iPad 1",
             @"iPad2,1": @"iPad 2 (WiFi)",
