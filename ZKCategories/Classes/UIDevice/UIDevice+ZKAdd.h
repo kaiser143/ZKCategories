@@ -23,6 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// Device system version (e.g. 8.1)
 + (double)systemVersion;
 
+// 刘海屏
+@property (nonatomic, readonly) BOOL iPhoneX;
+
 /// Whether the device is iPad/iPad mini.
 @property (nonatomic, readonly) BOOL isPad;
 

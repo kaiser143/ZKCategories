@@ -30,6 +30,17 @@ ZKSYNTH_DUMMY_CLASS(UIDevice_ZKAdd)
     return version;
 }
 
+- (BOOL)iPhoneX {
+    if (UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPhone) return NO;
+    
+    BOOL returnValue = NO;
+    if (@available(iOS 11.0, *)) {
+         returnValue = ([[UIApplication sharedApplication] delegate].window.safeAreaInsets.bottom > 0);
+    }
+    
+    return returnValue;
+}
+
 - (BOOL)isPad {
     static dispatch_once_t one;
     static BOOL pad;
