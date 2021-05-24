@@ -14,6 +14,8 @@
 + (void)load {
     [self swizzleMethod:@selector(drawTextInRect:) withMethod:@selector(drawAutomaticWritingTextInRect:)];
     [self swizzleMethod:@selector(sizeThatFits:) withMethod:@selector(kai_sizeThatFits:)];
+    [self swizzleMethod:@selector(intrinsicContentSize) withMethod:@selector(kai_intrinsicContentSize)];
+    [self swizzleMethod:@selector(textRectForBounds:limitedToNumberOfLines:) withMethod:@selector(kai_textRectForBounds:limitedToNumberOfLines:)];
 }
 
 - (void)setTextContainerInset:(UIEdgeInsets)textContainerInset {
@@ -42,6 +44,28 @@
     returnValue.width += (insets.left + insets.right);
     returnValue.height += (insets.top + insets.bottom);
     return returnValue;
+}
+
+- (CGSize)kai_intrinsicContentSize {
+    CGSize returnValue = [self kai_intrinsicContentSize];
+    
+    UIEdgeInsets insets = [self textContainerInset];
+    returnValue.width += (insets.left + insets.right);
+    returnValue.height += (insets.top + insets.bottom);
+    return returnValue;
+}
+
+- (CGRect)kai_textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines {
+    UIEdgeInsets insets = self.textContainerInset;
+    CGRect rect = [self kai_textRectForBounds:bounds
+                       limitedToNumberOfLines:numberOfLines];
+    
+    rect.origin.x    += insets.left;
+    rect.origin.y    += insets.top;
+    rect.size.width  += (insets.left + insets.right);
+    rect.size.height += (insets.top + insets.bottom);
+    
+    return rect;
 }
 
 @end
