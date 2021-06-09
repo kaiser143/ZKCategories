@@ -135,11 +135,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  *  @brief    根据字符串生成二维码
- *  @param    string    字符串内容
+ *  @param    data    字符串内容
  *  @param    size    生成的二维码图片大小
- *  @param    image    logo
  */
-+ (nullable UIImage *)imageWithString:(NSString *)string size:(CGSize)size image:(nullable UIImage *)image;
++ (nullable UIImage *)generateQuickResponseCodeWithSize:(CGSize)size dataValue:(NSString *)data centerImage:(nullable UIImage *)image NS_AVAILABLE_IOS(7_0);
++ (nullable UIImage *)generateQuickResponseCodeWithSize:(CGSize)size dataValue:(NSString *)data centerImage:(nullable UIImage *)image centerImageSize:(CGSize)centerImgSize NS_AVAILABLE_IOS(7_0);
 
 #pragma mark - Image Info
 ///=============================================================================

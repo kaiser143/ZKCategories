@@ -12,6 +12,7 @@
 #import <Accelerate/Accelerate.h>
 #import <CoreText/CoreText.h>
 #import <CoreImage/CoreImage.h>
+#import <CoreImage/CIFilterBuiltins.h>
 #import <objc/runtime.h>
 #import "ZKCategoriesMacro.h"
 
@@ -307,11 +308,23 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
     return image;
 }
 
-+ (UIImage *)imageWithString:(NSString *)string size:(CGSize)size image:(UIImage *)image {
-    CIImage *outputImage = [UIImage.new imageWithString:string];
-    return [UIImage createNonInterpolatedUIImageFormCIImage:outputImage size:size image:image];
++ (UIImage *)generateQuickResponseCodeWithSize:(CGSize)size dataValue:(NSString *)data centerImage:(UIImage *)image {
+    return [self generateQuickResponseCodeWithSize:size dataValue:data centerImage:image centerImageSize:image.size];
 }
 
++ (UIImage *)generateQuickResponseCodeWithSize:(CGSize)size dataValue:(NSString *)data centerImage:(UIImage *)image centerImageSize:(CGSize)centerImgSize {
+    NSAssert(data, @"`data` must be non-nil!");
+    UIImage *tmp = image;
+    if (tmp && !CGSizeEqualToSize(centerImgSize, CGSizeZero) && !CGSizeEqualToSize(centerImgSize, image.size)) tmp = [image imageByResizeToSize:centerImgSize];
+    
+    CIImage *outputImage = [UIImage.new imageWithString:data];
+    return [UIImage createNonInterpolatedUIImageFormCIImage:outputImage size:size image:tmp];
+}
+
+/*
+ 使用核心绘图框架CG（Core Graphics）对象操作，进一步针对大小生成二维码图片imgAdaptiveQRCode（图片大小适合，清晰，效果好）
+ Get Image of original size through `size`
+ */
 + (UIImage *)createNonInterpolatedUIImageFormCIImage:(CIImage *)image size:(CGSize)size image:(UIImage *)extra {
     CGRect extent = CGRectIntegral(image.extent);
     CGFloat scale = MIN(size.width / CGRectGetWidth(extent), size.height / CGRectGetHeight(extent));
@@ -359,7 +372,7 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
 
 - (CIImage *)imageWithString:(NSString *)strings {
     // 1. 实例化二维码滤镜
-    CIFilter *filter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
+    CIFilter *filter = CIFilter.QRCodeGenerator;
     // 2. 恢复滤镜的默认属性
     [filter setDefaults];
     // 3. 将字符串转换成NSData
