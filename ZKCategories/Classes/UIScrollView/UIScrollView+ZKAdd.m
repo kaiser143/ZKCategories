@@ -15,6 +15,10 @@
 
 ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 
+static inline UIViewAnimationOptions UIViewAnimationCurveToAnimationOptions(UIViewAnimationCurve curve) {
+    return curve << 16;
+}
+
 @implementation UIScrollView (ZKAdd)
 
 - (void)setContentInsetTop:(CGFloat)contentInsetTop {
@@ -476,29 +480,10 @@ ZKSYNTH_DUMMY_CLASS(UIScrollView_ZKAdd)
 - (void)keyboardWillShowHide:(NSNotification *)notification {
     CGRect keyboardRect        = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     UIViewAnimationCurve curve = [[notification.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
-    double duration            = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    NSTimeInterval duration            = [[notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 
     if (self.keyboardWillChange) {
-        self.keyboardWillChange(keyboardRect, [self animationOptionsForCurve:curve], duration, (([notification.name isEqualToString:UIKeyboardWillShowNotification]) ? YES : NO));
-    }
-}
-
-- (UIViewAnimationOptions)animationOptionsForCurve:(UIViewAnimationCurve)curve {
-    switch (curve) {
-        case UIViewAnimationCurveEaseInOut:
-            return UIViewAnimationOptionCurveEaseInOut;
-
-        case UIViewAnimationCurveEaseIn:
-            return UIViewAnimationOptionCurveEaseIn;
-
-        case UIViewAnimationCurveEaseOut:
-            return UIViewAnimationOptionCurveEaseOut;
-
-        case UIViewAnimationCurveLinear:
-            return UIViewAnimationOptionCurveLinear;
-
-        default:
-            return kNilOptions;
+        self.keyboardWillChange(keyboardRect, UIViewAnimationCurveToAnimationOptions(curve), duration, (([notification.name isEqualToString:UIKeyboardWillShowNotification]) ? YES : NO));
     }
 }
 
