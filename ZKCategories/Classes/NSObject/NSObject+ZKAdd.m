@@ -832,37 +832,37 @@ static char DTRuntimeDeallocBlocks;
 @implementation NSObject (ZKKVOSafe)
 
 - (void)_kai_addObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context {
-    if (object_getClass(observer) == objc_getClass("RACKVOProxy")) {
+    if ([self filterKVOObj:observer]) {
         [self _kai_addObserver:observer forKeyPath:keyPath options:options context:context];
         return;
     }
-    
+
     if (!self.KVOProxy) {
         @autoreleasepool {
             self.KVOProxy = [[_KAIKVOProxy alloc] initWithObserverd:self];
         }
     }
-    
+
     NSHashTable<NSObject *> *os = self.KVOProxy.KVOInfoMap[keyPath];
-        if (os.count == 0) {
-            os = [[NSHashTable alloc] initWithOptions:(NSPointerFunctionsWeakMemory) capacity:0];
-            [os addObject:observer];
+    if (os.count == 0) {
+        os = [[NSHashTable alloc] initWithOptions:(NSPointerFunctionsWeakMemory) capacity:0];
+        [os addObject:observer];
 
-            [self _kai_addObserver:self.KVOProxy forKeyPath:keyPath options:options context:context];
-            self.KVOProxy.KVOInfoMap[keyPath] = os;
-            return ;
-        }
+        [self _kai_addObserver:self.KVOProxy forKeyPath:keyPath options:options context:context];
+        self.KVOProxy.KVOInfoMap[keyPath] = os;
+        return;
+    }
 
-        if ([os containsObject:observer]) {
-    //        NSString *reason = [NSString stringWithFormat:@"target is %@ method is %@, reason : KVO add Observer to many timers.",
-    //                            [self class], XXSEL2Str(@selector(addObserver:forKeyPath:options:context:))];
-        } else {
-            [os addObject:observer];
-        }
+    if ([os containsObject:observer]) {
+        //        NSString *reason = [NSString stringWithFormat:@"target is %@ method is %@, reason : KVO add Observer to many timers.",
+        //                            [self class], XXSEL2Str(@selector(addObserver:forKeyPath:options:context:))];
+    } else {
+        [os addObject:observer];
+    }
 }
 
 - (void)_kai_removeObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath {
-    if (object_getClass(observer) == objc_getClass("RACKVOProxy")) {
+    if ([self filterKVOObj:observer]) {
         [self _kai_removeObserver:observer forKeyPath:keyPath];
         return;
     }
@@ -882,6 +882,23 @@ static char DTRuntimeDeallocBlocks;
     }
     
 //    [self _kai_removeObserver:observer forKeyPath:keyPath];
+}
+
+- (BOOL)filterKVOObj:(id)obj {
+    if (!obj) return NO;
+
+    //Ignore ReactiveCocoa
+    if (object_getClass(obj) == objc_getClass("RACKVOProxy")) {
+        return YES;
+    }
+
+    //Ignore AMAP
+    NSString *className = NSStringFromClass(object_getClass(obj));
+    if ([className hasPrefix:@"AMap"]) {
+        return YES;
+    }
+
+    return NO;
 }
 
 #pragma mark - :. getters and setters
