@@ -31,6 +31,8 @@
 #endif
 
 
+#define ZKDeprecated(instead) DEPRECATED_MSG_ATTRIBUTE(" Use " # instead " instead")
+
 ZK_EXTERN_C_BEGIN
 
 #ifndef ZK_CLAMP // return the clamped value
