@@ -57,7 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
  *   "3.02" ?? "3.0.3"
  *   "3.02" ?? "3.0.2"
  */
-- (NSComparisonResult)versionStringCompare:(NSString *)other ZKDeprecated(ZKVersion);
+- (NSComparisonResult)versionStringCompare:(NSString *)other ZK_API_DEPRECATED(ZKVersion);
 
 #pragma mark - :. URL
 

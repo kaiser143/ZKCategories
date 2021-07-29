@@ -30,8 +30,9 @@
 #endif
 #endif
 
-
-#define ZKDeprecated(instead) DEPRECATED_MSG_ATTRIBUTE(" Use " # instead " instead")
+// 方法废弃
+// Example
+#define ZK_API_DEPRECATED(instead) DEPRECATED_MSG_ATTRIBUTE(" Use " # instead " instead")
 
 ZK_EXTERN_C_BEGIN
 
