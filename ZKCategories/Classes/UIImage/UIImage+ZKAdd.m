@@ -372,7 +372,9 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
 
 - (CIImage *)imageWithString:(NSString *)strings {
     // 1. 实例化二维码滤镜
-    CIFilter *filter = CIFilter.QRCodeGenerator;
+    // +[CIFilter QRCodeGenerator]: unrecognized selector sent to class  [iOS 12.4.8  iPhone 6s]
+    // CIFilter *filter = CIFilter.QRCodeGenerator;
+    CIFilter *filter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
     // 2. 恢复滤镜的默认属性
     [filter setDefaults];
     // 3. 将字符串转换成NSData
