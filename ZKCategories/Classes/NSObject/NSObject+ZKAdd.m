@@ -436,7 +436,7 @@ static char DTRuntimeDeallocBlocks;
         obj = [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:self]];
     }
     @catch (NSException *exception) {
-        NSLog(@"%@", exception);
+        ZKLog(@"%@", exception);
     }
     return obj;
 }
@@ -447,7 +447,7 @@ static char DTRuntimeDeallocBlocks;
         obj = [unarchiver unarchiveObjectWithData:[archiver archivedDataWithRootObject:self]];
     }
     @catch (NSException *exception) {
-        NSLog(@"%@", exception);
+        ZKLog(@"%@", exception);
     }
     return obj;
 }

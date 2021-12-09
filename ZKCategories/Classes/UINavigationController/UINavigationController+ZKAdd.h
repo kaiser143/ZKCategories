@@ -35,9 +35,6 @@
 /// Default to YES, disable it if you don't want so.
 @property (nonatomic, assign) BOOL kai_viewControllerBasedNavigationBarAppearanceEnabled;
 
-/// 当前手势是否正在滑动转场中
-@property (nonatomic, assign, getter=isKai_grTransitioning) BOOL kai_grTransitioning;
-
 @end
 
 /// Allows any view controller to disable interactive pop gesture, which might

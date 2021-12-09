@@ -50,8 +50,6 @@
         return NO;
     }
     
-    self.navigationController.kai_grTransitioning = YES;
-    
     return YES;
 }
 
@@ -143,15 +141,12 @@ typedef void (^_KAIViewControllerWillAppearInjectBlock)(UIViewController *viewCo
     dispatch_once(&onceToken, ^{
         [self swizzleMethod:@selector(pushViewController:animated:) withMethod:@selector(_kai_pushViewController:animated:)];
         [self swizzleMethod:NSSelectorFromString(@"_updateInteractiveTransition:") withMethod:@selector(_kai_updateInteractiveTransition:)];
-        [self swizzleMethod:@selector(popViewControllerAnimated:) withMethod:@selector(_kai_popViewControllerAnimated:)];
     });
 }
 
 - (void)_kai_pushViewController:(UIViewController *)viewController animated:(BOOL)animated {
     if (self.viewControllers.count) {
         viewController.hidesBottomBarWhenPushed = YES;
-        [viewController setAssociateValue:@1 withKey:@"navigationBarAlpha"];
-        [self.navigationBar setNeedsNavigationBackground:1];
     }
     
     if (![self.interactivePopGestureRecognizer.view.gestureRecognizers containsObject:self.kai_fullscreenPopGestureRecognizer]) {
@@ -179,74 +174,8 @@ typedef void (^_KAIViewControllerWillAppearInjectBlock)(UIViewController *viewCo
     }
 }
 
-- (UIViewController *)_kai_popViewControllerAnimated:(BOOL)animated {
-    UIViewController *popVc = [self _kai_popViewControllerAnimated:animated];
-    if (self.viewControllers.count <= 0) return popVc;
-    
-    UIViewController *topVC = [self.viewControllers lastObject];
-    if (topVC != nil) {
-        id<UIViewControllerTransitionCoordinator> coordinator = topVC.transitionCoordinator;
-        if (coordinator != nil) {
-            if (@available(iOS 10.0, *)) {
-                [coordinator notifyWhenInteractionChangesUsingBlock:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-                    [self navigationBarChanges:context];
-                }];
-                
-                if (!self.isKai_grTransitioning)
-                    [self navigationBarChanges:coordinator];
-            } else {
-                [coordinator notifyWhenInteractionEndsUsingBlock:^(id<UIViewControllerTransitionCoordinatorContext> _Nonnull context) {
-                    [self navigationBarChanges:context];
-                }];
-            }
-        }
-    }
-    return popVc;
-}
-
-- (void)navigationBarChanges:(id<UIViewControllerTransitionCoordinatorContext>)context {
-    if ([context isCancelled]) { // 取消了(还在当前页面)
-        CGFloat animdDuration = [context transitionDuration] * [context percentComplete];
-        UIViewController *fromViewController = [context viewControllerForKey:UITransitionContextFromViewControllerKey];
-        CGFloat fromVCAlpha = [[fromViewController associatedValueForKey:@"navigationBarAlpha"] floatValue];
-        [UIView animateWithDuration:animdDuration
-                         animations:^{
-                             [self.navigationBar setSlideNavigationBackground:fromVCAlpha];
-                         }];
-    } else { // 自动完成(pop到上一个界面了)
-        CGFloat animdDuration = [context transitionDuration] * (1 - [context percentComplete]);
-        UIViewController *toViewController = [context viewControllerForKey:UITransitionContextToViewControllerKey];
-        CGFloat toVCAlpha = [[toViewController associatedValueForKey:@"navigationBarAlpha"] floatValue];
-        [UIView animateWithDuration:animdDuration
-                         animations:^{
-                             [self.navigationBar setSlideNavigationBackground:toVCAlpha];
-                         }];
-    };
-    self.kai_grTransitioning = NO;
-}
-
 - (void)_kai_updateInteractiveTransition:(CGFloat)percentComplete {
     [self _kai_updateInteractiveTransition:percentComplete];
-    UIViewController *topVC = self.topViewController;
-    if (topVC) {
-        id<UIViewControllerTransitionCoordinator> coordinator = topVC.transitionCoordinator;
-        if (coordinator != nil) {
-            UIViewController *fromViewController = [coordinator viewControllerForKey:UITransitionContextFromViewControllerKey];
-            id fromAlpha = [fromViewController associatedValueForKey:@"navigationBarAlpha"];
-            CGFloat fromVCAlpha = 1;
-            if (fromAlpha)
-                fromVCAlpha = [fromAlpha floatValue];
-            
-            UIViewController *toViewController = [coordinator viewControllerForKey:UITransitionContextToViewControllerKey];
-            id toAlpha = [toViewController associatedValueForKey:@"navigationBarAlpha"];
-            CGFloat toVCAlpha = 1;
-            if (toAlpha)
-                toVCAlpha = [toAlpha floatValue];
-            
-            CGFloat newAlpha = fromVCAlpha + ((toVCAlpha - fromVCAlpha) * percentComplete);
-            [self.navigationBar setSlideNavigationBackground:newAlpha];
-        }
-    }
 }
 
 - (void)_kai_setupViewControllerBasedNavigationBarAppearanceIfNeeded:(UIViewController *)appearingViewController {

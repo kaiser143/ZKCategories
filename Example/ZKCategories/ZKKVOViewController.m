@@ -7,17 +7,18 @@
 //
 
 #import "ZKKVOViewController.h"
+#import "ZKCategoriesMacro.h"
 
 @interface KVOObserver :NSObject @end
 
 @implementation KVOObserver
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context{
-    NSLog(@"KVOObserver:value %@", change[NSKeyValueChangeNewKey]);
+    ZKLog(@"KVOObserver:value %@", change[NSKeyValueChangeNewKey]);
 }
 
 - (void)dealloc{
-    NSLog(@"dealloc");
+    ZKLog(@"dealloc");
 }
 
 @end
@@ -42,7 +43,7 @@
 @implementation ZKKVOViewController
 
 - (void)dealloc {
-    NSLog(@"ZKKVOViewController dealloc");
+    ZKLog(@"ZKKVOViewController dealloc");
 }
 
 - (void)viewDidLoad {
@@ -79,7 +80,7 @@
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-    NSLog(@"ZKKVOViewController:value %@", change[NSKeyValueChangeNewKey]);
+    ZKLog(@"ZKKVOViewController:value %@", change[NSKeyValueChangeNewKey]);
 }
 
 /*

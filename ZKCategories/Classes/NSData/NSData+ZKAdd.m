@@ -10,6 +10,7 @@
 #import "NSData+ZKAdd.h"
 #include <CommonCrypto/CommonCrypto.h>
 #include <zlib.h>
+#import "ZKCategoriesMacro.h"
 
 @implementation NSData (ZKAdd)
 
@@ -497,7 +498,7 @@ static const short base64DecodingTable[256] = {
     NSError *error = nil;
     id value       = [NSJSONSerialization JSONObjectWithData:self options:kNilOptions error:&error];
     if (error) {
-        NSLog(@"jsonValueDecoded error:%@", error);
+        ZKLog(@"jsonValueDecoded error:%@", error);
     }
     return value;
 }

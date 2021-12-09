@@ -7,6 +7,7 @@
 
 #import "WKWebView+ZKAdd.h"
 #import "UIView+ZKAdd.h"
+#import "ZKCategoriesMacro.h"
 
 FOUNDATION_STATIC_INLINE void clearWebViewCacheFolderByType(NSString *cacheType) {
     
@@ -37,7 +38,7 @@ FOUNDATION_STATIC_INLINE void clearWebViewCacheFolderByType(NSString *cacheType)
             NSError *error = nil;
             [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
             if (error) {
-                NSLog(@"removed file fail: %@ ,error %@", [filePath lastPathComponent], error);
+                ZKLog(@"removed file fail: %@ ,error %@", [filePath lastPathComponent], error);
             }
         }
     }
@@ -64,7 +65,7 @@ FOUNDATION_STATIC_INLINE void clearWebViewCacheFolderByType(NSString *cacheType)
                 [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:websiteDataTypes
                                                            modifiedSince:dateFrom
                                                        completionHandler:^{
-                                                           NSLog(@"WKWebView (ClearWebCache) Clear All Cache Done");
+                    ZKLog(@"WKWebView (ClearWebCache) Clear All Cache Done");
                                                        }];
             }
     #endif

@@ -30,6 +30,18 @@
 #endif
 #endif
 
+
+#ifdef DEBUG
+    #define ZKLog(format, ...)      NSLog(@"%s(%d): " format, ((strrchr(__FILE__, '/') ? : __FILE__- 1) + 1), __LINE__, ##__VA_ARGS__)
+    #define ZKLogForRect(aRect)     ZKLog(@"[%s] x: %f, y: %f, width: %f, height: %f", #aRect, aRect.origin.x, aRect.origin.y, aRect.size.width, aRect.size.height)
+    #define ZKLogForRange(aRange)   ZKLog(@"[%s] location: %lu; length: %lu", #aRange, aRange.location, aRange.length)
+#else
+    #define ZKLog(xx, ...)          ((void)0)
+    #define ZKLogForRect(aRect)     ((void)0)
+    #define ZKLogForRange(aRange)   ((void)0)
+#endif
+
+
 // 方法废弃
 // Example
 #define ZK_API_DEPRECATED(instead) DEPRECATED_MSG_ATTRIBUTE(" Use " # instead " instead")

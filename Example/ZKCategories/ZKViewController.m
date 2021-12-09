@@ -25,10 +25,10 @@
     self.view.backgroundColor = UIColor.whiteColor;
 
     NSNumber *number = @(13145678.1415926);
-    NSLog(@"%@", [number stringWithFormat:@",###.00"]);
-    NSLog(@"%@", [number stringWithFormat:@".00"]);
-    NSLog(@"%@", [number stringWithFormat:@"0.00%"]);
-    NSLog(@"%@", [number stringWithFormat:@"#.##%"]);
+    ZKLog(@"%@", [number stringWithFormat:@",###.00"]);
+    ZKLog(@"%@", [number stringWithFormat:@".00"]);
+    ZKLog(@"%@", [number stringWithFormat:@"0.00%"]);
+    ZKLog(@"%@", [number stringWithFormat:@"#.##%"]);
 
     static NSInteger i = 0;
     if (i == 0) {
@@ -41,10 +41,10 @@
         [next setTitleColor:UIColor.blackColor];
         [self.view addSubview:next];
 
-        @weakify(self, next);
+        @weakify(self);
         [next addBlockForControlEvents:UIControlEventTouchUpInside
                                  block:^(id _Nonnull sender) {
-                                     @strongify(self, next);
+                                     @strongify(self);
                                      [self kai_pushViewController:ZKViewController.new];
                                  }];
     } else {
@@ -91,47 +91,5 @@
 
 #pragma mark - :. UIScrollViewDelegate
 
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-//    [self navigationColor:scrollView.contentOffsetY];
-//}
-//
-//- (void)navigationColor:(CGFloat)offsetY {
-//    CGFloat y = 88; //device_iPhoneX ? 88 : 64;
-//    NSInteger navbarChangePoint = -(+y); //-(self.topBannerView.height + y);
-//
-//    if (offsetY > navbarChangePoint) {
-//        CGFloat alpha = MIN(1, 1 - ((navbarChangePoint + y - offsetY) / y));
-//        NSLog(@"%f", alpha);
-//        [self.navigationController.navigationBar setNeedsNavigationBackground:alpha];
-//        UIStatusBarStyle style = UIStatusBarStyleLightContent;
-//        UIColor *color = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
-//        BOOL isShadow = YES;
-//        if (alpha == 1) {
-//            style = UIStatusBarStyleDefault;
-//            color = UIColorHex(F1F3F5);
-//            isShadow = NO;
-//        }
-//
-//        [[UIApplication sharedApplication] setStatusBarStyle:style animated:NO];
-////        [self.navigationController.navigationBar setShadowImage:[UIImage new]];
-////        kai_view_shadow(self.navigationController.navigationBar, UIColorHex(303943), CGSizeMake(0, -5), 0.5, 6);
-//        //        !self.viewManagerInfosBlock ?: self.viewManagerInfosBlock(@"color", @{ @"color" : color,
-//        //                                                                               @"isShadow" : @(isShadow) });
-//    } else {
-//        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
-//        [self.navigationController.navigationBar setNeedsNavigationBackground:0];
-//        self.navigationController.navigationBar.layer.shadowColor = [UIColor clearColor].CGColor;
-//
-//
-//        CGFloat statusHeight = 44; //device_iPhoneX ? 44 : 20;
-//        if (offsetY < -(/*self.homeCollectionView.contentInsetTop*/0 + statusHeight)) {
-//            //            self.navigationController.navigationBar.hidden = YES;
-//            //            self.navImageView.hidden = YES;
-//        } else if (offsetY >= -(statusHeight)) {
-//            //            self.navigationController.navigationBar.hidden = NO;
-//            //            self.navImageView.hidden = NO;
-//        }
-//    }
-//}
 
 @end

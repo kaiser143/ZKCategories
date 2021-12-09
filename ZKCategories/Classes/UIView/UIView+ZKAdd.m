@@ -8,6 +8,7 @@
 
 #import "UIView+ZKAdd.h"
 #import "NSObject+ZKAdd.h"
+#import "ZKCategoriesMacro.h"
 
 @implementation UIView (ZKAdd)
 
@@ -358,7 +359,7 @@
 @implementation UIView (ZKDebug)
 
 - (void)methodCalledNotFromMainThread:(NSString *)methodName {
-    NSLog(@"-[%@ %@] being called on background queue. Break on %s to find out where", NSStringFromClass([self class]), methodName, __PRETTY_FUNCTION__);
+    ZKLog(@"-[%@ %@] being called on background queue. Break on %s to find out where", NSStringFromClass([self class]), methodName, __PRETTY_FUNCTION__);
 }
 
 - (void)_setNeedsLayout_MainThreadCheck {
