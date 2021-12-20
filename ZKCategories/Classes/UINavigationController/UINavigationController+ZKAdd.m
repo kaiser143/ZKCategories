@@ -165,9 +165,6 @@ typedef void (^_KAIViewControllerWillAppearInjectBlock)(UIViewController *viewCo
         self.interactivePopGestureRecognizer.enabled = NO;
     }
     
-    // Handle perferred navigation bar appearance.
-    [self _kai_setupViewControllerBasedNavigationBarAppearanceIfNeeded:viewController];
-    
     // Forward to primary implementation.
     if (![self.viewControllers containsObject:viewController]) {
         [self _kai_pushViewController:viewController animated:animated];
@@ -176,29 +173,6 @@ typedef void (^_KAIViewControllerWillAppearInjectBlock)(UIViewController *viewCo
 
 - (void)_kai_updateInteractiveTransition:(CGFloat)percentComplete {
     [self _kai_updateInteractiveTransition:percentComplete];
-}
-
-- (void)_kai_setupViewControllerBasedNavigationBarAppearanceIfNeeded:(UIViewController *)appearingViewController {
-    if (!self.kai_viewControllerBasedNavigationBarAppearanceEnabled) {
-        return;
-    }
-    
-    __weak typeof(self) weakSelf = self;
-    _KAIViewControllerWillAppearInjectBlock block = ^(UIViewController *viewController, BOOL animated) {
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        if (strongSelf) {
-            [strongSelf setNavigationBarHidden:viewController.kai_prefersNavigationBarHidden animated:animated];
-        }
-    };
-    
-    // Setup will appear inject block to appearing view controller.
-    // Setup disappearing view controller as well, because not every view controller is added into
-    // stack by pushing, maybe by "-setViewControllers:".
-    appearingViewController.kai_willAppearInjectBlock = block;
-    UIViewController *disappearingViewController = self.viewControllers.lastObject;
-    if (disappearingViewController && !disappearingViewController.kai_willAppearInjectBlock) {
-        disappearingViewController.kai_willAppearInjectBlock = block;
-    }
 }
 
 - (_KAIFullscreenPopGestureRecognizerDelegate *)kai_popGestureRecognizerDelegate {
