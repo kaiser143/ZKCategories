@@ -13,7 +13,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    self.window.backgroundColor = UIColor.yellowColor;
+    self.window.backgroundColor = UIColor.whiteColor;
 
     [self setUpNavigationBarAppearance:UIColorHex(ffffff)];
     return YES;
@@ -52,7 +52,7 @@
         [[UINavigationBar appearance] setTintColor:color];
     }
 
-    [[UINavigationBar appearance] setTranslucent:NO];
+//    [[UINavigationBar appearance] setTranslucent:NO];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 
     [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:

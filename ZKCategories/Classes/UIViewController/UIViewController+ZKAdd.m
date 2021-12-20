@@ -309,6 +309,7 @@
 
 - (void)kai_pushViewController:(UIViewController *)viewController backTitle:(NSString *)title animated:(BOOL)animated {
     UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStylePlain target:self action:nil];
+    backBarButtonItem.stringProperty = @"__KAIExtra";
     self.navigationController.topViewController.navigationItem.backBarButtonItem = backBarButtonItem;
     [self.navigationController pushViewController:viewController animated:animated];
 }

@@ -36,6 +36,12 @@
 
 @implementation UIBarButtonItem (ZKAdd)
 
++ (void)load {
+    if (@available(iOS 14.0, *)) {
+        [self swizzleMethod:@selector(menu) withMethod:@selector(__kai_menu)];
+    }
+}
+
 + (instancetype)itemWithImage:(UIImage *)image target:(id)target action:(SEL)action {
     return [[self alloc] initWithImage:[image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:target action:action];
 }
@@ -51,6 +57,12 @@
 - (void (^)(id))actionBlock {
     _KAIBarButtonItemBlockTarget *target = [self associatedValueForKey:@selector(setActionBlock:)];
     return target.block;
+}
+
+- (UIMenu *)__kai_menu API_AVAILABLE(ios(14.0)) API_UNAVAILABLE(watchos, tvos) {
+    if ([self.stringProperty isEqual:@"__KAIExtra"]) return nil;
+    
+    return [self __kai_menu];
 }
 
 @end
