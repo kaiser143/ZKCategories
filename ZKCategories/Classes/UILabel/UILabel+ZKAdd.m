@@ -47,11 +47,11 @@
 
 - (CGRect)kai_textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines {
     UIEdgeInsets insets = self.textContainerInset;
-    CGRect rect = [self kai_textRectForBounds:bounds
+    CGRect rect = [self kai_textRectForBounds:UIEdgeInsetsInsetRect(bounds, insets)
                        limitedToNumberOfLines:numberOfLines];
     
-    rect.origin.x    += insets.left;
-    rect.origin.y    += insets.top;
+    rect.origin.x    -= insets.left;
+    rect.origin.y    -= insets.top;
     rect.size.width  += (insets.left + insets.right);
     rect.size.height += (insets.top + insets.bottom);
     
