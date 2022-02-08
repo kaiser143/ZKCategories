@@ -34,8 +34,11 @@ ZKSYNTH_DUMMY_CLASS(UIDevice_ZKAdd)
     if (UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPhone) return NO;
     
     BOOL returnValue = NO;
-    if (@available(iOS 11.0, *)) {
-         returnValue = ([[UIApplication sharedApplication] delegate].window.safeAreaInsets.bottom > 0);
+    if (@available(iOS 13.0, *)) {
+        UIWindow *window = [UIApplication sharedApplication].windows.lastObject;
+        returnValue = window.safeAreaInsets.bottom > 0;
+    } else if (@available(iOS 11.0, *)) {
+        returnValue = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom > 0;
     }
     
     return returnValue;
