@@ -19,6 +19,7 @@ typedef void (^ZKNSObjectDelayBlock)(BOOL cancel);
 
 - (id)safePerform:(SEL)selector;
 - (id)safePerform:(SEL)selector withObject:(nullable id)object;
+- (id)safePerform:(SEL)selector withObjects:(nonnull NSArray *)objects;
 
 + (ZKNSObjectDelayBlock)performBlock:(void (^)(void))block afterDelay:(NSTimeInterval)delay;
 

@@ -97,6 +97,46 @@ static inline dispatch_time_t dTimeDelay(NSTimeInterval time) {
     }
 }
 
+- (id)safePerform:(SEL)selector withObjects:(nonnull NSArray *)objects {
+    NSParameterAssert(selector != NULL);
+    NSParameterAssert([self respondsToSelector:selector]);
+    
+    if ([self respondsToSelector:selector]) {
+        NSMethodSignature *methodSig = [[self class] instanceMethodSignatureForSelector:selector];
+        if (methodSig == nil) return nil;
+        
+        // 方法调用者 方法名 方法参数 方法返回值
+        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSig];
+        invocation.target = self;
+        invocation.selector = selector;
+        
+        for (int i = 0; i< objects.count; i++) {
+            id objct = objects[i];
+            if ([objct isKindOfClass:[NSNull class]]) continue;
+            [invocation setArgument:&objct atIndex:i+2];
+        }
+        //调用方法
+        [invocation invoke];
+        
+        // 获取返回值
+        id result = nil;
+        if (methodSig.methodReturnLength) {// 没有返回值 sig.methodReturnLength = 0
+            [invocation getReturnValue:&result];
+        }
+        
+        return result;
+    } else {
+#ifndef NS_BLOCK_ASSERTIONS
+        NSString *message =
+            [NSString stringWithFormat:@"%@ does not recognize selector %@",
+                                       self,
+                                       NSStringFromSelector(selector)];
+        NSAssert(false, message);
+#endif
+        return nil;
+    }
+}
+
 + (ZKNSObjectDelayBlock)performBlock:(void (^)(void))block afterDelay:(NSTimeInterval)delay {
     if (!block) return nil;
 
