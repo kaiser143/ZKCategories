@@ -102,7 +102,7 @@ static inline dispatch_time_t dTimeDelay(NSTimeInterval time) {
     NSParameterAssert([self respondsToSelector:selector]);
     
     if ([self respondsToSelector:selector]) {
-        NSMethodSignature *methodSig = [[self class] instanceMethodSignatureForSelector:selector];
+        NSMethodSignature *methodSig = [self methodSignatureForSelector:selector];
         if (methodSig == nil) return nil;
         
         // 方法调用者 方法名 方法参数 方法返回值
