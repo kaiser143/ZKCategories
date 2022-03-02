@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ZKCategoriesMacro.h"
 
 @interface UINavigationController (ZKAdd)
 
@@ -33,7 +34,7 @@
 /// A view controller is able to control navigation bar's appearance by itself,
 /// rather than a global way, checking "kai_prefersNavigationBarHidden" property.
 /// Default to YES, disable it if you don't want so.
-@property (nonatomic, assign) BOOL kai_viewControllerBasedNavigationBarAppearanceEnabled;
+@property (nonatomic, assign) BOOL kai_viewControllerBasedNavigationBarAppearanceEnabled ZK_API_DEPRECATED(ZKNavigationBarConfigureStyle);
 
 @end
 
@@ -49,8 +50,7 @@
 /// Indicate this view controller prefers its navigation bar hidden or not,
 /// checked when view controller based navigation bar's appearance is enabled.
 /// Default to NO, bars are more likely to show.
-/// 为解决根视图中该属性不生效的问题，把该功能的实现挪到`ZKFoundation`中
-@property (nonatomic, assign) BOOL kai_prefersNavigationBarHidden;
+@property (nonatomic, assign) BOOL kai_prefersNavigationBarHidden ZK_API_DEPRECATED(ZKNavigationBarConfigureStyle);
 
 /// Max allowed initial distance to left edge when you begin the interactive pop
 /// gesture. 0 by default, which means it will ignore this limit.
