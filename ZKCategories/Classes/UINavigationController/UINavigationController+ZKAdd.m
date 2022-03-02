@@ -87,52 +87,6 @@
 
 @end
 
-typedef void (^_KAIViewControllerWillAppearInjectBlock)(UIViewController *viewController, BOOL animated);
-
-@interface UIViewController (KAIFullscreenPopGesturePrivate)
-
-@property (nonatomic, copy) _KAIViewControllerWillAppearInjectBlock kai_willAppearInjectBlock;
-
-@end
-
-@implementation UIViewController (KAIFullscreenPopGesturePrivate)
-
-+ (void)load {
-    [self swizzleMethod:@selector(viewWillAppear:) withMethod:@selector(__kai_viewWillAppear:)];
-    [self swizzleMethod:@selector(viewWillDisappear:) withMethod:@selector(__kai_viewWillDisappear:)];
-}
-
-- (void)__kai_viewWillAppear:(BOOL)animated {
-    // Forward to primary implementation.
-    [self __kai_viewWillAppear:animated];
-    
-    if (self.kai_willAppearInjectBlock) {
-        self.kai_willAppearInjectBlock(self, animated);
-    }
-}
-
-- (void)__kai_viewWillDisappear:(BOOL)animated {
-    // Forward to primary implementation.
-    [self __kai_viewWillDisappear:animated];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        UIViewController *viewController = self.navigationController.viewControllers.lastObject;
-        if (viewController && viewController.kai_willAppearInjectBlock && !viewController.kai_prefersNavigationBarHidden) {
-            [self.navigationController setNavigationBarHidden:NO animated:NO];
-        }
-    });
-}
-
-- (_KAIViewControllerWillAppearInjectBlock)kai_willAppearInjectBlock {
-    return [self associatedValueForKey:_cmd];
-}
-
-- (void)setKai_willAppearInjectBlock:(_KAIViewControllerWillAppearInjectBlock)block {
-    [self setAssociateValue:block withKey:@selector(kai_willAppearInjectBlock)];
-}
-
-@end
-
 @implementation UINavigationController (KAIFullscreenPopGesture)
 
 + (void)load {
