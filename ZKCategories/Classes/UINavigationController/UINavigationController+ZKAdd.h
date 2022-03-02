@@ -49,6 +49,7 @@
 /// Indicate this view controller prefers its navigation bar hidden or not,
 /// checked when view controller based navigation bar's appearance is enabled.
 /// Default to NO, bars are more likely to show.
+/// 为解决根视图中该属性不生效的问题，把该功能的实现挪到`ZKFoundation`中
 @property (nonatomic, assign) BOOL kai_prefersNavigationBarHidden;
 
 /// Max allowed initial distance to left edge when you begin the interactive pop
