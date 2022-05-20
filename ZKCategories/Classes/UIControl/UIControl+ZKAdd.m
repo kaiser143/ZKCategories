@@ -129,7 +129,9 @@
 }
 
 - (BOOL)isIgnore {
-    return [[self associatedValueForKey:_cmd] boolValue];
+    NSNumber *value = [self associatedValueForKey:_cmd];
+    value = value ?: @NO;
+    return [value boolValue];
 }
 
 - (void)setIgnoreEvent:(BOOL)ignoreEvent {

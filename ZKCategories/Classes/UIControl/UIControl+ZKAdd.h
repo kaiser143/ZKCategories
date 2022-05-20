@@ -71,7 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSTimeInterval acceptEventInterval;
 
 /// 是否忽略时间间隔
-@property (nonatomic, assign, getter=isIgnore) BOOL ignore;
+@property (nonatomic, assign, getter=isIgnore) BOOL ignore; // Default to NO
 
 @end
 
