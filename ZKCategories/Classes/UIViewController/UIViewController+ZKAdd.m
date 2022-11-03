@@ -214,6 +214,45 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidHideNotification object:nil];
 }
 
+- (void)setInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation completion:(nonnull dispatch_block_t)completion {
+    [self setAssociateValue:@(interfaceOrientation) withKey:@selector(interfaceOrientation)];
+    
+    if (@available(iOS 16.0, *)) {
+        UIWindowScene *windowScene = self.view.window.windowScene;
+        if (!windowScene) {
+            return;
+        }
+        [self setNeedsUpdateOfSupportedInterfaceOrientations];
+        UIWindowSceneGeometryPreferencesIOS *geometryPreferences = [[UIWindowSceneGeometryPreferencesIOS alloc] init];
+        geometryPreferences.interfaceOrientations                = interfaceOrientation;
+        [windowScene requestGeometryUpdateWithPreferences:geometryPreferences
+                                             errorHandler:^(NSError *_Nonnull error) {
+                                                 //业务代码
+                                                 ZKLog(@"menglc errorHandler error %@", error);
+                                             }];
+    } else if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
+        SEL selector             = NSSelectorFromString(@"setOrientation:");
+        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[UIDevice instanceMethodSignatureForSelector:selector]];
+        [invocation setSelector:selector];
+        [invocation setTarget:[UIDevice currentDevice]];
+        UIInterfaceOrientation val = interfaceOrientation;
+        [invocation setArgument:&val atIndex:2];
+        [invocation invoke];
+    }
+    
+    !completion ?: completion();
+}
+
+- (UIInterfaceOrientation)interfaceOrientation {
+    NSNumber *value = [self associatedValueForKey:_cmd];
+    if (!value) {
+        value = @([UIDevice currentDevice].orientation);
+        [self setAssociateValue:value withKey:@selector(interfaceOrientation)];
+    }
+    
+    return [value integerValue];
+}
+
 
 #pragma mark - notification callbacks
 

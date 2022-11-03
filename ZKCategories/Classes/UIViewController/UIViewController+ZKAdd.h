@@ -19,21 +19,33 @@ typedef NS_ENUM(NSUInteger, ZKKeyboardStatus) {
 
 typedef void (^ZKKeyboardFrameAnimationBlock)(CGRect keyboardFrame);
 
-@interface UIViewController (KeyboardNotifications)
+@interface UIViewController (ZKAdd)
 
-@property (nonatomic, readonly) ZKKeyboardStatus keyboardStatus;
+@property (nonatomic, assign, readonly) UIInterfaceOrientation interfaceOrientation;
 
-#pragma mark - Keyboard
+/*!
+ *  @brief    设置屏幕方向
+ *  @param     interfaceOrientation     设备方向
+ *  @param     completion     设置后，可以追加一些操作(是否隐藏导航栏等)
+ *
+ *  e.g.
+ - (BOOL)shouldAutorotate {
+     return YES;
+ }
 
-- (void)setKeyboardWillShowAnimationBlock:(ZKKeyboardFrameAnimationBlock)willShowBlock;
-- (void)setKeyboardWillHideAnimationBlock:(ZKKeyboardFrameAnimationBlock)willHideBlock;
+ - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+     return UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? UIInterfaceOrientationMaskPortrait : UIInterfaceOrientationMaskLandscapeRight;
+ }
 
-- (void)setKeyboardDidShowActionBlock:(ZKKeyboardFrameAnimationBlock)didShowBlock;
-- (void)setKeyboardDidHideActionBlock:(ZKKeyboardFrameAnimationBlock)didHideBlock;
+ - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+     return UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? UIInterfaceOrientationPortrait : UIInterfaceOrientationLandscapeRight;
+ }
+ */
+- (void)setInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation completion:(dispatch_block_t)completion;
 
 #pragma mark - :. 转场
 
-/// push 操作，返回按钮无文字
+/// push 操作，返回按钮无文字, 长按返回按钮去掉menu
 - (void)kai_pushViewController:(UIViewController *)viewController;
 - (void)kai_pushViewController:(UIViewController *)viewController animated:(BOOL)animated;
 - (void)kai_pushViewController:(UIViewController *)viewController backTitle:(NSString *)title animated:(BOOL)animated;
@@ -47,13 +59,32 @@ typedef void (^ZKKeyboardFrameAnimationBlock)(CGRect keyboardFrame);
 - (void)kai_presentViewController:(UIViewController *)newViewController;
 - (void)kai_presentViewController:(UIViewController *)newViewController animated:(BOOL)animated;
 
+/*!
+ *  @brief    拦截返回按钮的action
+ */
 @property (nonatomic, copy) void(^kai_prefersPopViewControllerInjectBlock)(UIViewController * _Nonnull controller);
 
 @end
 
+
 @interface UIViewController (ZKInteractiveTransitionTableViewDeselection)
 
 @property (nonatomic, weak) UITableView *kai_prefersTableViewDeselectRowWhenViewWillAppear;
+
+@end
+
+
+@interface UIViewController (ZKKeyboard)
+
+@property (nonatomic, readonly) ZKKeyboardStatus keyboardStatus;
+
+#pragma mark - Keyboard
+
+- (void)setKeyboardWillShowAnimationBlock:(ZKKeyboardFrameAnimationBlock)willShowBlock;
+- (void)setKeyboardWillHideAnimationBlock:(ZKKeyboardFrameAnimationBlock)willHideBlock;
+
+- (void)setKeyboardDidShowActionBlock:(ZKKeyboardFrameAnimationBlock)didShowBlock;
+- (void)setKeyboardDidHideActionBlock:(ZKKeyboardFrameAnimationBlock)didHideBlock;
 
 @end
 
