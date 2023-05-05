@@ -522,7 +522,10 @@ ZK_EXTERN_C_BEGIN
  */
 #define weakify(...) \
     autoreleasepool {} \
-    metamacro_foreach_cxt(rac_weakify_,, __weak, __VA_ARGS__)
+    _Pragma("clang diagnostic push") \
+    _Pragma("clang diagnostic ignored \"-Wunused\"") \
+    metamacro_foreach_cxt(rac_weakify_,, __weak, __VA_ARGS__) \
+    _Pragma("clang diagnostic pop")
 #endif
 
 #ifndef strongify
@@ -556,6 +559,7 @@ ZK_EXTERN_C_BEGIN
     try {} @finally {} \
     _Pragma("clang diagnostic push") \
     _Pragma("clang diagnostic ignored \"-Wshadow\"") \
+    _Pragma("clang diagnostic ignored \"-Wunused\"") \
     metamacro_foreach(rac_strongify_,, __VA_ARGS__) \
     _Pragma("clang diagnostic pop")
 #endif
