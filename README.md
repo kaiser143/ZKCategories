@@ -8,7 +8,7 @@ a categories for cocoa
 <img src="https://img.shields.io/cocoapods/v/ZKCategories.svg?style=flat" />
 <img src="https://img.shields.io/badge/supporting-objectiveC-yellow.svg" />
 <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg" />
-<img src="https://img.shields.io/cocoapods/p/ZKCategories.svg?style=flat" />
+<img src="https://img.shields.io/badge/platform- iOS -lightgrey.svg" />
 <img src="https://img.shields.io/badge/support-iOS 7+ -blue.svg?style=flat" />
 </p>
 <br>
