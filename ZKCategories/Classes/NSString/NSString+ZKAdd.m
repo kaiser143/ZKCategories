@@ -142,33 +142,7 @@
 }
 
 - (NSArray *)split:(NSString *)token {
-    return [self split:token limit:0];
-}
-
-- (NSArray *)split:(NSString *)token limit:(NSUInteger)maxResults {
-    NSMutableArray *result = [NSMutableArray arrayWithCapacity:8];
-    NSString *buffer       = self;
-    while ([buffer contains:token]) {
-        if (maxResults > 0 && [result count] == maxResults - 1) {
-            break;
-        }
-        NSUInteger matchIndex = [buffer indexOf:token];
-        NSString *nextPart    = [buffer substringFromIndex:0 toIndex:matchIndex];
-        buffer                = [buffer substringFromIndex:matchIndex + [token length]];
-        [result addObject:nextPart];
-    }
-    if ([buffer length] > 0) {
-        [result addObject:buffer];
-    }
-
-    return result;
-}
-
-- (NSString *)substringFromIndex:(NSUInteger)from toIndex:(NSUInteger)to {
-    NSRange range;
-    range.location = from;
-    range.length   = to - from;
-    return [self substringWithRange:range];
+    return [self componentsSeparatedByString:token];
 }
 
 + (NSString *)stringByFormattingBytes:(long long)bytes {
