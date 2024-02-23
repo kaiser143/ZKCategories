@@ -182,7 +182,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return      The new image with the given size.
  */
-- (nullable UIImage *)imageByResizeToSize:(CGSize)size;
+- (nullable UIImage *)imageByResizeToSize:(CGSize)size NS_SWIFT_NAME(resize(to:));
 
 /**
  Returns a new image which is scaled from this image.
@@ -194,7 +194,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return The new image with the given size.
  */
-- (nullable UIImage *)imageByResizeToSize:(CGSize)size contentMode:(UIViewContentMode)contentMode;
+- (nullable UIImage *)imageByResizeToSize:(CGSize)size contentMode:(UIViewContentMode)contentMode NS_SWIFT_NAME(resize(to:contentMode:));
 
 /**
  Returns a new image which is cropped from this image.
@@ -203,7 +203,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @return      The new image, or nil if an error occurs.
  */
-- (nullable UIImage *)imageByCropToRect:(CGRect)rect;
+- (nullable UIImage *)imageByCropToRect:(CGRect)rect NS_SWIFT_NAME(crop(to:));
 
 /**
  Returns a new image which is edge inset from this image.
@@ -223,7 +223,7 @@ NS_ASSUME_NONNULL_BEGIN
  rectangle's width or height are clamped appropriately to half
  the width or height.
  */
-- (nullable UIImage *)imageByRoundCornerRadius:(CGFloat)radius;
+- (nullable UIImage *)imageByRoundCornerRadius:(CGFloat)radius NS_SWIFT_NAME(roundCorner(radius:));
 
 /**
  Rounds a new image with a given corner size.
@@ -240,7 +240,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable UIImage *)imageByRoundCornerRadius:(CGFloat)radius
                                    borderWidth:(CGFloat)borderWidth
-                                   borderColor:(nullable UIColor *)borderColor;
+                                   borderColor:(nullable UIColor *)borderColor NS_SWIFT_NAME(roundCorner(radius:borderWidth:borderColor:));
 
 /**
  Rounds a new image with a given corner size.
@@ -265,44 +265,44 @@ NS_ASSUME_NONNULL_BEGIN
                                        corners:(UIRectCorner)corners
                                    borderWidth:(CGFloat)borderWidth
                                    borderColor:(nullable UIColor *)borderColor
-                                borderLineJoin:(CGLineJoin)borderLineJoin;
+                                borderLineJoin:(CGLineJoin)borderLineJoin NS_SWIFT_NAME(roundCorner(radius:corners:borderWidth:borderColor:borderLineJoin:));
 
 /**
  Returns a new rotated image (relative to the center).
  
- @param radians   Rotated radians in counterclockwise.⟲
+ @param radians   Rotated radians in counterclockwise.⟲(旋转弧度)
  
  @param fitSize   YES: new image's size is extend to fit all content.
  NO: image's size will not change, content may be clipped.
  */
-- (nullable UIImage *)imageByRotate:(CGFloat)radians fitSize:(BOOL)fitSize;
+- (nullable UIImage *)imageByRotate:(CGFloat)radians fitSize:(BOOL)fitSize NS_SWIFT_NAME(rotate(radians:fitSize:));
 
 /**
  Returns a new image rotated counterclockwise by a quarter‑turn (90°). ⤺
  The width and height will be exchanged.
  */
-- (nullable UIImage *)imageByRotateLeft90;
+- (nullable UIImage *)imageByRotateLeft90 NS_SWIFT_NAME(rotateLeft90());
 
 /**
  Returns a new image rotated clockwise by a quarter‑turn (90°). ⤼
  The width and height will be exchanged.
  */
-- (nullable UIImage *)imageByRotateRight90;
+- (nullable UIImage *)imageByRotateRight90 NS_SWIFT_NAME(rotateRight90());
 
 /**
  Returns a new image rotated 180° . ↻
  */
-- (nullable UIImage *)imageByRotate180;
+- (nullable UIImage *)imageByRotate180 NS_SWIFT_NAME(rotate180());
 
 /**
- Returns a vertically flipped image. ⥯
+ Returns a vertically flipped image. ⥯ （垂直翻转）
  */
-- (nullable UIImage *)imageByFlipVertical;
+- (nullable UIImage *)imageByFlipVertical NS_SWIFT_NAME(flipVertical());
 
 /**
- Returns a horizontally flipped image. ⇋
+ Returns a horizontally flipped image. ⇋ (水平翻转)
  */
-- (nullable UIImage *)imageByFlipHorizontal;
+- (nullable UIImage *)imageByFlipHorizontal NS_SWIFT_NAME(flipHorizontal());
 
 #pragma mark - Image Effect
 ///=============================================================================
@@ -314,42 +314,42 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param color  The color.
  */
-- (nullable UIImage *)imageByTintColor:(UIColor *)color;
+- (nullable UIImage *)imageByTintColor:(UIColor *)color NS_SWIFT_NAME(tint(color:));
 
 /**
  Returns a grayscaled image.
  */
-- (nullable UIImage *)imageByGrayscale;
+- (nullable UIImage *)imageByGrayscale NS_SWIFT_NAME(grayscale());
 
 /**
  Applies a blur effect to this image. Suitable for blur any content.
  */
-- (nullable UIImage *)imageByBlurSoft;
+- (nullable UIImage *)imageByBlurSof NS_SWIFT_NAME(blurSof());
 
 /**
  Applies a blur effect to this image. Suitable for blur any content except pure white.
  (same as iOS Control Panel)
  */
-- (nullable UIImage *)imageByBlurLight;
+- (nullable UIImage *)imageByBlurLight NS_SWIFT_NAME(blurLight());
 
 /**
  Applies a blur effect to this image. Suitable for displaying black text.
  (same as iOS Navigation Bar White)
  */
-- (nullable UIImage *)imageByBlurExtraLight;
+- (nullable UIImage *)imageByBlurExtraLight NS_SWIFT_NAME(blurExtraLight());
 
 /**
  Applies a blur effect to this image. Suitable for displaying white text.
  (same as iOS Notification Center)
  */
-- (nullable UIImage *)imageByBlurDark;
+- (nullable UIImage *)imageByBlurDark NS_SWIFT_NAME(blurDark());
 
 /**
  Applies a blur and tint color to this image.
  
  @param tintColor  The tint color.
  */
-- (nullable UIImage *)imageByBlurWithTint:(UIColor *)tintColor;
+- (nullable UIImage *)imageByBlurWithTint:(UIColor *)tintColor NS_SWIFT_NAME(blur(tint:));
 
 /**
  Applies a blur, tint color, and saturation adjustment to this image,
@@ -381,7 +381,7 @@ NS_ASSUME_NONNULL_BEGIN
                               tintColor:(nullable UIColor *)tintColor
                                tintMode:(CGBlendMode)tintBlendMode
                              saturation:(CGFloat)saturation
-                              maskImage:(nullable UIImage *)maskImage;
+                              maskImage:(nullable UIImage *)maskImage NS_SWIFT_NAME(blur(radius:tintColor:tintMode:saturation:maskImage:));
 
 @end
 

@@ -61,9 +61,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - :. URL
 
-- (NSString *)stringByURLEncoding;
-- (NSString *)stringByEscapingQueryParameters;
-- (NSString *)stringByReplacingPercentEscapes;
+- (NSString *)stringByURLEncoding NS_SWIFT_NAME(URLEncoding());
+- (NSString *)stringByEscapingQueryParameters NS_SWIFT_NAME(escapingQueryParameters());
+- (NSString *)stringByReplacingPercentEscapes NS_SWIFT_NAME(replacingPercentEscapes());
 
 - (nullable NSURL *)URL;
 - (nullable NSURL *)URLRelativeToURL:(nullable NSURL *)baseURL;
@@ -192,19 +192,19 @@ NS_ASSUME_NONNULL_BEGIN
  URL encode a string in utf-8.
  @return the encoded string.
  */
-- (NSString *)stringByURLEncode;
+- (NSString *)stringByURLEncode NS_SWIFT_NAME(URLEncode());
 
 /**
  URL decode a string in utf-8.
  @return the decoded string.
  */
-- (NSString *)stringByURLDecode;
+- (NSString *)stringByURLDecode NS_SWIFT_NAME(URLDecode());
 
 /**
  Escape commmon HTML to Entity.
  Example: "a < b" will be escape to "a&lt;b".
  */
-- (NSString *)stringByEscapingHTML;
+- (NSString *)stringByEscapingHTML NS_SWIFT_NAME(escapingHTML());
 
 #pragma mark - :. Drawing
 ///=============================================================================
@@ -358,7 +358,7 @@ NS_ASSUME_NONNULL_BEGIN
  Trim blank characters (space and newline) in head and tail.
  @return the trimmed string.
  */
-- (NSString *)stringByTrim;
+- (NSString *)stringByTrim NS_SWIFT_NAME(trim());
 
 /**
  Add scale modifier to the file name (without path extension),

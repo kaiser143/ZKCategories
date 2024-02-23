@@ -125,21 +125,21 @@ NS_ASSUME_NONNULL_BEGIN
  Attaches the given block for a single tap action to the receiver.
  @param block The block to execute.
  */
-- (void)setTapActionWithBlock:(void (^)(void))block;
+- (void)setTapActionWithBlock:(void (^)(void))block NS_SWIFT_NAME(setTapAction(block:));
 
 /**
  Attaches the given block for a long press action to the receiver.
  @param block The block to execute.
  */
-- (void)setLongPressActionWithBlock:(void (^)(void))block;
+- (void)setLongPressActionWithBlock:(void (^)(void))block NS_SWIFT_NAME(setLongPressAction(block:));
 
 @end
 
 @interface UIView (ZKDebug)
 
 /**
-@name Main Thread Checking
-*/
+ @name Main Thread Checking
+ */
 
 /**
  Toggles on/off main thread checking on several methods of UIView.
@@ -211,12 +211,12 @@ NS_ASSUME_NONNULL_BEGIN
 /*
  * @code
  - (id)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
-        [self loadContentsFromNib];
-        [self awakeFromNib];
-    }
-    
-    return self;
+ if (self = [super initWithFrame:frame]) {
+ [self loadContentsFromNib];
+ [self awakeFromNib];
+ }
+ 
+ return self;
  }
  * @code
  */
@@ -239,9 +239,9 @@ NS_ASSUME_NONNULL_END
 #if __has_include("Masonry.h") || __has_include(<Masonry/Masonry.h>)
 
 #if __has_include(<Masonry/Masonry.h>)
-    #import <Masonry/Masonry.h>
+#import <Masonry/Masonry.h>
 #else
-    #import "Masonry.h"
+#import "Masonry.h"
 #endif
 
 @interface UIView (Masonry)

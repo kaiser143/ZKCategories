@@ -253,6 +253,9 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = Kaiser;
 				TargetAttributes = {
+					6003F589195388D20070C39A = {
+						DevelopmentTeam = 9H5P3JV3C7;
+					};
 					6003F5AD195388D20070C39A = {
 						TestTargetID = 6003F589195388D20070C39A;
 					};
@@ -505,6 +508,7 @@
 			baseConfigurationReference = A318133ED0FA0692D2A0F37C /* Pods-ZKCategories_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 9H5P3JV3C7;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ZKCategories/ZKCategories-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -524,6 +528,7 @@
 			baseConfigurationReference = 64D47266F23F3108D4B8C50C /* Pods-ZKCategories_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 9H5P3JV3C7;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ZKCategories/ZKCategories-Prefix.pch";
 				INFOPLIST_FILE = "ZKCategories/ZKCategories-Info.plist";

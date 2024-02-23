@@ -70,7 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param animated        YES if you want to animate the change in position,
  NO if it should be immediate.
  */
-- (void)scrollToRow:(NSUInteger)row inSection:(NSUInteger)section atScrollPosition:(UITableViewScrollPosition)scrollPosition animated:(BOOL)animated;
+- (void)scrollToRow:(NSUInteger)row inSection:(NSUInteger)section atScrollPosition:(UITableViewScrollPosition)scrollPosition animated:(BOOL)animated NS_SWIFT_NAME(scroll(to:inSection:atPosition:animated:));
 
 /**
  Inserts a row in the receiver with an option to animate the insertion.
@@ -122,7 +122,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param animation  A constant that either specifies the kind of animation to
  perform when inserting the cell or requests no animation.
  */
-- (void)insertRowAtIndexPath:(NSIndexPath *)indexPath withRowAnimation:(UITableViewRowAnimation)animation;
+- (void)insertRowAtIndexPath:(NSIndexPath *)indexPath withRowAnimation:(UITableViewRowAnimation)animation NS_SWIFT_NAME(insertRow(at:animation:));
 
 /**
  Reloads the specified row using a certain animation effect.

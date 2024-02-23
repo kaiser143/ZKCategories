@@ -145,11 +145,11 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
  
  Example: @"0xF0F", @"66ccff", @"#66CCFF88"
  
- @param hexStr  The hex string value for the new color.
+ @param string  The hex string value for the new color.
  
  @return        An UIColor object from string, or nil if an error occurs.
  */
-+ (nullable UIColor *)colorWithHexString:(NSString *)hexStr;
++ (nullable UIColor *)colorWithHexString:(NSString *)string;
 
 /**
  Creates and returns a color object by add new color.
@@ -178,7 +178,7 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
 - (UIColor *)colorByChangeHue:(CGFloat)hueDelta
                    saturation:(CGFloat)saturationDelta
                    brightness:(CGFloat)brightnessDelta
-                        alpha:(CGFloat)alphaDelta;
+                        alpha:(CGFloat)alphaDelta NS_SWIFT_NAME(change(hue:saturation:brightness:alpha:));
 
 #pragma mark - Get color's description
 ///=============================================================================

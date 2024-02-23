@@ -12,7 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UILabel (ZKAdd)
 
-@property (nonatomic) UIEdgeInsets textContainerInset;
+// 设置边距
+@property (nonatomic) IBInspectable UIEdgeInsets textContainerInset;
 
 @end
 
