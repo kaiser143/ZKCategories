@@ -15,7 +15,7 @@ typedef void (^ZKNSObjectDelayBlock)(BOOL cancel);
 @interface NSObject (ZKAdd)
 
 // URL Parameter Strings
-- (NSString *)URLParameterStringValue;
+- (NSString *)URLParameterStringValue NS_SWIFT_NAME(URLParameterStringValue());
 
 - (id)safePerform:(SEL)selector;
 - (id)safePerform:(SEL)selector withObject:(nullable id)object;

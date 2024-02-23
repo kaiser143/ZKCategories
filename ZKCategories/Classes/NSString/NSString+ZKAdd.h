@@ -79,7 +79,7 @@ NS_ASSUME_NONNULL_BEGIN
 /*!
  *    @brief    %1.0f Bytes", @"%1.1f KB", @"%1.1f MB", @"%1.1f GB", @"%1.1f TB
  */
-+ (NSString *)stringByFormattingBytes:(long long)bytes;
++ (NSString *)stringByFormattingBytes:(long long)bytes NS_SWIFT_NAME(formatting(bytes:));
 
 /*!
  *  @brief    字符串字节长度
