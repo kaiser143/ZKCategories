@@ -583,6 +583,18 @@ ZK_EXTERN_C_BEGIN
     __CREATE_ARGS_DELETE_PAREN(CRATE_TYPE_CODING_DEL_VAR VALUE)
 
 
+#pragma mark - Clang
+
+#define ArgumentToString(macro) #macro
+#define ClangWarningConcat(warning_name) ArgumentToString(clang diagnostic ignored warning_name)
+
+/// 参数可直接传入 clang 的 warning 名，warning 列表参考：https://clang.llvm.org/docs/DiagnosticsReference.html
+#define BeginIgnoreClangWarning(warningName) _Pragma("clang diagnostic push") _Pragma(ClangWarningConcat(#warningName))
+#define EndIgnoreClangWarning _Pragma("clang diagnostic pop")
+
+#define BeginIgnorePerformSelectorLeaksWarning BeginIgnoreClangWarning(-Warc-performSelector-leaks)
+#define EndIgnorePerformSelectorLeaksWarning EndIgnoreClangWarning
+
 /**
  Convert CFRange to NSRange
  @param range CFRange @return NSRange

@@ -4,8 +4,8 @@ PODS:
   - FBSnapshotTestCase/Core (2.1.4)
   - FBSnapshotTestCase/SwiftSupport (2.1.4):
     - FBSnapshotTestCase/Core
-  - ZKCategories/Core (0.3.9)
-  - ZKCategories/ZKKVOSAFE (0.3.9):
+  - ZKCategories/Core (0.3.21)
+  - ZKCategories/ZKKVOSAFE (0.3.21):
     - ZKCategories/Core
 
 DEPENDENCIES:
@@ -13,7 +13,7 @@ DEPENDENCIES:
   - ZKCategories/ZKKVOSAFE (from `../`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git:
     - FBSnapshotTestCase
 
 EXTERNAL SOURCES:
@@ -22,8 +22,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
-  ZKCategories: b551095f8d89f8139010b934fc45df2eb6beac53
+  ZKCategories: 56ec57ab796f80cf2b797b77db02f3f95d4960e6
 
 PODFILE CHECKSUM: c390973306fa39af7f503c2f377471754bc47087
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.15.2

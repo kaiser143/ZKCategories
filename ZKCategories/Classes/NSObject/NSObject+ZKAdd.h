@@ -26,6 +26,24 @@ typedef void (^ZKNSObjectDelayBlock)(BOOL cancel);
 + (void)cancelBlock:(ZKNSObjectDelayBlock)block;
 + (void)cancelPreviousPerformBlock:(ZKNSObjectDelayBlock)aWrappingBlockHandle __attribute__((deprecated));
 
+/**
+ 判断当前类是否有重写某个父类的指定方法
+ 
+ @param selector 要判断的方法
+ @param superclass 要比较的父类，必须是当前类的某个 superclass
+ @return YES 表示子类有重写了父类方法，NO 表示没有重写（异常情况也返回 NO，例如当前类与指定的类并非父子关系、父类本身也无法响应指定的方法）
+ */
+- (BOOL)kai_hasOverrideMethod:(SEL)selector ofSuperclass:(Class)superclass;
+
+/**
+ 判断指定的类是否有重写某个父类的指定方法
+ 
+ @param selector 要判断的方法
+ @param superclass 要比较的父类，必须是当前类的某个 superclass
+ @return YES 表示子类有重写了父类方法，NO 表示没有重写（异常情况也返回 NO，例如当前类与指定的类并非父子关系、父类本身也无法响应指定的方法）
+ */
++ (BOOL)kai_hasOverrideMethod:(SEL)selector forClass:(Class)aClass ofSuperclass:(Class)superclass;
+
 /// catgory runtime实现get set方法增加一个字符串属性
 @property (nonatomic, strong) NSString *stringProperty;
 

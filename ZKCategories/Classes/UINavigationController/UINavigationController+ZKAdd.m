@@ -9,6 +9,8 @@
 #import "UINavigationController+ZKAdd.h"
 #import "NSObject+ZKAdd.h"
 #import "UINavigationBar+ZKAdd.h"
+#import "UIViewController+ZKAdd.h"
+#import "ZKCGUtilities.h"
 
 @interface _KAIFullscreenPopGestureRecognizerDelegate : NSObject <UIGestureRecognizerDelegate>
 
@@ -56,6 +58,12 @@
 @end
 
 
+@interface UINavigationController ()
+
+@property(nonatomic, strong) NSMutableArray<ZKNavigationActionDidChangeBlock> *kai_navigationActionDidChangeBlocks;
+
+@end
+
 @implementation UINavigationController (ZKAdd)
 
 - (UIViewController *)viewControllerForClass:(Class)cls {
@@ -85,6 +93,59 @@
     return controller;
 }
 
+- (void)setKai_navigationAction:(ZKNavigationAction)navigationAction
+                        animated:(BOOL)animated
+         appearingViewController:(UIViewController *)appearingViewController
+     disappearingViewControllers:(NSArray<UIViewController *> *)disappearingViewControllers {
+    BOOL valueChanged = self.kai_navigationAction != navigationAction;
+    [self setAssociateValue:@(navigationAction) withKey:@selector(kai_navigationAction)];
+    if (valueChanged && self.kai_navigationActionDidChangeBlocks.count) {
+        [self.kai_navigationActionDidChangeBlocks enumerateObjectsUsingBlock:^(ZKNavigationActionDidChangeBlock  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            obj(navigationAction, animated, self, appearingViewController, disappearingViewControllers);
+        }];
+    }
+}
+
+- (ZKNavigationAction)kai_navigationAction {
+    return [[self associatedValueForKey:_cmd] unsignedIntegerValue];
+}
+
+- (void)setKai_navigationActionDidChangeBlocks:(NSMutableArray<ZKNavigationActionDidChangeBlock> *)navigationActionDidChangeBlocks {
+    [self setAssociateValue:navigationActionDidChangeBlocks withKey:@selector(kai_navigationActionDidChangeBlocks)];
+}
+
+- (NSMutableArray<ZKNavigationActionDidChangeBlock> *)kai_navigationActionDidChangeBlocks {
+    return [self associatedValueForKey:_cmd];
+}
+
+- (void)setKai_alwaysInvokeAppearanceMethods:(BOOL)alwaysInvokeAppearanceMethods {
+    [self setAssociateValue:@(alwaysInvokeAppearanceMethods) withKey:@selector(kai_alwaysInvokeAppearanceMethods)];
+}
+
+- (BOOL)kai_alwaysInvokeAppearanceMethods {
+    return [[self associatedValueForKey:_cmd] boolValue];
+}
+
+- (void)setKai_isPushing:(BOOL)kai_isPushing {
+    [self setAssociateValue:@(kai_isPushing) withKey:@selector(kai_isPushing)];
+}
+
+- (BOOL)kai_isPushing {
+    return [[self associatedValueForKey:_cmd] boolValue];
+}
+
+- (void)setKai_isPopping:(BOOL)kai_isPopping {
+    [self setAssociateValue:@(kai_isPopping) withKey:@selector(kai_isPopping)];
+}
+
+- (BOOL)kai_isPopping {
+    return [[self associatedValueForKey:_cmd] boolValue];
+}
+
+- (nullable UIViewController *)kai_rootViewController {
+    return self.viewControllers.firstObject;
+}
+
 @end
 
 @implementation UINavigationController (KAIFullscreenPopGesture)
@@ -95,7 +156,264 @@
     dispatch_once(&onceToken, ^{
         [self swizzleMethod:@selector(pushViewController:animated:) withMethod:@selector(_kai_pushViewController:animated:)];
         [self swizzleMethod:NSSelectorFromString(@"_updateInteractiveTransition:") withMethod:@selector(_kai_updateInteractiveTransition:)];
+        
+#pragma mark - pushViewController:animated:
+        OverrideImplementation([UINavigationController class], @selector(pushViewController:animated:), ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
+            return ^(UINavigationController *selfObject, UIViewController *viewController, BOOL animated) {
+                
+                BOOL shouldInvokeAppearanceMethod = NO;
+                
+                if (selfObject.isViewLoaded && !selfObject.view.window) {
+                    ZKLog(@"push 的时候 navigationController 不可见（例如上面盖着一个 present vc，或者切到别的 tab，可能导致 vc 的生命周期方法或者 UINavigationControllerDelegate 不会被调用");
+                    if (selfObject.kai_alwaysInvokeAppearanceMethods) {
+                        shouldInvokeAppearanceMethod = YES;
+                    }
+                }
+                
+                if ([selfObject.viewControllers containsObject:viewController]) {
+                    NSAssert(NO, @"UINavigationController (ZKAdd)", @"不允许重复 push 相同的 viewController 实例，会产生 crash。当前 viewController：%@", viewController);
+                    return;
+                }
+                
+                // call super
+                void (^callSuperBlock)(void) = ^void(void) {
+                    void (*originSelectorIMP)(id, SEL, UIViewController *, BOOL);
+                    originSelectorIMP = (void (*)(id, SEL, UIViewController *, BOOL))originalIMPProvider();
+                    originSelectorIMP(selfObject, originCMD, viewController, animated);
+                };
+                
+                BOOL willPushActually = viewController && ![viewController isKindOfClass:UITabBarController.class] && ![selfObject.viewControllers containsObject:viewController];
+                
+                if (!willPushActually) {
+                    NSAssert(NO, @"UINavigationController (ZKAdd)", @"调用了 pushViewController 但实际上没 push 成功，viewController：%@", viewController);
+                    callSuperBlock();
+                    return;
+                }
+                
+                UIViewController *appearingViewController = viewController;
+                NSArray<UIViewController *> *disappearingViewControllers = selfObject.topViewController ? @[selfObject.topViewController] : nil;
+                
+                [selfObject setKai_navigationAction:ZKNavigationActionWillPush animated:animated appearingViewController:appearingViewController disappearingViewControllers:disappearingViewControllers];
+                
+                if (shouldInvokeAppearanceMethod) {
+                    [disappearingViewControllers.lastObject beginAppearanceTransition:NO animated:animated];
+                    [appearingViewController beginAppearanceTransition:YES animated:animated];
+                }
+                
+                callSuperBlock();
+                
+                [selfObject setKai_navigationAction:ZKNavigationActionDidPush animated:animated appearingViewController:appearingViewController disappearingViewControllers:disappearingViewControllers];
+                
+                [selfObject animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+                    [selfObject setKai_navigationAction:ZKNavigationActionPushCompleted animated:animated appearingViewController:appearingViewController disappearingViewControllers:disappearingViewControllers];
+                    [selfObject setKai_navigationAction:ZKNavigationActionUnknow animated:animated appearingViewController:nil disappearingViewControllers:nil];
+                    
+                    if (shouldInvokeAppearanceMethod) {
+                        [disappearingViewControllers.lastObject endAppearanceTransition];
+                        [appearingViewController endAppearanceTransition];
+                    }
+                }];
+            };
+        });
     });
+    
+#pragma mark - popViewControllerAnimated:
+        OverrideImplementation([UINavigationController class], @selector(popViewControllerAnimated:), ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
+            return ^UIViewController *(UINavigationController *selfObject, BOOL animated) {
+                
+                // call super
+                UIViewController *(^callSuperBlock)(void) = ^UIViewController *(void) {
+                    UIViewController *(*originSelectorIMP)(id, SEL, BOOL);
+                    originSelectorIMP = (UIViewController *(*)(id, SEL, BOOL))originalIMPProvider();
+                    UIViewController *result = originSelectorIMP(selfObject, originCMD, animated);
+                    return result;
+                };
+                
+                ZKNavigationAction action = selfObject.kai_navigationAction;
+                if (action != ZKNavigationActionUnknow) {
+                    ZKLog(@"popViewController 时上一次的转场尚未完成，系统会忽略本次 pop，等上一次转场完成后再重新执行 pop, viewControllers = %@", selfObject.viewControllers);
+                }
+                BOOL willPopActually = selfObject.viewControllers.count > 1 && action == ZKNavigationActionUnknow;// 系统文档里说 rootViewController 是不能被 pop 的，当只剩下 rootViewController 时当前方法什么事都不会做
+                
+                if (!willPopActually) {
+                    return callSuperBlock();
+                }
+                
+                BOOL shouldInvokeAppearanceMethod = NO;
+                
+                if (selfObject.isViewLoaded && !selfObject.view.window) {
+                    ZKLog(@"pop 的时候 navigationController 不可见（例如上面盖着一个 present vc，或者切到别的 tab，可能导致 vc 的生命周期方法或者 UINavigationControllerDelegate 不会被调用");
+                    if (selfObject.kai_alwaysInvokeAppearanceMethods) {
+                        shouldInvokeAppearanceMethod = YES;
+                    }
+                }
+                
+                UIViewController *appearingViewController = selfObject.viewControllers[selfObject.viewControllers.count - 2];
+                NSArray<UIViewController *> *disappearingViewControllers = selfObject.viewControllers.lastObject ? @[selfObject.viewControllers.lastObject] : nil;
+                
+                [selfObject setKai_navigationAction:ZKNavigationActionWillPop animated:animated appearingViewController:appearingViewController disappearingViewControllers:disappearingViewControllers];
+                
+                if (shouldInvokeAppearanceMethod) {
+                    [disappearingViewControllers.lastObject beginAppearanceTransition:NO animated:animated];
+                    [appearingViewController beginAppearanceTransition:YES animated:animated];
+                }
+                
+                UIViewController *result = callSuperBlock();
+                
+                // UINavigationController 不可见时 return 值可能为 nil
+                // https://github.com/Tencent/QMUI_iOS/issues/1180
+                NSAssert(result && disappearingViewControllers && disappearingViewControllers.firstObject == result, @"UINavigationController (ZKAdd)", @"ZKCategories 认为 popViewController 会成功，但实际上失败了，result = %@, disappearingViewControllers = %@", result, disappearingViewControllers);
+                disappearingViewControllers = result ? @[result] : disappearingViewControllers;
+                
+                [selfObject setKai_navigationAction:ZKNavigationActionDidPop animated:animated appearingViewController:appearingViewController disappearingViewControllers:disappearingViewControllers];
+                
+                void (^transitionCompletion)(void) = ^void(void) {
+                    [selfObject setKai_navigationAction:ZKNavigationActionPopCompleted animated:animated appearingViewController:appearingViewController disappearingViewControllers:disappearingViewControllers];
+                    [selfObject setKai_navigationAction:ZKNavigationActionUnknow animated:animated appearingViewController:nil disappearingViewControllers:nil];
+                    
+                    if (shouldInvokeAppearanceMethod) {
+                        [disappearingViewControllers.lastObject endAppearanceTransition];
+                        [appearingViewController endAppearanceTransition];
+                    }
+                };
+                if (!result) {
+                    // 如果系统的 pop 没有成功，实际上提交给 animateAlongsideTransition:completion: 的 completion 并不会被执行，所以这里改为手动调用
+                    if (transitionCompletion) {
+                        transitionCompletion();
+                    }
+                } else {
+                    [selfObject animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+                        if (transitionCompletion) {
+                            transitionCompletion();
+                        }
+                    }];
+                }
+                
+                return result;
+            };
+        });
+        
+#pragma mark - popToViewController:animated:
+        OverrideImplementation([UINavigationController class], @selector(popToViewController:animated:), ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
+            return ^NSArray<UIViewController *> *(UINavigationController *selfObject, UIViewController *viewController, BOOL animated) {
+                
+                // call super
+                NSArray<UIViewController *> *(^callSuperBlock)(void) = ^NSArray<UIViewController *> *(void) {
+                    NSArray<UIViewController *> *(*originSelectorIMP)(id, SEL, UIViewController *, BOOL);
+                    originSelectorIMP = (NSArray<UIViewController *> * (*)(id, SEL, UIViewController *, BOOL))originalIMPProvider();
+                    NSArray<UIViewController *> *poppedViewControllers = originSelectorIMP(selfObject, originCMD, viewController, animated);
+                    return poppedViewControllers;
+                };
+                
+                ZKNavigationAction action = selfObject.kai_navigationAction;
+                if (action != ZKNavigationActionUnknow) {
+                    ZKLog(@"popToViewController 时上一次的转场尚未完成，系统会忽略本次 pop，等上一次转场完成后再重新执行 pop, currentViewControllers = %@, viewController = %@", selfObject.viewControllers, viewController);
+                }
+                BOOL willPopActually = selfObject.viewControllers.count > 1 && [selfObject.viewControllers containsObject:viewController] && selfObject.topViewController != viewController && action == ZKNavigationActionUnknow;// 系统文档里说 rootViewController 是不能被 pop 的，当只剩下 rootViewController 时当前方法什么事都不会做
+                
+                if (!willPopActually) {
+                    return callSuperBlock();
+                }
+                
+                UIViewController *appearingViewController = viewController;
+                NSArray<UIViewController *> *disappearingViewControllers = nil;
+                NSUInteger index = [selfObject.viewControllers indexOfObject:appearingViewController];
+                if (index != NSNotFound) {
+                    disappearingViewControllers = [selfObject.viewControllers subarrayWithRange:NSMakeRange(index + 1, selfObject.viewControllers.count - index - 1)];
+                }
+
+                [selfObject setKai_navigationAction:ZKNavigationActionWillPop animated:animated appearingViewController:appearingViewController disappearingViewControllers:disappearingViewControllers];
+                
+                NSArray<UIViewController *> *result = callSuperBlock();
+                
+                NSAssert(!(selfObject.isViewLoaded && selfObject.view.window) || [result isEqualToArray:disappearingViewControllers], @"UINavigationController (ZKAdd)", @"ZKCategories 计算得到的 popToViewController 结果和系统的不一致");
+                disappearingViewControllers = result ?: disappearingViewControllers;
+                
+                [selfObject setKai_navigationAction:ZKNavigationActionDidPop animated:animated appearingViewController:appearingViewController disappearingViewControllers:disappearingViewControllers];
+                
+                [selfObject animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+                    [selfObject setKai_navigationAction:ZKNavigationActionPopCompleted animated:animated appearingViewController:appearingViewController disappearingViewControllers:disappearingViewControllers];
+                    [selfObject setKai_navigationAction:ZKNavigationActionUnknow animated:animated appearingViewController:nil disappearingViewControllers:nil];
+                }];
+                
+                return result;
+            };
+        });
+
+#pragma mark - popToRootViewControllerAnimated:
+        OverrideImplementation([UINavigationController class], @selector(popToRootViewControllerAnimated:), ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
+            return ^NSArray<UIViewController *> *(UINavigationController *selfObject, BOOL animated) {
+                
+                // call super
+                NSArray<UIViewController *> *(^callSuperBlock)(void) = ^NSArray<UIViewController *> *(void) {
+                    NSArray<UIViewController *> *(*originSelectorIMP)(id, SEL, BOOL);
+                    originSelectorIMP = (NSArray<UIViewController *> * (*)(id, SEL, BOOL))originalIMPProvider();
+                    NSArray<UIViewController *> *result = originSelectorIMP(selfObject, originCMD, animated);
+                    return result;
+                };
+                
+                ZKNavigationAction action = selfObject.kai_navigationAction;
+                if (action != ZKNavigationActionUnknow) {
+                    ZKLog(@"popToRootViewController 时上一次的转场尚未完成，系统会忽略本次 pop，等上一次转场完成后再重新执行 pop, viewControllers = %@", selfObject.viewControllers);
+                }
+                BOOL willPopActually = selfObject.viewControllers.count > 1 && action == ZKNavigationActionUnknow;
+                
+                if (!willPopActually) {
+                    return callSuperBlock();
+                }
+                
+                UIViewController *appearingViewController = selfObject.kai_rootViewController;
+                NSArray<UIViewController *> *disappearingViewControllers = [selfObject.viewControllers subarrayWithRange:NSMakeRange(1, selfObject.viewControllers.count - 1)];
+                
+                [selfObject setKai_navigationAction:ZKNavigationActionWillPop animated:animated appearingViewController:appearingViewController disappearingViewControllers:disappearingViewControllers];
+                
+                NSArray<UIViewController *> *result = callSuperBlock();
+                
+                // UINavigationController 不可见时 return 值可能为 nil
+                // https://github.com/Tencent/QMUI_iOS/issues/1180
+                NSAssert(!(selfObject.isViewLoaded && selfObject.view.window) || [result isEqualToArray:disappearingViewControllers], @"UINavigationController (ZKAdd)", @"ZKCategories 计算得到的 popToRootViewController 结果和系统的不一致");
+                disappearingViewControllers = result ?: disappearingViewControllers;
+                
+                [selfObject setKai_navigationAction:ZKNavigationActionDidPop animated:animated appearingViewController:appearingViewController disappearingViewControllers:disappearingViewControllers];
+                
+                [selfObject animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+                    [selfObject setKai_navigationAction:ZKNavigationActionPopCompleted animated:animated appearingViewController:appearingViewController disappearingViewControllers:disappearingViewControllers];
+                    [selfObject setKai_navigationAction:ZKNavigationActionUnknow animated:animated appearingViewController:nil disappearingViewControllers:nil];
+                }];
+                
+                return result;
+            };
+        });
+
+#pragma mark - setViewControllers:animated:
+        OverrideImplementation([UINavigationController class], @selector(setViewControllers:animated:), ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
+            return ^(UINavigationController *selfObject, NSArray<UIViewController *> *viewControllers, BOOL animated) {
+                
+                if (viewControllers.count != [NSSet setWithArray:viewControllers].count) {
+                    NSAssert(NO, @"UINavigationController (ZKAdd)", @"setViewControllers 数组里不允许出现重复元素：%@", viewControllers);
+                    viewControllers = [NSOrderedSet orderedSetWithArray:viewControllers].array;// 这里会保留该 vc 第一次出现的位置不变
+                }
+
+                UIViewController *appearingViewController = selfObject.topViewController != viewControllers.lastObject ? viewControllers.lastObject : nil;// setViewControllers 执行前后 topViewController 没有变化，则赋值为 nil，表示没有任何界面有“重新显示”，这个 nil 的值也用于在 ZKNavigationController 里实现 viewControllerKeepingAppearWhenSetViewControllersWithAnimated:
+                NSMutableArray<UIViewController *> *disappearingViewControllers = selfObject.viewControllers.mutableCopy;
+                [disappearingViewControllers removeObjectsInArray:viewControllers];
+                disappearingViewControllers = disappearingViewControllers.count ? disappearingViewControllers : nil;
+
+                [selfObject setKai_navigationAction:ZKNavigationActionWillSet animated:animated appearingViewController:appearingViewController disappearingViewControllers:disappearingViewControllers];
+
+                // call super
+                void (*originSelectorIMP)(id, SEL, NSArray<UIViewController *> *, BOOL);
+                originSelectorIMP = (void (*)(id, SEL, NSArray<UIViewController *> *, BOOL))originalIMPProvider();
+                originSelectorIMP(selfObject, originCMD, viewControllers, animated);
+
+                [selfObject setKai_navigationAction:ZKNavigationActionDidSet animated:animated appearingViewController:appearingViewController disappearingViewControllers:disappearingViewControllers];
+
+                [selfObject animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+                    [selfObject setKai_navigationAction:ZKNavigationActionSetCompleted animated:animated appearingViewController:appearingViewController disappearingViewControllers:disappearingViewControllers];
+                    [selfObject setKai_navigationAction:ZKNavigationActionUnknow animated:animated appearingViewController:nil disappearingViewControllers:nil];
+                }];
+            };
+        });
 }
 
 - (void)_kai_pushViewController:(UIViewController *)viewController animated:(BOOL)animated {

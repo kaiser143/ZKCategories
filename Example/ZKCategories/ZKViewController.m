@@ -70,13 +70,15 @@
     button.top     = 200;
     button.size    = CGSizeMake(80, 50);
     button.centerX = self.view.centerX;
+    button.preventsRepeatedTouchUpInsideEvent = YES;
     kai_view_border_radius(button, 8.f, 1, [UIColor colorWithHexString:@"#eeeeee"]);
     [self.view addSubview:button];
     [button addBlockForControlEvents:UIControlEventTouchUpInside
                                block:^(__kindof UIControl *_Nonnull sender) {
                                    @strongify(self);
-                                   ZKKVOViewController *controller = [[ZKKVOViewController alloc] init];
-                                   [self kai_pushViewController:controller];
+//                                   ZKKVOViewController *controller = [[ZKKVOViewController alloc] init];
+//                                   [self kai_pushViewController:controller];
+        NSLog(@"test", nil);
                                }];
 
     i++;

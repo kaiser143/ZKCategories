@@ -23,6 +23,7 @@
     #import <ZKCategories/NSDecimalNumber+ZKAdd.h>
     #import <ZKCategories/NSArray+ZKAdd.h>
     #import <ZKCategories/NSError+ZKAdd.h>
+    #import <ZKCategories/NSMethodSignature+ZKAdd.h>
     #import <ZKCategories/UIBarButtonItem+ZKAdd.h>
     #import <ZKCategories/UIViewController+ZKAdd.h>
     #import <ZKCategories/UIImagePickerController+ZKAdd.h>
@@ -66,6 +67,7 @@
     #import "NSDecimalNumber+ZKAdd.h"
     #import "NSArray+ZKAdd.h"
     #import "NSError+ZKAdd.h"
+    #import "NSMethodSignature+ZKAdd.h"
     #import "UIBarButtonItem+ZKAdd.h"
     #import "UIViewController+ZKAdd.h"
     #import "UIImagePickerController+ZKAdd.h"

@@ -67,11 +67,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)removeAllBlocksForControlEvents:(UIControlEvents)controlEvents;
 
-/// 设置点击时间间隔，默认时间间隔0.5
-@property (nonatomic, assign) NSTimeInterval acceptEventInterval;
+/*!
+ *  @brief
+ *  UIControl 被放在 UIScrollView 上时的点击体验。系统默认行为下，UIControl 在 UIScrollView 上会有300毫秒的延迟，当你快速点击某个 UIControl 时，将不会看到 setHighlighted 的效果。
+ *  当置为 YES，会使用自己的一套计算方式去判断触发 setHighlighted 的时机，从而保证既不影响 UIScrollView 的滚动，又能让 UIControl 在被快速点击时也能立马看到 setHighlighted 的效果。
+ */
+@property(nonatomic, assign) BOOL automaticallyAdjustTouchHighlightedInScrollView;
 
-/// 是否忽略时间间隔
-@property (nonatomic, assign, getter=isIgnore) BOOL ignore; // Default to NO
+/*!
+ *  @brief  当置为 YES 时，连续的快速点击只有第一次会触发
+ *  @warning 不能与 @c automaticallyAdjustTouchHighlightedInScrollView 同时开启。
+ */
+@property(nonatomic, assign) BOOL preventsRepeatedTouchUpInsideEvent;
 
 @end
 

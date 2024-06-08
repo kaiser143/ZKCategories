@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ZKCategories'
-  s.version          = "0.3.21"
+  s.version          = "0.4.0"
   s.summary          = 'A short description of ZKCategories.'
 
 # This description is used to generate tags and improve search results.
@@ -29,7 +29,7 @@ TODO: Add long description of the pod here.
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.requires_arc = true
-  s.ios.deployment_target = '7.0'
+  s.ios.deployment_target = '9.0'
   s.default_subspec = 'Core'
 
   s.subspec 'Core' do |ss|

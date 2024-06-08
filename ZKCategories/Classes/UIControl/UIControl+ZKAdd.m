@@ -38,8 +38,8 @@
 
 @interface UIControl ()
 
-/// 是否执行点UI方法，YES: 不允许点击  NO:允许点击
-@property (nonatomic, assign, getter=isIgnoreEvent) BOOL ignoreEvent;
+@property (nonatomic,assign) BOOL canSetHighlighted;
+@property (nonatomic,assign) NSInteger touchEndCount;
 
 @end
 
@@ -47,6 +47,10 @@
 
 + (void)load {
     [self swizzleMethod:@selector(sendAction:to:forEvent:) withMethod:@selector(kai_sendAction:to:forEvent:)];
+    [self swizzleMethod:@selector(touchesBegan:withEvent:) withMethod:@selector(kai_touchesBegan:withEvent:)];
+    [self swizzleMethod:@selector(touchesMoved:withEvent:) withMethod:@selector(kai_touchesMoved:withEvent:)];
+    [self swizzleMethod:@selector(touchesEnded:withEvent:) withMethod:@selector(kai_touchesEnded:withEvent:)];
+    [self swizzleMethod:@selector(touchesCancelled:withEvent:) withMethod:@selector(kai_touchesCancelled:withEvent:)];
 }
 
 - (void)removeAllTargets {
@@ -115,54 +119,121 @@
     return targets;
 }
 
-- (void)setAcceptEventInterval:(NSTimeInterval)timeInterval {
-    [self setAssociateValue:@(timeInterval) withKey:@selector(acceptEventInterval)];
+- (void)setAutomaticallyAdjustTouchHighlightedInScrollView:(BOOL)automaticallyAdjustTouchHighlightedInScrollView {
+    [self setAssociateValue:@(automaticallyAdjustTouchHighlightedInScrollView) withKey:@selector(automaticallyAdjustTouchHighlightedInScrollView)];
 }
 
-- (NSTimeInterval)acceptEventInterval {
-    NSNumber *interval = [self associatedValueForKey:_cmd];
-    return interval ? interval.doubleValue : 0.5;
-}
-
-- (void)setIgnore:(BOOL)ignore {
-    [self setAssociateValue:@(ignore) withKey:@selector(isIgnore)];
-}
-
-- (BOOL)isIgnore {
-    NSNumber *value = [self associatedValueForKey:_cmd];
-    value = value ?: @NO;
-    return [value boolValue];
-}
-
-- (void)setIgnoreEvent:(BOOL)ignoreEvent {
-    [self setAssociateValue:@(ignoreEvent) withKey:@selector(isIgnoreEvent)];
-}
-
-- (BOOL)isIgnoreEvent {
+- (BOOL)automaticallyAdjustTouchHighlightedInScrollView {
     return [[self associatedValueForKey:_cmd] boolValue];
 }
 
-- (void)kai_sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event {
-    if (self.isIgnore) {
-        [self kai_sendAction:action to:target forEvent:event];
-        return;
-    }
+- (void)setPreventsRepeatedTouchUpInsideEvent:(BOOL)preventsRepeatedTouchUpInsideEvent {
+    [self setAssociateValue:@(preventsRepeatedTouchUpInsideEvent) withKey:@selector(preventsRepeatedTouchUpInsideEvent)];
+}
 
-    NSString *controlName = NSStringFromClass(self.class);
-    if ([controlName isEqualToString:@"UIButton"] || [controlName isEqualToString:@"UINavigationButton"]) {
-        if (self.isIgnoreEvent) {
-            return;
-        } else if (self.acceptEventInterval > 0) {
-            [self performSelector:@selector(resetState) withObject:nil afterDelay:self.acceptEventInterval];
+- (BOOL)preventsRepeatedTouchUpInsideEvent {
+    return [[self associatedValueForKey:_cmd] boolValue];
+}
+
+- (void)setCanSetHighlighted:(BOOL)canSetHighlighted {
+    [self setAssociateValue:@(canSetHighlighted) withKey:@selector(canSetHighlighted)];
+}
+
+- (BOOL)canSetHighlighted {
+    return [[self associatedValueForKey:_cmd] boolValue];
+}
+
+- (void)setTouchEndCount:(NSInteger)touchEndCount {
+    [self setAssociateValue:@(touchEndCount) withKey:@selector(touchEndCount)];
+}
+
+- (NSInteger)touchEndCount {
+    return [[self associatedValueForKey:_cmd] integerValue];
+}
+
+//@property (nonatomic,assign) BOOL canSetHighlighted;
+//@property (nonatomic,assign) NSInteger touchEndCount;
+
+- (void)kai_sendAction:(SEL)action to:(id)target forEvent:(UIEvent *)event {
+    if (self.preventsRepeatedTouchUpInsideEvent) {
+        NSArray<NSString *> *actions = [self actionsForTarget:target forControlEvent:UIControlEventTouchUpInside];
+        if (!actions) {
+            // iOS 10 UIBarButtonItem 里的 UINavigationButton 点击事件用的是 UIControlEventPrimaryActionTriggered
+            actions = [self actionsForTarget:target forControlEvent:UIControlEventPrimaryActionTriggered];
+        }
+        if ([actions containsObject:NSStringFromSelector(action)]) {
+            UITouch *touch = event.allTouches.anyObject;
+            if (touch.tapCount > 1) {
+                return;
+            }
         }
     }
-    // 此处 methodA和methodB方法IMP互换了，实际上执行 sendAction；所以不会死循环
-    self.ignoreEvent = YES;
+
     [self kai_sendAction:action to:target forEvent:event];
 }
 
-- (void)resetState {
-    self.ignoreEvent = NO;
+// 参考 QMUI
+// 这段代码需要以一个独立的方法存在，因为一旦有坑，外面可以直接通过runtime调用这个方法
+// 但，不要开放到.h文件里，理论上外面不应该用到它
+- (void)sendActionsForAllTouchEventsIfCan {
+    self.touchEndCount += 1;
+    if (self.touchEndCount == 1) {
+        [self sendActionsForControlEvents:UIControlEventAllTouchEvents];
+    }
+}
+
+- (void)kai_touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    self.touchEndCount = 0;
+    if (self.automaticallyAdjustTouchHighlightedInScrollView) {
+        self.canSetHighlighted = YES;
+        [self kai_touchesBegan:touches withEvent:event];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (self.canSetHighlighted) {
+                [self setHighlighted:YES];
+            }
+        });
+    } else {
+        [self kai_touchesBegan:touches withEvent:event];
+    }
+}
+
+- (void)kai_touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    if (self.automaticallyAdjustTouchHighlightedInScrollView) {
+        self.canSetHighlighted = NO;
+    }
+    
+    [self kai_touchesMoved:touches withEvent:event];
+}
+
+- (void)kai_touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    if (self.automaticallyAdjustTouchHighlightedInScrollView) {
+        self.canSetHighlighted = NO;
+        if (self.touchInside) {
+            [self setHighlighted:YES];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.02 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self sendActionsForAllTouchEventsIfCan];
+                if (self.highlighted) {
+                    [self setHighlighted:NO];
+                }
+            });
+        } else {
+            [self setHighlighted:NO];
+        }
+        return;
+    }
+    [self kai_touchesEnded:touches withEvent:event];
+}
+
+- (void)kai_touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    if (self.automaticallyAdjustTouchHighlightedInScrollView) {
+        self.canSetHighlighted = NO;
+        [self kai_touchesCancelled:touches withEvent:event];
+        if (self.highlighted) {
+            [self setHighlighted:NO];
+        }
+        return;
+    }
+    [self kai_touchesCancelled:touches withEvent:event];
 }
 
 @end

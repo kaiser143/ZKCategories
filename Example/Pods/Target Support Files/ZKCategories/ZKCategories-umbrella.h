@@ -16,6 +16,7 @@
 #import "NSDate+ZKAdd.h"
 #import "NSDictionary+ZKAdd.h"
 #import "NSError+ZKAdd.h"
+#import "NSMethodSignature+ZKAdd.h"
 #import "NSNotificationCenter+ZKAdd.h"
 #import "NSDecimalNumber+ZKAdd.h"
 #import "NSNumber+ZKAdd.h"

@@ -191,6 +191,27 @@ static inline dispatch_time_t dTimeDelay(NSTimeInterval time) {
     return [self associatedValueForKey:_cmd];
 }
 
+- (BOOL)kai_hasOverrideMethod:(SEL)selector ofSuperclass:(Class)superclass {
+    return [NSObject kai_hasOverrideMethod:selector forClass:self.class ofSuperclass:superclass];
+}
+
++ (BOOL)kai_hasOverrideMethod:(SEL)selector forClass:(Class)aClass ofSuperclass:(Class)superclass {
+    if (![aClass isSubclassOfClass:superclass]) {
+        return NO;
+    }
+    
+    if (![superclass instancesRespondToSelector:selector]) {
+        return NO;
+    }
+    
+    Method superclassMethod = class_getInstanceMethod(superclass, selector);
+    Method instanceMethod = class_getInstanceMethod(aClass, selector);
+    if (!instanceMethod || instanceMethod == superclassMethod) {
+        return NO;
+    }
+    return YES;
+}
+
 @end
 
 @implementation NSObject (ZKRuntime)

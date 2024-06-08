@@ -377,6 +377,23 @@
     }
 }
 
+- (void)animateAlongsideTransition:(void (^ __nullable)(id <UIViewControllerTransitionCoordinatorContext>context))animation
+                        completion:(void (^ __nullable)(id <UIViewControllerTransitionCoordinatorContext>context))completion {
+    if (self.transitionCoordinator) {
+        BOOL animationQueuedToRun = [self.transitionCoordinator animateAlongsideTransition:animation completion:completion];
+        // 某些情况下传给 animateAlongsideTransition 的 animation 不会被执行，这时候要自己手动调用一下
+        // 但即便如此，completion 也会在动画结束后才被调用，因此这样写不会导致 completion 比 animation block 先调用
+        // 某些情况包含：从 B 手势返回 A 的过程中，取消手势，animation 不会被调用
+        // https://github.com/Tencent/QMUI_iOS/issues/692
+        if (!animationQueuedToRun && animation) {
+            animation(nil);
+        }
+    } else {
+        if (animation) animation(nil);
+        if (completion) completion(nil);
+    }
+}
+
 @end
 
 @implementation UINavigationController (__KAINavigationBackItemInjection)
@@ -413,6 +430,38 @@
 
 - (void)setKai_prefersTableViewDeselectRowWhenViewWillAppear:(UITableView *)kai_prefersTableViewDeselectRowWhenViewWillAppear {
     [self setAssociateWeakValue:kai_prefersTableViewDeselectRowWhenViewWillAppear withKey:@selector(kai_prefersTableViewDeselectRowWhenViewWillAppear)];
+}
+
+@end
+
+@implementation UIViewController (ZKRuntime)
+
+- (BOOL)kai_hasOverrideUIKitMethod:(SEL)selector {
+    // 排序依照 Xcode Interface Builder 里的控件排序，但保证子类在父类前面
+    NSMutableArray<Class> *viewControllerSuperclasses = [[NSMutableArray alloc] initWithObjects:
+                                               [UIImagePickerController class],
+                                               [UINavigationController class],
+                                               [UITableViewController class],
+                                               [UICollectionViewController class],
+                                               [UITabBarController class],
+                                               [UISplitViewController class],
+                                               [UIPageViewController class],
+                                               [UIViewController class],
+                                               nil];
+    
+    if (NSClassFromString(@"UIAlertController")) {
+        [viewControllerSuperclasses addObject:[UIAlertController class]];
+    }
+    if (NSClassFromString(@"UISearchController")) {
+        [viewControllerSuperclasses addObject:[UISearchController class]];
+    }
+    for (NSInteger i = 0, l = viewControllerSuperclasses.count; i < l; i++) {
+        Class superclass = viewControllerSuperclasses[i];
+        if ([self kai_hasOverrideMethod:selector ofSuperclass:superclass]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 @end

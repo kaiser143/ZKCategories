@@ -11,27 +11,27 @@
 
 @implementation UIButton (ZKAdd)
 
-- (UIEdgeInsets)touchAreaInsets {
-    //    return [objc_getAssociatedObject(self, @selector(touchAreaInsets)) UIEdgeInsetsValue];
+- (UIEdgeInsets)outsideEdge {
     return [[self associatedValueForKey:_cmd] UIEdgeInsetsValue];
 }
 
-/**
- *  @brief  设置按钮额外热区
- */
-- (void)setTouchAreaInsets:(UIEdgeInsets)touchAreaInsets {
+
+- (void)setOutsideEdge:(UIEdgeInsets)touchAreaInsets {
     NSValue *value = [NSValue valueWithUIEdgeInsets:touchAreaInsets];
-    [self setAssociateValue:value withKey:@selector(touchAreaInsets)];
+    [self setAssociateValue:value withKey:@selector(outsideEdge)];
 }
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
-    UIEdgeInsets touchAreaInsets = self.touchAreaInsets;
-    CGRect bounds                = self.bounds;
-    bounds                       = CGRectMake(bounds.origin.x - touchAreaInsets.left,
-                        bounds.origin.y - touchAreaInsets.top,
-                        bounds.size.width + touchAreaInsets.left + touchAreaInsets.right,
-                        bounds.size.height + touchAreaInsets.top + touchAreaInsets.bottom);
-    return CGRectContainsPoint(bounds, point);
+    if (!UIEdgeInsetsEqualToEdgeInsets(self.outsideEdge, UIEdgeInsetsZero)
+        && self.alpha > 0.01
+        && !self.hidden
+        && !CGRectIsEmpty(self.frame)) {
+        CGRect rect = UIEdgeInsetsInsetRect(self.bounds, self.outsideEdge);
+        BOOL result = CGRectContainsPoint(rect, point);
+        return result;
+    }
+    
+    return [super pointInside:point withEvent:event];
 }
 
 - (void)kai_setTitle:(NSString *)title {
