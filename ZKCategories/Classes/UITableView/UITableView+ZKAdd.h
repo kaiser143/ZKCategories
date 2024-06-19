@@ -10,6 +10,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// cell 在当前 section 里的位置，注意判断时要用 (var & xxx) == xxx 的方式
+typedef NS_OPTIONS(NSInteger, KAITableViewCellPosition) {
+    KAITableViewCellPositionNone               = 0, // 默认
+    KAITableViewCellPositionFirstInSection     = 1 << 0,
+    KAITableViewCellPositionMiddleInSection    = 1 << 1,
+    KAITableViewCellPositionLastInSection      = 1 << 2,
+    KAITableViewCellPositionSingleInSection    = KAITableViewCellPositionFirstInSection | KAITableViewCellPositionLastInSection,
+};
+
 @interface UITableView (ZKAdd)
 
 /**
@@ -198,6 +207,31 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 隐藏多余的线
 - (void)extraCellLineHidden;
+
+/**
+ * 根据给定的indexPath，配合dataSource得到对应的cell在当前section中所处的位置
+ * @param indexPath cell所在的indexPath
+ * @return 给定indexPath对应的cell在当前section中所处的位置
+ */
+- (KAITableViewCellPosition)positionForRowAtIndexPath:(nullable NSIndexPath *)indexPath;
+
+@end
+
+
+/**
+ 系统在 iOS 13 新增了 UITableViewStyleInsetGrouped 类型用于展示往内缩进、cell 带圆角的列表，而这个 Category 让 iOS 12 及以下的系统也能支持这种样式，iOS 13 也可以通过这个 Category 修改左右的缩进值和 cell 的圆角。
+ 使用方式：
+ 对于 UITableView，通过 -[UITableView initWithStyle:UITableViewStyleInsetGrouped] 初始化 tableView。
+ 对于 UITableViewController，通过 -[UITableViewController initWithStyle:UITableViewStyleInsetGrouped] 初始化 tableViewController。
+ 可通过 @c kai_insetGroupedCornerRadius @c kai_insetGroupedHorizontalInset 统一修改圆角值和左右缩进，如果要为不同 indexPath 指定不同圆角值，可在 -[UITableViewDelegate tableView:willDisplayCell:forRowAtIndexPath:] 内修改 cell.layer.cornerRadius 的值。
+ */
+@interface UITableView (ZKAdd_InsetGrouped)
+
+/// 当使用 UITableViewStyleInsetGrouped 时可通过这个属性修改 cell 的圆角值，默认值为 10，也即 iOS 13 系统默认表现。如果要为不同 indexPath 指定不同圆角值，可在 -[UITableViewDelegate tableView:willDisplayCell:forRowAtIndexPath:] 内修改 cell.layer.cornerRadius 的值。
+@property(nonatomic, assign) CGFloat kai_insetGroupedCornerRadius UI_APPEARANCE_SELECTOR;
+
+/// 当使用 UITableViewStyleInsetGrouped 时可通过这个属性修改列表的左右缩进值，默认值为 20，也即 iOS 13 系统默认表现。
+@property(nonatomic, assign) CGFloat kai_insetGroupedHorizontalInset UI_APPEARANCE_SELECTOR;
 
 @end
 

@@ -734,5 +734,22 @@
     return [uti conformsToUniversalTypeIdentifier:@"public.html"];
 }
 
++ (NSString *)stringByConcat:(id)firstArgv, ... {
+    if (firstArgv) {
+        NSMutableString *result = [[NSMutableString alloc] initWithFormat:@"%@", firstArgv];
+        
+        va_list argumentList;
+        va_start(argumentList, firstArgv);
+        id argument;
+        while ((argument = va_arg(argumentList, id))) {
+            [result appendFormat:@"%@", argument];
+        }
+        va_end(argumentList);
+        
+        return [result copy];
+    }
+    return nil;
+}
+
 @end
 

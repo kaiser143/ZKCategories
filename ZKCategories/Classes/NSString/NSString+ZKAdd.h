@@ -551,6 +551,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (BOOL)isHTMLFileName;
 
+
+/// 把参数列表拼接成一个字符串并返回，相当于用另一种语法来代替 [NSString stringWithFormat:]
++ (NSString *)stringByConcat:(id)firstArgv, ...;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -32,4 +32,16 @@
     return object;
 }
 
+- (UITableView *)tableView {
+    return [self valueForKey:@"_tableView"];
+}
+
+- (void)setCellPosition:(KAITableViewCellPosition)cellPosition {
+    [self setAssociateValue:@(cellPosition) withKey:@selector(cellPosition)];
+}
+
+- (KAITableViewCellPosition)cellPosition {
+    return [[self associatedValueForKey:_cmd] integerValue];
+}
+
 @end
