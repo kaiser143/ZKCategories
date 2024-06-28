@@ -14,6 +14,157 @@
 
 #define URL_MATCHING_PATTERN @"(?i)\\b((?:https?://|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}/)(?:[^\\s()<>]+|\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\))+(?:\\(([^\\s()<>]+|(\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:'\".,<>?«»“”‘’]))"
 
+@interface _KAIString : NSObject
+
++ (nullable id)substring:(id)aString avoidBreakingUpCharacterSequencesFromIndex:(NSUInteger)index lessValue:(BOOL)lessValue countingNonASCIICharacterAsTwo:(BOOL)countingNonASCIICharacterAsTwo;
++ (nullable id)substring:(id)aString avoidBreakingUpCharacterSequencesToIndex:(NSUInteger)index lessValue:(BOOL)lessValue countingNonASCIICharacterAsTwo:(BOOL)countingNonASCIICharacterAsTwo;
++ (nullable id)substring:(id)aString avoidBreakingUpCharacterSequencesWithRange:(NSRange)range lessValue:(BOOL)lessValue countingNonASCIICharacterAsTwo:(BOOL)countingNonASCIICharacterAsTwo;
++ (nullable id)string:(id)aString avoidBreakingUpCharacterSequencesByRemoveCharacterAtIndex:(NSUInteger)index;
+
+@end
+
+@implementation _KAIString
+
++ (NSUInteger)transformIndexToDefaultMode:(NSUInteger)index inString:(NSString *)string {
+    CGFloat strlength = 0.f;
+    NSUInteger i = 0;
+    for (i = 0; i < string.length; i++) {
+        unichar character = [string characterAtIndex:i];
+        if (isascii(character)) {
+            strlength += 1;
+        } else {
+            strlength += 2;
+        }
+        if (strlength >= index + 1) return i;
+    }
+    return 0;
+}
+
++ (NSRange)transformRangeToDefaultMode:(NSRange)range lessValue:(BOOL)lessValue inString:(NSString *)string {
+    CGFloat strlength = 0.f;
+    NSRange resultRange = NSMakeRange(NSNotFound, 0);
+    NSUInteger i = 0;
+    for (i = 0; i < string.length; i++) {
+        unichar character = [string characterAtIndex:i];
+        if (isascii(character)) {
+            strlength += 1;
+        } else {
+            strlength += 2;
+        }
+        if ((lessValue && isascii(character) && strlength >= range.location + 1)
+            || (lessValue && !isascii(character) && strlength > range.location + 1)
+            || (!lessValue && strlength >= range.location + 1)) {
+            if (resultRange.location == NSNotFound) {
+                resultRange.location = i;
+            }
+            
+            if (range.length > 0 && strlength >= NSMaxRange(range)) {
+                resultRange.length = i - resultRange.location;
+                if (lessValue && (strlength == NSMaxRange(range))) {
+                    resultRange.length += 1;// 尽量不包含字符的，只有在精准等于时才+1，否则就不算这最后一个字符
+                } else if (!lessValue) {
+                    resultRange.length += 1;// 只要是最大能力包含字符的，一进来就+1
+                }
+                return resultRange;
+            }
+        }
+    }
+    return resultRange;
+}
+
++ (NSRange)downRoundRangeOfComposedCharacterSequences:(NSRange)range inString:(NSString *)string {
+    if (range.length == 0) {
+        return range;
+    }
+    NSRange systemRange = [string rangeOfComposedCharacterSequencesForRange:range];// 系统总是往大取值
+    if (NSEqualRanges(range, systemRange)) {
+        return range;
+    }
+    NSRange result = systemRange;
+    if (range.location > systemRange.location) {
+        // 意味着传进来的 range 起点刚好在某个 Character Sequence 中间，所以要把这个 Character Sequence 遗弃掉，从它后面的字符开始算
+        NSRange beginRange = [string rangeOfComposedCharacterSequenceAtIndex:range.location];
+        result.location = NSMaxRange(beginRange);
+        result.length -= beginRange.length;
+    }
+    if (NSMaxRange(range) < NSMaxRange(systemRange)) {
+        // 意味着传进来的 range 终点刚好在某个 Character Sequence 中间，所以要把这个 Character Sequence 遗弃掉，只取到它前面的字符
+        NSRange endRange = [string rangeOfComposedCharacterSequenceAtIndex:NSMaxRange(range) - 1];
+        
+        // 如果参数传进来的 range 刚好落在一个 emoji 的中间，就会导致前面减完 beginRange 这里又减掉一个 endRange，出现负数（注意这里 length 是 NSUInteger），所以做个保护，可以用 👨‍👩‍👧‍👦 测试，这个 emoji 长度是 11
+        if (result.length >= endRange.length) {
+            result.length = result.length - endRange.length;
+        } else {
+            result.length = 0;
+        }
+    }
+    return result;
+}
+
++ (id)substring:(id)aString avoidBreakingUpCharacterSequencesFromIndex:(NSUInteger)index lessValue:(BOOL)lessValue countingNonASCIICharacterAsTwo:(BOOL)countingNonASCIICharacterAsTwo {
+    NSAttributedString *attributedString = [aString isKindOfClass:NSAttributedString.class] ? (NSAttributedString *)aString : nil;
+    NSString *string = attributedString.string ?: (NSString *)aString;
+    NSUInteger length = countingNonASCIICharacterAsTwo ? string.lengthWhenCountingNonASCIICharacterAsTwo : string.length;
+    if (index >= length) return @"";
+    index = countingNonASCIICharacterAsTwo ? [self transformIndexToDefaultMode:index inString:string] : index;// 实际计算都按照系统默认的 length 规则来
+    NSRange range = [string rangeOfComposedCharacterSequenceAtIndex:index];
+    index = range.length == 1 ? index : (lessValue ? NSMaxRange(range) : range.location);
+    if (attributedString) {
+        NSAttributedString *resultString = [attributedString attributedSubstringFromRange:NSMakeRange(index, string.length - index)];
+        return resultString;
+    }
+    NSString *resultString = [string substringFromIndex:index];
+    return resultString;
+}
+
++ (id)substring:(id)aString avoidBreakingUpCharacterSequencesToIndex:(NSUInteger)index lessValue:(BOOL)lessValue countingNonASCIICharacterAsTwo:(BOOL)countingNonASCIICharacterAsTwo {
+    NSAttributedString *attributedString = [aString isKindOfClass:NSAttributedString.class] ? (NSAttributedString *)aString : nil;
+    NSString *string = attributedString.string ?: (NSString *)aString;
+    NSUInteger length = countingNonASCIICharacterAsTwo ? string.lengthWhenCountingNonASCIICharacterAsTwo : string.length;
+    if (index == 0 || index > length) return @"";
+    if (index == length) return [aString copy];// 根据系统 -[NSString substringToIndex:] 的注释，在 index 等于 length 时会返回 self 的 copy。
+    index = countingNonASCIICharacterAsTwo ? [self transformIndexToDefaultMode:index inString:string] : index;// 实际计算都按照系统默认的 length 规则来
+    NSRange range = [string rangeOfComposedCharacterSequenceAtIndex:index];
+    index = range.length == 1 ? index : (lessValue ? range.location : NSMaxRange(range));
+    if (attributedString) {
+        NSAttributedString *resultString = [attributedString attributedSubstringFromRange:NSMakeRange(0, index)];
+        return resultString;
+    }
+    NSString *resultString = [string substringToIndex:index];
+    return resultString;
+}
+
++ (id)substring:(id)aString avoidBreakingUpCharacterSequencesWithRange:(NSRange)range lessValue:(BOOL)lessValue countingNonASCIICharacterAsTwo:(BOOL)countingNonASCIICharacterAsTwo {
+    NSAttributedString *attributedString = [aString isKindOfClass:NSAttributedString.class] ? (NSAttributedString *)aString : nil;
+    NSString *string = attributedString.string ?: (NSString *)aString;
+    NSUInteger length = countingNonASCIICharacterAsTwo ? string.lengthWhenCountingNonASCIICharacterAsTwo : string.length;
+    if (NSMaxRange(range) > length) return @"";
+    range = countingNonASCIICharacterAsTwo ? [self transformRangeToDefaultMode:range lessValue:lessValue inString:string] : range;// 实际计算都按照系统默认的 length 规则来
+    NSRange characterSequencesRange = lessValue ? [self downRoundRangeOfComposedCharacterSequences:range inString:string] : [string rangeOfComposedCharacterSequencesForRange:range];
+    if (attributedString) {
+        NSAttributedString *resultString = [attributedString attributedSubstringFromRange:characterSequencesRange];
+        return resultString;
+    }
+    NSString *resultString = [string substringWithRange:characterSequencesRange];
+    return resultString;
+}
+
++ (id)string:(id)aString avoidBreakingUpCharacterSequencesByRemoveCharacterAtIndex:(NSUInteger)index {
+    NSAttributedString *attributedString = [aString isKindOfClass:NSAttributedString.class] ? (NSAttributedString *)aString : nil;
+    NSString *string = attributedString.string ?: (NSString *)aString;
+    NSRange rangeForRemove = [string rangeOfComposedCharacterSequenceAtIndex:index];
+    if (attributedString) {
+        NSMutableAttributedString *resultString = attributedString.mutableCopy;
+        [resultString replaceCharactersInRange:rangeForRemove withString:@""];
+        return resultString.copy;
+    }
+    NSString *resultString = [string stringByReplacingCharactersInRange:rangeForRemove withString:@""];
+    return resultString;
+}
+
+
+@end
+
 @implementation NSString (ZKAdd)
 
 - (BOOL)isValidURL {
@@ -659,6 +810,14 @@
 
 - (NSMutableAttributedString *)mutableAttributedStringWithAttributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attrs {
     return [[NSMutableAttributedString alloc] initWithString:self attributes:attrs];
+}
+
+- (instancetype)substringAvoidBreakingUpCharacterSequencesWithRange:(NSRange)range lessValue:(BOOL)lessValue countingNonASCIICharacterAsTwo:(BOOL)countingNonASCIICharacterAsTwo {
+    return [_KAIString substring:self avoidBreakingUpCharacterSequencesWithRange:range lessValue:lessValue countingNonASCIICharacterAsTwo:countingNonASCIICharacterAsTwo];
+}
+
+- (instancetype)substringAvoidBreakingUpCharacterSequencesWithRange:(NSRange)range {
+    return [self substringAvoidBreakingUpCharacterSequencesWithRange:range lessValue:YES countingNonASCIICharacterAsTwo:NO];
 }
 
 @end

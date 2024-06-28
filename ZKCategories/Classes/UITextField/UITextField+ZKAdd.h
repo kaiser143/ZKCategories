@@ -48,6 +48,17 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)setSelectedRange:(NSRange)range;
 
+/**
+ *  convert UITextRange to NSRange, for example, [self qmui_convertNSRangeFromUITextRange:self.markedTextRange]
+ */
+- (NSRange)convertNSRangeFromUITextRange:(UITextRange *)textRange;
+
+/**
+ *  convert NSRange to UITextRange
+ *  @return return nil if range is invalidate.
+ */
+- (nullable UITextRange *)convertUITextRangeFromNSRange:(NSRange)range;
+
 @end
 
 NS_ASSUME_NONNULL_END

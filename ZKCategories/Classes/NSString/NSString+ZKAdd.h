@@ -492,6 +492,25 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSMutableAttributedString *)mutableAttributedString;
 - (NSMutableAttributedString *)mutableAttributedStringWithAttributes:(nullable NSDictionary<NSAttributedStringKey, id> *)attrs;
 
+/**
+ *  将字符串里指定 range 的子字符串裁剪出来，会避免将 emoji 等 "character sequences" 拆散（一个 emoji 表情占用1-4个长度的字符）。
+ *
+ *  例如对于字符串“😊😞”，它的长度为4，在 lessValue 模式下，裁剪 (0, 1) 得到的是空字符串，裁剪 (0, 2) 得到的是“😊”。
+ *  在非 lessValue 模式下，裁剪 (0, 1) 或 (0, 2)，得到的都是“😊”。
+ *
+ *  @param range 要裁剪的文字位置
+ *  @param lessValue 裁剪时若遇到“character sequences”，是向下取整还是向上取整（系统的 rangeOfComposedCharacterSequencesForRange: 会尽量把给定 range 里包含的所有 character sequences 都包含在内，也即 lessValue = NO）。
+ *  @param countingNonASCIICharacterAsTwo 是否按照 英文 1 个字符长度、中文 2 个字符长度的方式来裁剪
+ *  @return 裁剪完的字符
+ */
+- (nullable instancetype)substringAvoidBreakingUpCharacterSequencesWithRange:(NSRange)range lessValue:(BOOL)lessValue countingNonASCIICharacterAsTwo:(BOOL)countingNonASCIICharacterAsTwo;
+
+/**
+ *  相当于 `substringAvoidBreakingUpCharacterSequencesWithRange:lessValue:YES` countingNonASCIICharacterAsTwo:NO
+ *  @see substringAvoidBreakingUpCharacterSequencesWithRange:lessValue:countingNonASCIICharacterAsTwo:
+ */
+- (nullable instancetype)substringAvoidBreakingUpCharacterSequencesWithRange:(NSRange)range;
+
 @end
 
 @interface NSString (ZKUTI)

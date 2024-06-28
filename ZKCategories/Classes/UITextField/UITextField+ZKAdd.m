@@ -42,6 +42,22 @@ ZKSYNTH_DUMMY_CLASS(UITextField_ZKAdd)
     [self setSelectedTextRange:selectionRange];
 }
 
+- (NSRange)convertNSRangeFromUITextRange:(UITextRange *)textRange {
+    NSInteger location = [self offsetFromPosition:self.beginningOfDocument toPosition:textRange.start];
+    NSInteger length = [self offsetFromPosition:textRange.start toPosition:textRange.end];
+    return NSMakeRange(location, length);
+}
+
+- (UITextRange *)convertUITextRangeFromNSRange:(NSRange)range {
+    if (range.location == NSNotFound || NSMaxRange(range) > self.text.length) {
+        return nil;
+    }
+    UITextPosition *beginning = self.beginningOfDocument;
+    UITextPosition *startPosition = [self positionFromPosition:beginning offset:range.location];
+    UITextPosition *endPosition = [self positionFromPosition:beginning offset:NSMaxRange(range)];
+    return [self textRangeFromPosition:startPosition toPosition:endPosition];
+}
+
 #pragma mark UITextField Delegate methods
 
 + (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
