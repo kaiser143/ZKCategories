@@ -176,6 +176,19 @@
     return (strlength + 1) / 2;
 }
 
+- (NSUInteger)lengthWhenCountingNonASCIICharacterAsTwo {
+    NSUInteger length = 0;
+    for (NSUInteger i = 0, l = self.length; i < l; i++) {
+        unichar character = [self characterAtIndex:i];
+        if (isascii(character)) {
+            length += 1;
+        } else {
+            length += 2;
+        }
+    }
+    return length;
+}
+
 - (NSString *)md2String {
     return [[self dataUsingEncoding:NSUTF8StringEncoding] md2String];
 }
