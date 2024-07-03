@@ -108,7 +108,8 @@
     CGSize size       = self.bounds.size;
     CGFloat scale     = [UIScreen mainScreen].scale;
     CGSize resultSize = CGSizeMake(radius, radius);
-
+    if (size.width <= 0 || size.height <= 0) return ;
+    
     UIGraphicsBeginImageContextWithOptions(size, NO, scale);
     CGContextRef currentContext = UIGraphicsGetCurrentContext();
     if (nil == currentContext) {
