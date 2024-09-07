@@ -143,7 +143,7 @@ static void *zoomEnabledKey = &zoomEnabledKey;
     }
 }
 
-- (void)qmui_scrollCaretVisibleAnimated:(BOOL)animated {
+- (void)scrollCaretVisibleAnimated:(BOOL)animated {
     if (CGRectIsEmpty(self.bounds)) return;
     
     CGRect caretRect = [self caretRectForPosition:self.selectedTextRange.end];
