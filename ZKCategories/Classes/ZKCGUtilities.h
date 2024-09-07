@@ -93,11 +93,6 @@ static inline CGAffineTransform CGAffineTransformMakeSkew(CGFloat x, CGFloat y){
     return transform;
 }
 
-/// Negates/inverts a UIEdgeInsets.
-static inline UIEdgeInsets UIEdgeInsetsInvert(UIEdgeInsets insets) {
-    return UIEdgeInsetsMake(-insets.top, -insets.left, -insets.bottom, -insets.right);
-}
-
 /// Convert CALayer's gravity string to UIViewContentMode.
 UIViewContentMode ZKCAGravityToUIViewContentMode(NSString *gravity);
 
@@ -153,6 +148,10 @@ static inline CGFloat CGPointGetDistanceToRect(CGPoint p, CGRect r) {
 }
 
 
+/// 检测某个数值如果为 NaN 则将其转换为 0，避免布局中出现 crash
+CG_INLINE CGFloat CGFloatSafeValue(CGFloat value) {
+    return isnan(value) ? 0 : value;
+}
 
 /// Convert point to pixel.
 static inline CGFloat CGFloatToPixel(CGFloat value) {
@@ -163,8 +162,6 @@ static inline CGFloat CGFloatToPixel(CGFloat value) {
 static inline CGFloat CGFloatFromPixel(CGFloat value) {
     return value / ZKScreenScale();
 }
-
-
 
 /// floor point value for pixel-aligned
 static inline CGFloat CGFloatPixelFloor(CGFloat value) {
@@ -189,8 +186,6 @@ static inline CGFloat CGFloatPixelHalf(CGFloat value) {
     CGFloat scale = ZKScreenScale();
     return (floor(value * scale) + 0.5) / scale;
 }
-
-
 
 /// floor point value for pixel-aligned
 static inline CGPoint CGPointPixelFloor(CGPoint point) {
@@ -250,9 +245,32 @@ static inline CGSize CGSizePixelHalf(CGSize size) {
                        (floor(size.height * scale) + 0.5) / scale);
 }
 
+/// 判断一个 CGRect 是否存在 NaN
+CG_INLINE BOOL CGRectIsNaN(CGRect rect) {
+    return isnan(rect.origin.x) || isnan(rect.origin.y) || isnan(rect.size.width) || isnan(rect.size.height);
+}
 
+/// 系统提供的 CGRectIsInfinite 接口只能判断 CGRectInfinite 的情况，而该接口可以用于判断 INFINITY 的值
+CG_INLINE BOOL CGRectIsInf(CGRect rect) {
+    return isinf(rect.origin.x) || isinf(rect.origin.y) || isinf(rect.size.width) || isinf(rect.size.height);
+}
 
-/// floor point value for pixel-aligned
+/// 判断一个 CGSize 是否为空（宽或高为0）
+CG_INLINE BOOL CGSizeIsEmpty(CGSize size) {
+    return size.width <= 0 || size.height <= 0;
+}
+
+/// 判断一个 CGRect 是否合法（例如不带无穷大的值、不带非法数字）
+CG_INLINE BOOL CGRectIsValidated(CGRect rect) {
+    return !CGRectIsNull(rect) && !CGRectIsInfinite(rect) && !CGRectIsNaN(rect) && !CGRectIsInf(rect);
+}
+
+/// 检测某个 CGRect 如果存在数值为 NaN 的则将其转换为 0，避免布局中出现 crash
+CG_INLINE CGRect CGRectSafeValue(CGRect rect) {
+    return CGRectMake(CGFloatSafeValue(CGRectGetMinX(rect)), CGFloatSafeValue(CGRectGetMinY(rect)), CGFloatSafeValue(CGRectGetWidth(rect)), CGFloatSafeValue(CGRectGetHeight(rect)));
+}
+
+/// 创建一个像素对齐的CGRect
 static inline CGRect CGRectPixelFloor(CGRect rect) {
     CGPoint origin = CGPointPixelCeil(rect.origin);
     CGPoint corner = CGPointPixelFloor(CGPointMake(rect.origin.x + rect.size.width,
@@ -287,7 +305,19 @@ static inline CGRect CGRectPixelHalf(CGRect rect) {
     return CGRectMake(origin.x, origin.y, corner.x - origin.x, corner.y - origin.y);
 }
 
+/// 将两个UIEdgeInsets合并为一个
+CG_INLINE UIEdgeInsets UIEdgeInsetsConcat(UIEdgeInsets insets1, UIEdgeInsets insets2) {
+    insets1.top += insets2.top;
+    insets1.left += insets2.left;
+    insets1.bottom += insets2.bottom;
+    insets1.right += insets2.right;
+    return insets1;
+}
 
+/// Negates/inverts a UIEdgeInsets.
+static inline UIEdgeInsets UIEdgeInsetsInvert(UIEdgeInsets insets) {
+    return UIEdgeInsetsMake(-insets.top, -insets.left, -insets.bottom, -insets.right);
+}
 
 /// floor UIEdgeInset for pixel-aligned
 static inline UIEdgeInsets UIEdgeInsetPixelFloor(UIEdgeInsets insets) {

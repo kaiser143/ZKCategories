@@ -36,6 +36,12 @@ typedef NS_ENUM(NSUInteger, ZKScrollDirection) {
 - (ZKScrollDirection)scrollDirection;
 
 /**
+ * 判断当前的scrollView内容是否足够滚动
+ * @warning 避免与<i>scrollEnabled</i>混淆
+ */
+- (BOOL)canScroll;
+
+/**
  Scroll content to top with animation.
  */
 - (void)scrollToTop;

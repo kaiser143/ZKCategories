@@ -37,6 +37,29 @@ NS_ASSUME_NONNULL_BEGIN
 // 用于计算textview输入情况下的字符数，解决实现限制字符数时，计算不准的问题
 - (NSInteger)getInputLengthWithText:(NSString *)text;
 
+/**
+ *  convert UITextRange to NSRange, for example, [self convertNSRangeFromUITextRange:self.markedTextRange]
+ */
+- (NSRange)convertNSRangeFromUITextRange:(UITextRange *)textRange;
+
+/**
+ *  convert NSRange to UITextRange
+ *  @return return nil if range is invalidate.
+ */
+- (nullable UITextRange *)convertUITextRangeFromNSRange:(NSRange)range;
+
+/**
+ [UITextView scrollRangeToVisible:] 并不会考虑 textContainerInset.bottom，所以使用这个方法来代替
+
+ @param range 要滚动到的文字区域，如果 range 非法则什么都不做
+ */
+- (void)scrollRangeToVisible:(NSRange)range;
+
+/**
+ * 将光标滚到可视区域
+ */
+- (void)scrollCaretVisibleAnimated:(BOOL)animated;
+
 /*
  * @code
  - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {

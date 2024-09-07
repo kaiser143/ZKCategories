@@ -7,6 +7,8 @@
 
 #import "UITextView+ZKAdd.h"
 #import "NSObject+ZKAdd.h"
+#import "ZKCGUtilities.h"
+#import "UIScrollView+ZKAdd.h"
 
 static void *minFontSizeKey = &minFontSizeKey;
 static void *maxFontSizeKey = &maxFontSizeKey;
@@ -100,6 +102,80 @@ static void *zoomEnabledKey = &zoomEnabledKey;
 
 - (BOOL)isZoomEnabled {
     return [[self associatedValueForKey:zoomEnabledKey] boolValue];
+}
+
+- (NSRange)convertNSRangeFromUITextRange:(UITextRange *)textRange {
+    NSInteger location = [self offsetFromPosition:self.beginningOfDocument toPosition:textRange.start];
+    NSInteger length = [self offsetFromPosition:textRange.start toPosition:textRange.end];
+    return NSMakeRange(location, length);
+}
+
+- (UITextRange *)convertUITextRangeFromNSRange:(NSRange)range {
+    if (range.location == NSNotFound || NSMaxRange(range) > self.text.length) {
+        return nil;
+    }
+    UITextPosition *beginning = self.beginningOfDocument;
+    UITextPosition *startPosition = [self positionFromPosition:beginning offset:range.location];
+    UITextPosition *endPosition = [self positionFromPosition:beginning offset:NSMaxRange(range)];
+    return [self textRangeFromPosition:startPosition toPosition:endPosition];
+}
+
+- (void)scrollRangeToVisible:(NSRange)range {
+    if (CGRectIsEmpty(self.bounds)) return;
+    
+    UITextRange *textRange = [self convertUITextRangeFromNSRange:range];
+    if (!textRange) return;
+    
+    NSArray<UITextSelectionRect *> *selectionRects = [self selectionRectsForRange:textRange];
+    CGRect rect = CGRectZero;
+    for (UITextSelectionRect *selectionRect in selectionRects) {
+        if (!CGRectIsEmpty(selectionRect.rect)) {
+            if (CGRectIsEmpty(rect)) {
+                rect = selectionRect.rect;
+            } else {
+                rect = CGRectUnion(rect, selectionRect.rect);
+            }
+        }
+    }
+    if (!CGRectIsEmpty(rect)) {
+        rect = [self convertRect:rect fromView:self.textInputView];
+        [self _scrollRectToVisible:rect animated:YES];
+    }
+}
+
+- (void)qmui_scrollCaretVisibleAnimated:(BOOL)animated {
+    if (CGRectIsEmpty(self.bounds)) return;
+    
+    CGRect caretRect = [self caretRectForPosition:self.selectedTextRange.end];
+    [self _scrollRectToVisible:caretRect animated:animated];
+}
+
+- (void)_scrollRectToVisible:(CGRect)rect animated:(BOOL)animated {
+    // scrollEnabled 为 NO 时可能产生不合法的 rect 值 https://github.com/Tencent/QMUI_iOS/issues/205
+    if (!CGRectIsValidated(rect)) {
+        return;
+    }
+    
+    CGFloat contentOffsetY = self.contentOffset.y;
+    
+    BOOL canScroll = self.canScroll;
+    if (canScroll) {
+        if (CGRectGetMinY(rect) < contentOffsetY + self.textContainerInset.top) {
+            // 光标在可视区域上方，往下滚动
+            contentOffsetY = CGRectGetMinY(rect) - self.textContainerInset.top - self.adjustedContentInset.top;
+        } else if (CGRectGetMaxY(rect) > contentOffsetY + CGRectGetHeight(self.bounds) - self.textContainerInset.bottom - self.adjustedContentInset.bottom) {
+            // 光标在可视区域下方，往上滚动
+            contentOffsetY = CGRectGetMaxY(rect) - CGRectGetHeight(self.bounds) + self.textContainerInset.bottom + self.adjustedContentInset.bottom;
+        } else {
+            // 光标在可视区域，不用滚动
+        }
+        CGFloat contentOffsetWhenScrollToTop = -self.adjustedContentInset.top;
+        CGFloat contentOffsetWhenScrollToBottom = self.contentSize.height + self.adjustedContentInset.bottom - CGRectGetHeight(self.bounds);
+        contentOffsetY = MAX(MIN(contentOffsetY, contentOffsetWhenScrollToBottom), contentOffsetWhenScrollToTop);
+    } else {
+        contentOffsetY = -self.adjustedContentInset.top;
+    }
+    [self setContentOffset:CGPointMake(self.contentOffset.x, contentOffsetY) animated:animated];
 }
 
 @end

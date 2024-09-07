@@ -223,6 +223,16 @@ static inline UIViewAnimationOptions UIViewAnimationCurveToAnimationOptions(UIVi
     [self setContentOffset:offset animated:animated];
 }
 
+- (BOOL)canScroll {
+    // 没有高度就不用算了，肯定不可滚动，这里只是做个保护
+    if (CGSizeIsEmpty(self.bounds.size)) {
+        return NO;
+    }
+    BOOL canVerticalScroll = self.contentSize.height + (self.adjustedContentInset.top + self.adjustedContentInset.bottom) > CGRectGetHeight(self.bounds);
+    BOOL canHorizontalScoll = self.contentSize.width + (self.adjustedContentInset.left + self.adjustedContentInset.right) > CGRectGetWidth(self.bounds);
+    return canVerticalScroll || canHorizontalScoll;
+}
+
 #pragma mark -
 #pragma mark :. keyboardControl
 
