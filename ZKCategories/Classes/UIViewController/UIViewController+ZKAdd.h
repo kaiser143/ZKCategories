@@ -10,15 +10,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSUInteger, ZKKeyboardStatus) {
-    ZKKeyboardStatusDidHide,
-    ZKKeyboardStatusWillShow,
-    ZKKeyboardStatusDidShow,
-    ZKKeyboardStatusWillHide
-};
-
-typedef void (^ZKKeyboardFrameAnimationBlock)(CGRect keyboardFrame);
-
 @interface UIViewController (ZKAdd)
 
 @property (nonatomic, assign, readonly) UIInterfaceOrientation interfaceOrientation;
@@ -77,21 +68,6 @@ typedef void (^ZKKeyboardFrameAnimationBlock)(CGRect keyboardFrame);
 @interface UIViewController (ZKInteractiveTransitionTableViewDeselection)
 
 @property (nonatomic, weak) UITableView *kai_prefersTableViewDeselectRowWhenViewWillAppear;
-
-@end
-
-
-@interface UIViewController (ZKKeyboard)
-
-@property (nonatomic, readonly) ZKKeyboardStatus keyboardStatus;
-
-#pragma mark - Keyboard
-
-- (void)setKeyboardWillShowAnimationBlock:(ZKKeyboardFrameAnimationBlock)willShowBlock;
-- (void)setKeyboardWillHideAnimationBlock:(ZKKeyboardFrameAnimationBlock)willHideBlock;
-
-- (void)setKeyboardDidShowActionBlock:(ZKKeyboardFrameAnimationBlock)didShowBlock;
-- (void)setKeyboardDidHideActionBlock:(ZKKeyboardFrameAnimationBlock)didHideBlock;
 
 @end
 

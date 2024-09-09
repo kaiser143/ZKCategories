@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <objc/runtime.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -191,6 +192,15 @@ typedef void (^ZKNSObjectDelayBlock)(BOOL cancel);
  @param unarchiver NSKeyedUnarchiver clsas or any class inherited.
  */
 - (nullable id)deepCopyWithArchiver:(Class)archiver unarchiver:(Class)unarchiver;
+
+/**
+ 使用 block 遍历指定 class 的所有成员变量（也即 _xxx 那种），不包含 property 对应的 _property 成员变量
+ 
+ @param aClass 指定的 class
+ @param includingInherited 是否要包含由继承链带过来的 ivars
+ @param block  用于遍历的 block
+ */
++ (void)kai_enumrateIvarsOfClass:(Class)aClass includingInherited:(BOOL)includingInherited usingBlock:(void (^)(Ivar ivar, NSString *ivarDescription))block;
 
 @end
 

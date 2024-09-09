@@ -103,7 +103,7 @@ typedef NS_ENUM(NSUInteger, ZKScrollDirection) {
 - (void)setPageX:(CGFloat)page animated:(BOOL)animated;
 
 #pragma mark -
-#pragma mark :. CCkeyboardControl
+#pragma mark :. ZKkeyboardControl
 
 typedef void (^KeyboardWillBeDismissedBlock)(void);
 typedef void (^KeyboardDidHideBlock)(void);

@@ -53,6 +53,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign, readonly, getter=isRunningTestFlightBeta) BOOL runningTestFlightBeta;
 
+/**
+ 在 iPad 分屏模式下可获得实际运行区域的窗口大小，如需适配 iPad 分屏，建议用这个方法来代替 [UIScreen mainScreen].bounds.size
+ @return 应用运行的窗口大小
+ */
+@property(class, nonatomic, readonly) CGSize applicationSize;
 
 /**
  Increments the number of active network operations

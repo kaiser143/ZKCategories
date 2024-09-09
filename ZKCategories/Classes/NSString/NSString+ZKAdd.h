@@ -511,6 +511,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable instancetype)substringAvoidBreakingUpCharacterSequencesWithRange:(NSRange)range;
 
+/// 把当前文本的第一个字符改为大写，其他的字符保持不变，例如 backgroundView.kai_capitalizedString -> BackgroundView（系统的 capitalizedString 会变成 Backgroundview）
+@property(nullable, readonly, copy) NSString *kai_capitalizedString;
+
 @end
 
 @interface NSString (ZKUTI)

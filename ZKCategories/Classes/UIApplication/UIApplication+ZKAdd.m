@@ -227,4 +227,24 @@ static NSUInteger __internalOperationCount = 0;
 #pragma clang diagnostic pop
 }
 
++ (CGSize)applicationSize {
+    /// applicationFrame 在 iPad 下返回的 size 要比 window 实际的 size 小，这个差值体现在 origin 上，所以用 origin + size 修正得到正确的大小。
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    CGRect applicationFrame = [UIScreen mainScreen].applicationFrame;
+#pragma clang diagnostic pop
+    
+    CGSize applicationSize = CGSizeMake(applicationFrame.size.width + applicationFrame.origin.x, applicationFrame.size.height + applicationFrame.origin.y);
+    if (CGSizeEqualToSize(applicationSize, CGSizeZero)) {
+        // 实测 MacCatalystApp 通过 [UIScreen mainScreen].applicationFrame 拿不到大小，这里做一下保护
+        UIWindow *window = UIApplication.sharedApplication.delegate.window;
+        if (window) {
+            applicationSize = window.bounds.size;
+        } else {
+            applicationSize = UIWindow.new.bounds.size;
+        }
+    }
+    return applicationSize;
+}
+
 @end

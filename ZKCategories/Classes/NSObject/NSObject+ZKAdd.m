@@ -9,6 +9,7 @@
 #import "NSObject+ZKAdd.h"
 #import "NSDate+ZKAdd.h"
 #import "NSArray+ZKAdd.h"
+#import "NSString+ZKAdd.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import "ZKCategoriesMacro.h"
@@ -511,6 +512,68 @@ static char DTRuntimeDeallocBlocks;
         ZKLog(@"%@", exception);
     }
     return obj;
+}
+
+- (void)kai_enumrateIvarsIncludingInherited:(BOOL)includingInherited usingBlock:(void (^)(Ivar ivar, NSString *ivarDescription))block {
+    NSMutableArray<NSString *> *ivarDescriptions = [NSMutableArray new];
+    BeginIgnorePerformSelectorLeaksWarning
+    NSString *ivarList = [self performSelector:NSSelectorFromString(@"_ivarDescription")];
+    EndIgnorePerformSelectorLeaksWarning
+    NSError *error;
+    NSRegularExpression *reg = [NSRegularExpression regularExpressionWithPattern:[NSString stringWithFormat:@"in %@:(.*?)((?=in \\w+:)|$)", NSStringFromClass(self.class)] options:NSRegularExpressionDotMatchesLineSeparators error:&error];
+    if (!error) {
+        NSArray<NSTextCheckingResult *> *result = [reg matchesInString:ivarList options:NSMatchingReportCompletion range:NSMakeRange(0, ivarList.length)];
+        [result enumerateObjectsUsingBlock:^(NSTextCheckingResult * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSString *ivars = [ivarList substringWithRange:[obj rangeAtIndex:1]];
+            [ivars enumerateLinesUsingBlock:^(NSString * _Nonnull line, BOOL * _Nonnull stop) {
+                if (![line hasPrefix:@"\t\t"]) {// 有些 struct 类型的变量，会把 struct 的成员也缩进打出来，所以用这种方式过滤掉
+                    line = line.stringByTrim;
+                    if (line.length > 2) {// 过滤掉空行或者 struct 结尾的"}"
+                        NSRange range = [line rangeOfString:@":"];
+                        if (range.location != NSNotFound)// 有些"unknow type"的变量不会显示指针地址（例如 UIView->_viewFlags）
+                            line = [line substringToIndex:range.location];// 去掉指针地址
+                        NSUInteger typeStart = [line rangeOfString:@" ("].location;
+                        line = [NSString stringWithFormat:@"%@ %@", [line substringWithRange:NSMakeRange(typeStart + 2, line.length - 1 - (typeStart + 2))], [line substringToIndex:typeStart]];// 交换变量类型和变量名的位置，变量类型在前，变量名在后，空格隔开
+                        [ivarDescriptions addObject:line];
+                    }
+                }
+            }];
+        }];
+    }
+    
+    unsigned int outCount = 0;
+    Ivar *ivars = class_copyIvarList(self.class, &outCount);
+    for (unsigned int i = 0; i < outCount; i ++) {
+        Ivar ivar = ivars[i];
+        NSString *ivarName = [NSString stringWithFormat:@"%s", ivar_getName(ivar)];
+        for (NSString *desc in ivarDescriptions) {
+            if ([desc hasSuffix:ivarName]) {
+                block(ivar, desc);
+                break;
+            }
+        }
+    }
+    free(ivars);
+    
+    if (includingInherited) {
+        Class superclass = self.superclass;
+        if (superclass) {
+            [NSObject kai_enumrateIvarsOfClass:superclass includingInherited:includingInherited usingBlock:block];
+        }
+    }
+}
+
++ (void)kai_enumrateIvarsOfClass:(Class)aClass includingInherited:(BOOL)includingInherited usingBlock:(void (^)(Ivar, NSString *))block {
+    if (!block) return;
+    NSObject *obj = nil;
+    if ([aClass isSubclassOfClass:[UICollectionView class]]) {
+        obj = [[aClass alloc] initWithFrame:CGRectZero collectionViewLayout:UICollectionViewFlowLayout.new];
+    } else if ([aClass isSubclassOfClass:[UIApplication class]]) {
+        obj = UIApplication.sharedApplication;
+    } else {
+        obj = [aClass new];
+    }
+    [obj kai_enumrateIvarsIncludingInherited:includingInherited usingBlock:block];
 }
 
 + (NSDictionary *)dictionaryWithProperty:(objc_property_t)property {

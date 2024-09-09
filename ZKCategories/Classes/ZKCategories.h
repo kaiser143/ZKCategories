@@ -55,6 +55,7 @@
     #import <ZKCategories/UILabel+ZKAdd.h>
     #import <ZKCategories/NSData+ZKAdd.h>
     #import <ZKCategories/CALayer+ZKAdd.h>
+    #import <ZKCategories/ZKHelper.h>
 #else
 
     #import "NSObject+ZKAdd.h"
@@ -99,6 +100,7 @@
     #import "UILabel+ZKAdd.h"
     #import "NSData+ZKAdd.h"
     #import "CALayer+ZKAdd.h"
+    #import "ZKHelper.h"
 
 #endif  /* __has_include */
 
