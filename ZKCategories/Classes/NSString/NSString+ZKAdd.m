@@ -289,7 +289,7 @@
 
 - (NSUInteger)indexOf:(NSString *)substring {
     NSRange range = [self rangeOfString:substring options:NSCaseInsensitiveSearch];
-    return range.location == NSNotFound ? -1 : range.location;
+    return range.location;
 }
 
 - (NSArray *)split:(NSString *)token {
