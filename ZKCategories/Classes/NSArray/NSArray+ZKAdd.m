@@ -12,8 +12,8 @@
 
 - (NSArray *)filter:(BOOL (^)(id object))condition {
     return [self filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id _Nonnull evaluatedObject, NSDictionary<NSString *, id> *_Nullable bindings) {
-                     return condition(evaluatedObject);
-                 }]];
+        return condition(evaluatedObject);
+    }]];
 }
 
 - (NSArray *)ignore:(id)value {
@@ -37,8 +37,8 @@
     NSMutableArray *results = [NSMutableArray new];
     [self each:^(NSArray *array) {
         [results addObject:[array map:^id(id obj, NSUInteger idx) {
-                     return block(obj, idx);
-                 }]];
+            return block(obj, idx);
+        }]];
     }];
     return results;
 }
@@ -47,8 +47,8 @@
     NSMutableArray *results = [NSMutableArray new];
     [self each:^(id object) {
         [results addObject:[[object valueForKey:key] map:^id(id obj, NSUInteger idx) {
-                     return block(obj, idx);
-                 }]];
+            return block(obj, idx);
+        }]];
     }];
     return results;
 }

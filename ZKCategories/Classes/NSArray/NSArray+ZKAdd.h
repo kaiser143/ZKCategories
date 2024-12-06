@@ -25,22 +25,22 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * performs the operation to each element
  */
-- (void)each:(void (^)(ValueType object))operation;
+- (void)each:(void (^ _Nonnull)(ValueType object))operation;
 
 /**
  * @return new NSArray from the result of the block performed to each element
  */
-- (NSArray *)map:(id (^)(ValueType obj, NSUInteger idx))block;
+- (NSArray *)map:(id (^ _Nonnull)(ValueType obj, NSUInteger idx))block;
 
 /**
- * @return new NSArray by flatting it and performing a map to each element(格式化二维数组中的元素)
+ * @return new NSArray by flatting it and performing a map to each element(把二维数组中的对象 经过block 转换为另一个对象)
  */
-- (NSArray *)flattenMap:(id (^)(id obj, NSUInteger idx))block;
+- (NSArray *)flattenMap:(id (^ _Nonnull)(ValueType obj, NSUInteger idx))block;
 
 /**
  * @return new NSArray by flatting it with the key and performing a map to each element
  */
-- (NSArray *)flattenMap:(NSString *)key block:(id (^)(ValueType obj, NSUInteger idx))block;
+- (NSArray *)flattenMap:(NSString *_Nonnull)key block:(id (^ _Nonnull)(ValueType obj, NSUInteger idx))block;
 
 // 参与运算的属性必须是NSNumber对象
 - (NSNumber *)sum;
@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSUInteger)countKeyPath:(NSString *)keypath;
 - (NSArray *)flatten:(NSString *)keypath;
 
-- (ValueType)objectPassingTest:(BOOL (^)(ValueType))block;
+- (ValueType)objectPassingTest:(BOOL (^ _Nonnull)(ValueType))block;
 
 /*!
  *  @brief  排序
