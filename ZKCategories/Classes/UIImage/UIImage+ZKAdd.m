@@ -632,7 +632,7 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
     return [self imageByBlurRadius:0 tintColor:nil tintMode:0 saturation:0 maskImage:nil];
 }
 
-- (UIImage *)imageByBlurSoft {
+- (UIImage *)imageByBlurSof {
     return [self imageByBlurRadius:60 tintColor:[UIColor colorWithWhite:0.84 alpha:0.36] tintMode:kCGBlendModeNormal saturation:1.8 maskImage:nil];
 }
 

@@ -278,19 +278,19 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable UIImage *)imageByRotate:(CGFloat)radians fitSize:(BOOL)fitSize NS_SWIFT_NAME(rotate(radians:fitSize:));
 
 /**
- Returns a new image rotated counterclockwise by a quarter‑turn (90°). ⤺
+ Returns a new image rotated counterclockwise by a quarter‑turn (90°). ⤺ （逆时针旋转90度）
  The width and height will be exchanged.
  */
 - (nullable UIImage *)imageByRotateLeft90 NS_SWIFT_NAME(rotateLeft90());
 
 /**
- Returns a new image rotated clockwise by a quarter‑turn (90°). ⤼
+ Returns a new image rotated clockwise by a quarter‑turn (90°). ⤼ (顺时针旋转90度)
  The width and height will be exchanged.
  */
 - (nullable UIImage *)imageByRotateRight90 NS_SWIFT_NAME(rotateRight90());
 
 /**
- Returns a new image rotated 180° . ↻
+ Returns a new image rotated 180° . ↻ (旋转180度)
  */
 - (nullable UIImage *)imageByRotate180 NS_SWIFT_NAME(rotate180());
 
