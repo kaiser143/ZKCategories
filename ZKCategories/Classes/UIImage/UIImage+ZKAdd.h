@@ -24,6 +24,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSData *)compressBySizeWithMaxLength:(NSUInteger)maxLength;
 
+/*!
+ *    @brief    获取当前图片的均色，原理是将图片绘制到1px*1px的矩形内，再从当前区域取色，得到图片的均色。
+ *    @link http://www.bobbygeorgescu.com/2011/08/finding-average-color-of-uiimage/ @/link
+ *
+ *    @return 代表图片平均颜色的UIColor对象
+ */
+- (UIColor *)averageColor;
+
 #pragma mark - Create image
 ///=============================================================================
 /// @name Create image
@@ -310,7 +318,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///=============================================================================
 
 /**
- Tint the image in alpha channel with the given color.
+ 用给定的颜色在alpha通道中对图像进行着色。
  
  @param color  The color.
  */

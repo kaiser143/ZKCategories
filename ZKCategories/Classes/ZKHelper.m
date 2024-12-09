@@ -7,6 +7,7 @@
 //
 
 #import "ZKHelper.h"
+#import "ZKCategoriesMacro.h"
 
 @interface ZKHelper ()
 
@@ -49,6 +50,19 @@ static NSMutableSet<NSString *> *executedIdentifiers;
         }
         return NO;
     }
+}
+
+@end
+
+@implementation ZKHelper (UIGraphic)
+
++ (BOOL)inspectContextIfInvalidated:(CGContextRef)context {
+    if (!context) {
+        ZKAssertNil(NO, @"ZKHelper (UIGraphic)", @"ZKCategories CGPostError, %@:%d %s, 非法的context：%@\n%@", [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, __PRETTY_FUNCTION__, context, [NSThread callStackSymbols]);
+        
+        return NO;
+    }
+    return YES;
 }
 
 @end

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <sys/time.h>
 #import <pthread.h>
+#import "ZKHelper.h"
 
 #ifndef ZKCategoriesMacro_h
 #define ZKCategoriesMacro_h
@@ -594,6 +595,9 @@ ZK_EXTERN_C_BEGIN
 
 #define BeginIgnorePerformSelectorLeaksWarning BeginIgnoreClangWarning(-Warc-performSelector-leaks)
 #define EndIgnorePerformSelectorLeaksWarning EndIgnoreClangWarning
+
+
+#define CGContextInspectContext(context, returnValue) if(![ZKHelper inspectContextIfInvalidated:context]){return returnValue;}
 
 /**
  Convert CFRange to NSRange

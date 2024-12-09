@@ -28,4 +28,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+
+@interface ZKHelper (UIGraphic)
+
+/// context是否合法
++ (BOOL)inspectContextIfInvalidated:(CGContextRef)context;
+
+@end
+
 NS_ASSUME_NONNULL_END
