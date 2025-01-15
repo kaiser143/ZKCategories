@@ -42,7 +42,7 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
 /*!
  *    @abstract    for Debug
  */
-+ (UIColor *)randomColor;
++ (UIColor *)randomColor NS_SWIFT_NAME(random());
 
 #pragma mark - Create a UIColor Object
 ///=============================================================================
@@ -149,7 +149,7 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
  
  @return        An UIColor object from string, or nil if an error occurs.
  */
-+ (nullable UIColor *)colorWithHexString:(NSString *)string;
++ (nullable UIColor *)colorWithHexString:(NSString *)string NS_SWIFT_NAME(hex(_:));
 
 /**
  Creates and returns a color object by add new color.
