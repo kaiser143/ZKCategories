@@ -16,12 +16,12 @@ NS_ASSUME_NONNULL_BEGIN
  *    @brief    初始化方法，设置圆角幅度和圆角位置
  *    @param    rectCorner    需要设置圆角的位置
  */
-- (instancetype)initWithCornerRadius:(CGFloat)radius rectCorner:(UIRectCorner)rectCorner;
+- (instancetype)initWithCornerRadius:(CGFloat)radius rectCorner:(UIRectCorner)rectCorner NS_SWIFT_NAME(init(cornerRadius:rectCorner:));
 
 /*!
  *    @brief    初始化方法，生成圆形ImageView
  */
-- (instancetype)initWithRoundingRectImageView;
+- (instancetype)initWithRoundingRectImageView NS_SWIFT_NAME(init(roundingRect:));
 
 /*!
  *    @brief    设置成圆角
