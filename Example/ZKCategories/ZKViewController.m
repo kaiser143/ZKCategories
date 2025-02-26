@@ -23,6 +23,8 @@
     // Do any additional setup after loading the view, typically from a nib.
 
     self.view.backgroundColor = UIColor.whiteColor;
+    
+    __unused UIBlurEffect *effect = [UIBlurEffect kai_effectWithBlurRadius:30];
 
     NSNumber *number = @(13145678.1415926);
     ZKLog(@"%@", [number stringWithFormat:@",###.00"]);

@@ -89,6 +89,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)removePreviousFadeAnimation;
 
+/**
+ *  把某个 sublayer 移动到当前所有 sublayers 的最后面
+ *  @param sublayer 要被移动的 layer
+ *  @warning 要被移动的 sublayer 必须已经添加到当前 layer 上
+ */
+- (void)sendSublayerToBack:(CALayer *)sublayer;
+
+/**
+ * 移除 CALayer（包括 CAShapeLayer 和 CAGradientLayer）所有支持动画的属性的默认动画，方便需要一个不带动画的 layer 时使用。
+ */
+- (void)removeDefaultAnimations;
+
 @end
 
 NS_ASSUME_NONNULL_END

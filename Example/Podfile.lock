@@ -4,8 +4,8 @@ PODS:
   - FBSnapshotTestCase/Core (2.1.4)
   - FBSnapshotTestCase/SwiftSupport (2.1.4):
     - FBSnapshotTestCase/Core
-  - ZKCategories/Core (0.4.6)
-  - ZKCategories/ZKKVOSAFE (0.4.6):
+  - ZKCategories/Core (0.4.9)
+  - ZKCategories/ZKKVOSAFE (0.4.9):
     - ZKCategories/Core
 
 DEPENDENCIES:
@@ -22,7 +22,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
-  ZKCategories: bb9a5bc8875398862684f4a608c6c05c4a0414d1
+  ZKCategories: 5369fd3028318057b2a273edeb2f18c886699ed6
 
 PODFILE CHECKSUM: c390973306fa39af7f503c2f377471754bc47087
 

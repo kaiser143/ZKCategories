@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <sys/time.h>
+#import <objc/runtime.h>
 #import <pthread.h>
 #import "ZKHelper.h"
 
@@ -770,5 +771,44 @@ ZK_EXTERN_C_END
  */
 extern uint64_t dispatch_benchmark(size_t count, void(^block)(void));
 
+/**
+ 用于判断一个给定的 type encoding（const char *）或者 Ivar 是哪种类型的系列函数。
+ 
+ 为了节省代码量，函数由宏展开生成，一个宏会展开为两个函数定义：
+ 
+ 1. isXxxTypeEncoding(const char *)，例如判断是否为 BOOL 类型的函数名为：isBOOLTypeEncoding()
+ 2. isXxxIvar(Ivar)，例如判断是否为 BOOL 的 Ivar 的函数名为：isBOOLIvar()
+ 
+ @see https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html#//apple_ref/doc/uid/TP40008048-CH100-SW1
+ */
+#define _KAITypeEncodingDetectorGenerator(_TypeInFunctionName, _typeForEncode) \
+    CG_INLINE BOOL is##_TypeInFunctionName##TypeEncoding(const char *typeEncoding) {\
+        return strncmp(@encode(_typeForEncode), typeEncoding, strlen(@encode(_typeForEncode))) == 0;\
+    }\
+    CG_INLINE BOOL is##_TypeInFunctionName##Ivar(Ivar ivar) {\
+        return is##_TypeInFunctionName##TypeEncoding(ivar_getTypeEncoding(ivar));\
+    }
+
+_KAITypeEncodingDetectorGenerator(Char, char)
+_KAITypeEncodingDetectorGenerator(Int, int)
+_KAITypeEncodingDetectorGenerator(Short, short)
+_KAITypeEncodingDetectorGenerator(Long, long)
+_KAITypeEncodingDetectorGenerator(LongLong, long long)
+_KAITypeEncodingDetectorGenerator(NSInteger, NSInteger)
+_KAITypeEncodingDetectorGenerator(UnsignedChar, unsigned char)
+_KAITypeEncodingDetectorGenerator(UnsignedInt, unsigned int)
+_KAITypeEncodingDetectorGenerator(UnsignedShort, unsigned short)
+_KAITypeEncodingDetectorGenerator(UnsignedLong, unsigned long)
+_KAITypeEncodingDetectorGenerator(UnsignedLongLong, unsigned long long)
+_KAITypeEncodingDetectorGenerator(NSUInteger, NSUInteger)
+_KAITypeEncodingDetectorGenerator(Float, float)
+_KAITypeEncodingDetectorGenerator(Double, double)
+_KAITypeEncodingDetectorGenerator(CGFloat, CGFloat)
+_KAITypeEncodingDetectorGenerator(BOOL, BOOL)
+_KAITypeEncodingDetectorGenerator(Void, void)
+_KAITypeEncodingDetectorGenerator(Character, char *)
+_KAITypeEncodingDetectorGenerator(Object, id)
+_KAITypeEncodingDetectorGenerator(Class, Class)
+_KAITypeEncodingDetectorGenerator(Selector, SEL)
 
 #endif /* ZKCategoriesMacro_h */

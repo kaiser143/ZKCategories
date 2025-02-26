@@ -67,74 +67,114 @@ static inline dispatch_time_t dTimeDelay(NSTimeInterval time) {
 }
 
 - (id)safePerform:(SEL)selector withObject:(id)object {
-    NSParameterAssert(selector != NULL);
-    NSParameterAssert([self respondsToSelector:selector]);
-
-    if ([self respondsToSelector:selector]) {
-        NSMethodSignature *methodSig = [self methodSignatureForSelector:selector];
-        if (methodSig == nil) {
-            return nil;
-        }
-
-        const char *retType = [methodSig methodReturnType];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        if (strcmp(retType, @encode(void)) != 0) {
-            return [self performSelector:selector withObject:object];
-        } else {
-            [self performSelector:selector withObject:object];
-            return nil;
-        }
-#pragma clang diagnostic pop
-    } else {
-#ifndef NS_BLOCK_ASSERTIONS
-        NSString *message =
-            [NSString stringWithFormat:@"%@ does not recognize selector %@",
-                                       self,
-                                       NSStringFromSelector(selector)];
-        NSAssert(false, message);
-#endif
-        return nil;
-    }
+    return [self safePerform:selector withArguments:(__bridge void * _Nullable)(object)];
 }
 
 - (id)safePerform:(SEL)selector withObjects:(nonnull NSArray *)objects {
     NSParameterAssert(selector != NULL);
     NSParameterAssert([self respondsToSelector:selector]);
     
-    if ([self respondsToSelector:selector]) {
-        NSMethodSignature *methodSig = [self methodSignatureForSelector:selector];
-        if (methodSig == nil) return nil;
-        
-        // 方法调用者 方法名 方法参数 方法返回值
-        NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSig];
-        invocation.target = self;
-        invocation.selector = selector;
-        
-        for (int i = 0; i< objects.count; i++) {
-            id objct = objects[i];
-            if ([objct isKindOfClass:[NSNull class]]) continue;
-            [invocation setArgument:&objct atIndex:i+2];
-        }
-        //调用方法
-        [invocation invoke];
-        
-        // 获取返回值
-        id result = nil;
-        if (methodSig.methodReturnLength) {// 没有返回值 sig.methodReturnLength = 0
-            [invocation getReturnValue:&result];
-        }
-        
-        return result;
-    } else {
+    if (![self respondsToSelector:selector]) {
 #ifndef NS_BLOCK_ASSERTIONS
-        NSString *message =
-            [NSString stringWithFormat:@"%@ does not recognize selector %@",
-                                       self,
-                                       NSStringFromSelector(selector)];
+        NSString *message = [NSString stringWithFormat:@"%@ does not recognize selector %@", self, NSStringFromSelector(selector)];
         NSAssert(false, message);
 #endif
         return nil;
+    }
+    
+    NSMethodSignature *methodSig = [self methodSignatureForSelector:selector];
+    if (methodSig == nil) return nil;
+    
+    // 方法调用者 方法名 方法参数 方法返回值
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSig];
+    invocation.target = self;
+    invocation.selector = selector;
+    
+    for (int i = 0; i< objects.count; i++) {
+        id objct = objects[i];
+        if ([objct isKindOfClass:[NSNull class]]) continue;
+        [invocation setArgument:&objct atIndex:i+2];
+    }
+    //调用方法
+    [invocation invoke];
+    
+    const char *typeEncoding = method_getTypeEncoding(class_getInstanceMethod(object_getClass(self), selector));
+    if (isObjectTypeEncoding(typeEncoding)) {
+        __unsafe_unretained id returnValue;
+        [invocation getReturnValue:&returnValue];
+        return returnValue;
+    }
+    return nil;
+}
+
+- (nullable id)safePerform:(SEL)selector withArguments:(nullable void *)firstArgument, ... {
+    NSParameterAssert(selector != NULL);
+    NSParameterAssert([self respondsToSelector:selector]);
+    
+    if (![self respondsToSelector:selector]) {
+#ifndef NS_BLOCK_ASSERTIONS
+        NSString *message = [NSString stringWithFormat:@"%@ does not recognize selector %@", self, NSStringFromSelector(selector)];
+        NSAssert(false, message);
+#endif
+        return nil;
+    }
+    
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:selector]];
+    [invocation setTarget:self];
+    [invocation setSelector:selector];
+    
+    if (firstArgument) {
+        va_list valist;
+        va_start(valist, firstArgument);
+        [invocation setArgument:firstArgument atIndex:2];// 0->self, 1->_cmd
+        
+        void *currentArgument;
+        NSInteger index = 3;
+        while ((currentArgument = va_arg(valist, void *))) {
+            [invocation setArgument:currentArgument atIndex:index];
+            index++;
+        }
+        va_end(valist);
+    }
+    
+    [invocation invoke];
+    
+    const char *typeEncoding = method_getTypeEncoding(class_getInstanceMethod(object_getClass(self), selector));
+    if (isObjectTypeEncoding(typeEncoding)) {
+        __unsafe_unretained id returnValue;
+        [invocation getReturnValue:&returnValue];
+        return returnValue;
+    }
+    return nil;
+}
+
+- (void)safePerform:(SEL)selector withPrimitiveReturnValue:(nullable void *)returnValue arguments:(nullable void *)firstArgument, ... {
+    NSParameterAssert(selector != NULL);
+    NSParameterAssert([self respondsToSelector:selector]);
+    
+    NSMethodSignature *methodSignature = [self methodSignatureForSelector:selector];
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
+    [invocation setTarget:self];
+    [invocation setSelector:selector];
+    
+    if (firstArgument) {
+        va_list valist;
+        va_start(valist, firstArgument);
+        [invocation setArgument:firstArgument atIndex:2];// 0->self, 1->_cmd
+        
+        void *currentArgument;
+        NSInteger index = 3;
+        while ((currentArgument = va_arg(valist, void *))) {
+            [invocation setArgument:currentArgument atIndex:index];
+            index++;
+        }
+        va_end(valist);
+    }
+    
+    [invocation invoke];
+    
+    if (returnValue) {
+        [invocation getReturnValue:returnValue];
     }
 }
 

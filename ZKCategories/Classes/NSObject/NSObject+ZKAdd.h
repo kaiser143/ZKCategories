@@ -18,9 +18,38 @@ typedef void (^ZKNSObjectDelayBlock)(BOOL cancel);
 // URL Parameter Strings
 - (NSString *)URLParameterStringValue NS_SWIFT_NAME(URLParameterStringValue());
 
-- (id)safePerform:(SEL)selector;
-- (id)safePerform:(SEL)selector withObject:(nullable id)object;
-- (id)safePerform:(SEL)selector withObjects:(nonnull NSArray *)objects;
+/// 返回值为对象或者 void
+- (nullable id)safePerform:(SEL)selector;
+- (nullable id)safePerform:(SEL)selector withObject:(nullable id)object;
+- (nullable id)safePerform:(SEL)selector withObjects:(nonnull NSArray *)objects;
+
+/**
+ 调用一个带参数的 selector，参数类型支持对象和非对象，也没有数量限制。返回值为对象或者 void。
+ 
+ @code
+ id target = xxx;
+ SEL action = xxx;
+ UIControlEvents events = xxx;
+ [control safePerform:@selector(addTarget:action:forControlEvents:) withArguments:&target, &action, &events, nil];
+ @endcode
+ */
+- (nullable id)safePerform:(SEL)selector withArguments:(nullable void *)firstArgument, ...;
+
+/**
+ 调用一个返回值类型为非对象且带参数的 selector，参数类型支持对象和非对象，也没有数量限制。
+ 
+ @param selector 要判断的方法
+ @param returnValue selector 的返回值的指针地址
+ 
+ @code
+ CGPoint point = xxx;
+ UIEvent *event = xxx;
+ BOOL isInside;
+ [view safePerform:@selector(pointInside:withEvent:) withPrimitiveReturnValue:&isInside arguments:&point, event, nil];
+ @endcode
+ */
+- (void)safePerform:(SEL)selector withPrimitiveReturnValue:(nullable void *)returnValue arguments:(nullable void *)firstArgument, ...;
+
 
 + (ZKNSObjectDelayBlock)performBlock:(void (^)(void))block afterDelay:(NSTimeInterval)delay;
 

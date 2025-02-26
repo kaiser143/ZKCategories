@@ -44,6 +44,8 @@
     #import <ZKCategories/UITextView+ZKAdd.h>
     #import <ZKCategories/UIScreen+ZKAdd.h>
     #import <ZKCategories/UIScrollView+ZKAdd.h>
+    #import <ZKCategories/UIBlurEffect+ZKAdd.h>
+    #import <ZKCategories/UIVisualEffectView+ZKAdd.h>
     #import <ZKCategories/ZKCGUtilities.h>
     #import <ZKCategories/UIGestureRecognizer+ZKAdd.h>
     #import <ZKCategories/UIDevice+ZKAdd.h>
@@ -89,6 +91,8 @@
     #import "UITextView+ZKAdd.h"
     #import "UIScreen+ZKAdd.h"
     #import "UIScrollView+ZKAdd.h"
+    #import "UIBlurEffect+ZKAdd.h"
+    #import "UIVisualEffectView+ZKAdd.h"
     #import "ZKCGUtilities.h"
     #import "UIGestureRecognizer+ZKAdd.h"
     #import "UIDevice+ZKAdd.h"
