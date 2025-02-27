@@ -12,6 +12,7 @@
 
 #import "CALayer+ZKAdd.h"
 #import "NSArray+ZKAdd.h"
+#import "NSAttributedString+ZKAdd.h"
 #import "NSData+ZKAdd.h"
 #import "NSDate+ZKAdd.h"
 #import "NSDictionary+ZKAdd.h"

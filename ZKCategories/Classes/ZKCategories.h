@@ -18,6 +18,7 @@
     #import <ZKCategories/NSDate+ZKAdd.h>
     #import <ZKCategories/NSNumber+ZKAdd.h>
     #import <ZKCategories/NSString+ZKAdd.h>
+    #import <ZKCategories/NSAttributedString+ZKAdd.h>
     #import <ZKCategories/NSURL+ZKAdd.h>
     #import <ZKCategories/NSRunLoop+ZKAdd.h>
     #import <ZKCategories/NSDecimalNumber+ZKAdd.h>
@@ -65,6 +66,7 @@
     #import "NSDate+ZKAdd.h"
     #import "NSNumber+ZKAdd.h"
     #import "NSString+ZKAdd.h"
+    #import "NSAttributedString+ZKAdd.h"
     #import "NSURL+ZKAdd.h"
     #import "NSRunLoop+ZKAdd.h"
     #import "NSDecimalNumber+ZKAdd.h"
