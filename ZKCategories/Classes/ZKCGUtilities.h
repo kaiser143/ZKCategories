@@ -34,12 +34,12 @@ CGSize ZKScreenSize(void);
 
 
 /// Convert degrees to radians.
-static inline CGFloat DegreesToRadians(CGFloat degrees) {
+CG_INLINE CGFloat DegreesToRadians(CGFloat degrees) {
     return degrees * M_PI / 180;
 }
 
 /// Convert radians to degrees.
-static inline CGFloat RadiansToDegrees(CGFloat radians) {
+CG_INLINE CGFloat RadiansToDegrees(CGFloat radians) {
     return radians * 180 / M_PI;
 }
 
@@ -47,35 +47,35 @@ static inline CGFloat RadiansToDegrees(CGFloat radians) {
 
 /// Get the transform rotation.
 /// @return the rotation in radians [-PI,PI] ([-180°,180°])
-static inline CGFloat CGAffineTransformGetRotation(CGAffineTransform transform) {
+CG_INLINE CGFloat CGAffineTransformGetRotation(CGAffineTransform transform) {
     return atan2(transform.b, transform.a);
 }
 
 /// Get the transform's scale.x
-static inline CGFloat CGAffineTransformGetScaleX(CGAffineTransform transform) {
+CG_INLINE CGFloat CGAffineTransformGetScaleX(CGAffineTransform transform) {
     return  sqrt(transform.a * transform.a + transform.c * transform.c);
 }
 
 /// Get the transform's scale.y
-static inline CGFloat CGAffineTransformGetScaleY(CGAffineTransform transform) {
+CG_INLINE CGFloat CGAffineTransformGetScaleY(CGAffineTransform transform) {
     return sqrt(transform.b * transform.b + transform.d * transform.d);
 }
 
 /// Get the transform's translate.x
-static inline CGFloat CGAffineTransformGetTranslateX(CGAffineTransform transform) {
+CG_INLINE CGFloat CGAffineTransformGetTranslateX(CGAffineTransform transform) {
     return transform.tx;
 }
 
 /// Get the transform's translate.y
-static inline CGFloat CGAffineTransformGetTranslateY(CGAffineTransform transform) {
+CG_INLINE CGFloat CGAffineTransformGetTranslateY(CGAffineTransform transform) {
     return transform.ty;
 }
 
 /**
  If you have 3 pair of points transformed by a same CGAffineTransform:
-     p1 (transform->) q1
-     p2 (transform->) q2
-     p3 (transform->) q3
+ p1 (transform->) q1
+ p2 (transform->) q2
+ p3 (transform->) q3
  This method returns the original transform matrix from these 3 pair of points.
  
  @see http://stackoverflow.com/questions/13291796/calculate-values-for-a-cgaffinetransform-from-three-points-in-each-of-two-uiview
@@ -86,7 +86,7 @@ CGAffineTransform ZKCGAffineTransformGetFromPoints(CGPoint before[_Nullable 3], 
 CGAffineTransform ZKCGAffineTransformGetFromViews(UIView *from, UIView *to);
 
 /// Create a skew transform.
-static inline CGAffineTransform CGAffineTransformMakeSkew(CGFloat x, CGFloat y){
+CG_INLINE CGAffineTransform CGAffineTransformMakeSkew(CGFloat x, CGFloat y){
     CGAffineTransform transform = CGAffineTransformIdentity;
     transform.c = -x;
     transform.b = y;
@@ -113,24 +113,24 @@ NSString *ZKUIViewContentModeToCAGravity(UIViewContentMode contentMode);
 CGRect ZKCGRectFitWithContentMode(CGRect rect, CGSize size, UIViewContentMode mode);
 
 /// Returns the center for the rectangle.
-static inline CGPoint CGRectGetCenter(CGRect rect) {
+CG_INLINE CGPoint CGRectGetCenter(CGRect rect) {
     return CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect));
 }
 
 /// Returns the area of the rectangle.
-static inline CGFloat CGRectGetArea(CGRect rect) {
+CG_INLINE CGFloat CGRectGetArea(CGRect rect) {
     if (CGRectIsNull(rect)) return 0;
     rect = CGRectStandardize(rect);
     return rect.size.width * rect.size.height;
 }
 
 /// Returns the distance between two points.
-static inline CGFloat CGPointGetDistanceToPoint(CGPoint p1, CGPoint p2) {
+CG_INLINE CGFloat CGPointGetDistanceToPoint(CGPoint p1, CGPoint p2) {
     return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
 }
 
 /// Returns the minmium distance between a point to a rectangle.
-static inline CGFloat CGPointGetDistanceToRect(CGPoint p, CGRect r) {
+CG_INLINE CGFloat CGPointGetDistanceToRect(CGPoint p, CGRect r) {
     r = CGRectStandardize(r);
     if (CGRectContainsPoint(r, p)) return 0;
     CGFloat distV, distH;
@@ -154,62 +154,90 @@ CG_INLINE CGFloat CGFloatSafeValue(CGFloat value) {
 }
 
 /// Convert point to pixel.
-static inline CGFloat CGFloatToPixel(CGFloat value) {
+CG_INLINE CGFloat CGFloatToPixel(CGFloat value) {
     return value * ZKScreenScale();
 }
 
 /// Convert pixel to point.
-static inline CGFloat CGFloatFromPixel(CGFloat value) {
+CG_INLINE CGFloat CGFloatFromPixel(CGFloat value) {
     return value / ZKScreenScale();
 }
 
 /// floor point value for pixel-aligned
-static inline CGFloat CGFloatPixelFloor(CGFloat value) {
+CG_INLINE CGFloat CGFloatPixelFloor(CGFloat value) {
     CGFloat scale = ZKScreenScale();
     return floor(value * scale) / scale;
 }
 
+/**
+ *  某些地方可能会将 CGFLOAT_MIN 作为一个数值参与计算（但其实 CGFLOAT_MIN 更应该被视为一个标志位而不是数值），可能导致一些精度问题，所以提供这个方法快速将 CGFLOAT_MIN 转换为 0
+ */
+CG_INLINE CGFloat removeFloatMin(CGFloat floatValue) {
+    return floatValue == CGFLOAT_MIN ? 0 : floatValue;
+}
+
+/**
+ *  基于指定的倍数，对传进来的 floatValue 进行像素取整。若指定倍数为0，则表示以当前设备的屏幕倍数为准。
+ *
+ *  例如传进来 “2.1”，在 2x 倍数下会返回 2.5（0.5pt 对应 1px），在 3x 倍数下会返回 2.333（0.333pt 对应 1px）。
+ */
+CG_INLINE CGFloat flatSpecificScale(CGFloat floatValue, CGFloat scale) {
+    floatValue = removeFloatMin(floatValue);
+    scale = scale ?: ZKScreenScale();
+    CGFloat flattedValue = ceil(floatValue * scale) / scale;
+    return flattedValue;
+}
+
+/**
+ *  基于当前设备的屏幕倍数，对传进来的 floatValue 进行像素取整。
+ *
+ *  注意如果在 Core Graphic 绘图里使用时，要注意当前画布的倍数是否和设备屏幕倍数一致，若不一致，不可使用 flat() 函数，而应该用 flatSpecificScale
+ */
+CG_INLINE CGFloat flat(CGFloat floatValue) {
+    return flatSpecificScale(floatValue, 0);
+}
+
 /// round point value for pixel-aligned
-static inline CGFloat CGFloatPixelRound(CGFloat value) {
+CG_INLINE CGFloat CGFloatPixelRound(CGFloat value) {
     CGFloat scale = ZKScreenScale();
     return round(value * scale) / scale;
 }
 
 /// ceil point value for pixel-aligned
-static inline CGFloat CGFloatPixelCeil(CGFloat value) {
+CG_INLINE CGFloat CGFloatPixelCeil(CGFloat value) {
     CGFloat scale = ZKScreenScale();
     return ceil(value * scale) / scale;
 }
 
 /// round point value to .5 pixel for path stroke (odd pixel line width pixel-aligned)
-static inline CGFloat CGFloatPixelHalf(CGFloat value) {
+CG_INLINE CGFloat CGFloatPixelHalf(CGFloat value) {
     CGFloat scale = ZKScreenScale();
     return (floor(value * scale) + 0.5) / scale;
 }
 
 /// floor point value for pixel-aligned
-static inline CGPoint CGPointPixelFloor(CGPoint point) {
+CG_INLINE CGPoint CGPointPixelFloor(CGPoint point) {
     CGFloat scale = ZKScreenScale();
     return CGPointMake(floor(point.x * scale) / scale,
                        floor(point.y * scale) / scale);
 }
 
 /// round point value for pixel-aligned
-static inline CGPoint CGPointPixelRound(CGPoint point) {
+CG_INLINE CGPoint CGPointPixelRound(CGPoint point) {
     CGFloat scale = ZKScreenScale();
     return CGPointMake(round(point.x * scale) / scale,
                        round(point.y * scale) / scale);
 }
 
 /// ceil point value for pixel-aligned
-static inline CGPoint CGPointPixelCeil(CGPoint point) {
+CG_INLINE CGPoint CGPointPixelCeil(CGPoint point) {
     CGFloat scale = ZKScreenScale();
     return CGPointMake(ceil(point.x * scale) / scale,
                        ceil(point.y * scale) / scale);
 }
 
 /// round point value to .5 pixel for path stroke (odd pixel line width pixel-aligned)
-static inline CGPoint CGPointPixelHalf(CGPoint point) {
+CG_INLINE CGPoint CGPointPixelHalf(CGPoint point) {
     CGFloat scale = ZKScreenScale();
     return CGPointMake((floor(point.x * scale) + 0.5) / scale,
                        (floor(point.y * scale) + 0.5) / scale);
@@ -218,32 +246,34 @@ static inline CGPoint CGPointPixelHalf(CGPoint point) {
 
 
 /// floor point value for pixel-aligned
-static inline CGSize CGSizePixelFloor(CGSize size) {
+CG_INLINE CGSize CGSizePixelFloor(CGSize size) {
     CGFloat scale = ZKScreenScale();
     return CGSizeMake(floor(size.width * scale) / scale,
                       floor(size.height * scale) / scale);
 }
 
 /// round point value for pixel-aligned
-static inline CGSize CGSizePixelRound(CGSize size) {
+CG_INLINE CGSize CGSizePixelRound(CGSize size) {
     CGFloat scale = ZKScreenScale();
     return CGSizeMake(round(size.width * scale) / scale,
                       round(size.height * scale) / scale);
 }
 
 /// ceil point value for pixel-aligned
-static inline CGSize CGSizePixelCeil(CGSize size) {
+CG_INLINE CGSize CGSizePixelCeil(CGSize size) {
     CGFloat scale = ZKScreenScale();
     return CGSizeMake(ceil(size.width * scale) / scale,
                       ceil(size.height * scale) / scale);
 }
 
 /// round point value to .5 pixel for path stroke (odd pixel line width pixel-aligned)
-static inline CGSize CGSizePixelHalf(CGSize size) {
+CG_INLINE CGSize CGSizePixelHalf(CGSize size) {
     CGFloat scale = ZKScreenScale();
     return CGSizeMake((floor(size.width * scale) + 0.5) / scale,
-                       (floor(size.height * scale) + 0.5) / scale);
+                      (floor(size.height * scale) + 0.5) / scale);
 }
+
+#pragma mark - CGRect
 
 /// 判断一个 CGRect 是否存在 NaN
 CG_INLINE BOOL CGRectIsNaN(CGRect rect) {
@@ -271,7 +301,7 @@ CG_INLINE CGRect CGRectSafeValue(CGRect rect) {
 }
 
 /// 创建一个像素对齐的CGRect
-static inline CGRect CGRectPixelFloor(CGRect rect) {
+CG_INLINE CGRect CGRectPixelFloor(CGRect rect) {
     CGPoint origin = CGPointPixelCeil(rect.origin);
     CGPoint corner = CGPointPixelFloor(CGPointMake(rect.origin.x + rect.size.width,
                                                    rect.origin.y + rect.size.height));
@@ -282,28 +312,77 @@ static inline CGRect CGRectPixelFloor(CGRect rect) {
 }
 
 /// round point value for pixel-aligned
-static inline CGRect CGRectPixelRound(CGRect rect) {
+CG_INLINE CGRect CGRectPixelRound(CGRect rect) {
     CGPoint origin = CGPointPixelRound(rect.origin);
     CGPoint corner = CGPointPixelRound(CGPointMake(rect.origin.x + rect.size.width,
-                                                  rect.origin.y + rect.size.height));
-    return CGRectMake(origin.x, origin.y, corner.x - origin.x, corner.y - origin.y);
-}
-
-/// ceil point value for pixel-aligned
-static inline CGRect CGRectPixelCeil(CGRect rect) {
-    CGPoint origin = CGPointPixelFloor(rect.origin);
-    CGPoint corner = CGPointPixelCeil(CGPointMake(rect.origin.x + rect.size.width,
                                                    rect.origin.y + rect.size.height));
     return CGRectMake(origin.x, origin.y, corner.x - origin.x, corner.y - origin.y);
 }
 
+/// ceil point value for pixel-aligned
+CG_INLINE CGRect CGRectPixelCeil(CGRect rect) {
+    CGPoint origin = CGPointPixelFloor(rect.origin);
+    CGPoint corner = CGPointPixelCeil(CGPointMake(rect.origin.x + rect.size.width,
+                                                  rect.origin.y + rect.size.height));
+    return CGRectMake(origin.x, origin.y, corner.x - origin.x, corner.y - origin.y);
+}
+
+/// 对CGRect的x/y、width/height都调用一次flat，以保证像素对齐
+CG_INLINE CGRect CGRectFlatted(CGRect rect) {
+    return CGRectMake(flat(rect.origin.x), flat(rect.origin.y), flat(rect.size.width), flat(rect.size.height));
+}
+
 /// round point value to .5 pixel for path stroke (odd pixel line width pixel-aligned)
-static inline CGRect CGRectPixelHalf(CGRect rect) {
+CG_INLINE CGRect CGRectPixelHalf(CGRect rect) {
     CGPoint origin = CGPointPixelHalf(rect.origin);
     CGPoint corner = CGPointPixelHalf(CGPointMake(rect.origin.x + rect.size.width,
                                                   rect.origin.y + rect.size.height));
     return CGRectMake(origin.x, origin.y, corner.x - origin.x, corner.y - origin.y);
 }
+
+/// 传入size，返回一个x/y为0的CGRect
+CG_INLINE CGRect CGRectMakeWithSize(CGSize size) {
+    return CGRectMake(0, 0, size.width, size.height);
+}
+
+CG_INLINE CGRect CGRectSetX(CGRect rect, CGFloat x) {
+    rect.origin.x = flat(x);
+    return rect;
+}
+
+CG_INLINE CGRect CGRectSetY(CGRect rect, CGFloat y) {
+    rect.origin.y = flat(y);
+    return rect;
+}
+
+CG_INLINE CGRect CGRectSetXY(CGRect rect, CGFloat x, CGFloat y) {
+    rect.origin.x = flat(x);
+    rect.origin.y = flat(y);
+    return rect;
+}
+
+CG_INLINE CGRect CGRectSetWidth(CGRect rect, CGFloat width) {
+    if (width < 0) {
+        return rect;
+    }
+    rect.size.width = flat(width);
+    return rect;
+}
+
+CG_INLINE CGRect CGRectSetHeight(CGRect rect, CGFloat height) {
+    if (height < 0) {
+        return rect;
+    }
+    rect.size.height = flat(height);
+    return rect;
+}
+
+/// 用于居中运算
+CG_INLINE CGFloat CGFloatGetCenter(CGFloat parent, CGFloat child) {
+    return flat((parent - child) / 2.0);
+}
+
+#pragma mark - UIEdgeInsets
 
 /// 将两个UIEdgeInsets合并为一个
 CG_INLINE UIEdgeInsets UIEdgeInsetsConcat(UIEdgeInsets insets1, UIEdgeInsets insets2) {
@@ -315,12 +394,12 @@ CG_INLINE UIEdgeInsets UIEdgeInsetsConcat(UIEdgeInsets insets1, UIEdgeInsets ins
 }
 
 /// Negates/inverts a UIEdgeInsets.
-static inline UIEdgeInsets UIEdgeInsetsInvert(UIEdgeInsets insets) {
+CG_INLINE UIEdgeInsets UIEdgeInsetsInvert(UIEdgeInsets insets) {
     return UIEdgeInsetsMake(-insets.top, -insets.left, -insets.bottom, -insets.right);
 }
 
 /// floor UIEdgeInset for pixel-aligned
-static inline UIEdgeInsets UIEdgeInsetPixelFloor(UIEdgeInsets insets) {
+CG_INLINE UIEdgeInsets UIEdgeInsetPixelFloor(UIEdgeInsets insets) {
     insets.top = CGFloatPixelFloor(insets.top);
     insets.left = CGFloatPixelFloor(insets.left);
     insets.bottom = CGFloatPixelFloor(insets.bottom);
@@ -329,7 +408,7 @@ static inline UIEdgeInsets UIEdgeInsetPixelFloor(UIEdgeInsets insets) {
 }
 
 /// ceil UIEdgeInset for pixel-aligned
-static inline UIEdgeInsets UIEdgeInsetPixelCeil(UIEdgeInsets insets) {
+CG_INLINE UIEdgeInsets UIEdgeInsetPixelCeil(UIEdgeInsets insets) {
     insets.top = CGFloatPixelCeil(insets.top);
     insets.left = CGFloatPixelCeil(insets.left);
     insets.bottom = CGFloatPixelCeil(insets.bottom);
@@ -337,8 +416,23 @@ static inline UIEdgeInsets UIEdgeInsetPixelCeil(UIEdgeInsets insets) {
     return insets;
 }
 
+CG_INLINE UIEdgeInsets UIEdgeInsetsRemoveFloatMin(UIEdgeInsets insets) {
+    UIEdgeInsets result = UIEdgeInsetsMake(removeFloatMin(insets.top), removeFloatMin(insets.left), removeFloatMin(insets.bottom), removeFloatMin(insets.right));
+    return result;
+}
+
+/// 获取UIEdgeInsets在水平方向上的值
+CG_INLINE CGFloat UIEdgeInsetsGetHorizontalValue(UIEdgeInsets insets) {
+    return insets.left + insets.right;
+}
+
+/// 获取UIEdgeInsets在垂直方向上的值
+CG_INLINE CGFloat UIEdgeInsetsGetVerticalValue(UIEdgeInsets insets) {
+    return insets.top + insets.bottom;
+}
+
 /** 设置投影 **/
-static inline void kai_view_shadow(UIView *view, UIColor *color, CGSize offset, CGFloat opacity, CGFloat radius) {
+CG_INLINE void kai_view_shadow(UIView *view, UIColor *color, CGSize offset, CGFloat opacity, CGFloat radius) {
     view.layer.shadowColor = color.CGColor;
     view.layer.shadowOffset = offset;
     view.layer.shadowOpacity = opacity;
@@ -346,19 +440,19 @@ static inline void kai_view_shadow(UIView *view, UIColor *color, CGSize offset, 
 }
 
 /** view 圆角 */
-static inline void kai_view_radius(UIView *view, CGFloat radius) {
+CG_INLINE void kai_view_radius(UIView *view, CGFloat radius) {
     [view.layer setCornerRadius:radius];
     [view.layer setMasksToBounds:YES];
 }
 
 /** view 边框 */
-static inline void kai_view_border(UIView *view, CGFloat width, UIColor *color) {
+CG_INLINE void kai_view_border(UIView *view, CGFloat width, UIColor *color) {
     [view.layer setBorderWidth:(width)];
     [view.layer setBorderColor:[color CGColor]];
 }
 
 /** view 圆角 边框 */
-static inline void kai_view_border_radius(UIView *view, CGFloat radius, CGFloat width, UIColor *color) {
+CG_INLINE void kai_view_border_radius(UIView *view, CGFloat radius, CGFloat width, UIColor *color) {
     kai_view_radius(view, radius);
     kai_view_border(view, width, color);
 }
@@ -375,7 +469,7 @@ static inline void kai_view_border_radius(UIView *view, CGFloat radius, CGFloat 
  * UIRectCornerAllCorners
  @param radius 圆角度
  */
-static inline void kai_view_singleFillet(UIView *view, UIRectCorner angle, CGFloat radius) {
+CG_INLINE void kai_view_singleFillet(UIView *view, UIRectCorner angle, CGFloat radius) {
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:view.bounds
                                                    byRoundingCorners:angle
                                                          cornerRadii:CGSizeMake(radius, radius)];
