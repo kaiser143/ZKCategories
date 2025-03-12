@@ -23,25 +23,25 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark-
 #pragma mark :. SafeAccess
 
-+ (NSString *)stringForKey:(NSString *)defaultName;
++ (NSString *)stringForKey:(NSString *)defaultName NS_SWIFT_UNAVAILABLE("");
 
-+ (NSArray *)arrayForKey:(NSString *)defaultName;
++ (NSArray *)arrayForKey:(NSString *)defaultName NS_SWIFT_UNAVAILABLE("");
 
-+ (NSDictionary *)dictionaryForKey:(NSString *)defaultName;
++ (NSDictionary *)dictionaryForKey:(NSString *)defaultName NS_SWIFT_UNAVAILABLE("");
 
-+ (NSData *)dataForKey:(NSString *)defaultName;
++ (NSData *)dataForKey:(NSString *)defaultName NS_SWIFT_UNAVAILABLE("");
 
-+ (NSArray *)stringArrayForKey:(NSString *)defaultName;
++ (NSArray *)stringArrayForKey:(NSString *)defaultName NS_SWIFT_UNAVAILABLE("");
 
-+ (NSInteger)integerForKey:(NSString *)defaultName;
++ (NSInteger)integerForKey:(NSString *)defaultName NS_SWIFT_UNAVAILABLE("");
 
-+ (float)floatForKey:(NSString *)defaultName;
++ (float)floatForKey:(NSString *)defaultName NS_SWIFT_UNAVAILABLE("");
 
-+ (double)doubleForKey:(NSString *)defaultName;
++ (double)doubleForKey:(NSString *)defaultName NS_SWIFT_UNAVAILABLE("");
 
-+ (BOOL)boolForKey:(NSString *)defaultName;
++ (BOOL)boolForKey:(NSString *)defaultName NS_SWIFT_UNAVAILABLE("");
 
-+ (NSURL *)URLForKey:(NSString *)defaultName;
++ (NSURL *)URLForKey:(NSString *)defaultName NS_SWIFT_UNAVAILABLE("");
 
 #pragma mark - :. WRITE FOR STANDARD
 
