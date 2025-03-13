@@ -45,7 +45,7 @@ typedef void (^ZKNSObjectDelayBlock)(BOOL cancel);
  CGPoint point = xxx;
  UIEvent *event = xxx;
  BOOL isInside;
- [view safePerform:@selector(pointInside:withEvent:) withPrimitiveReturnValue:&isInside arguments:&point, event, nil];
+ [view safePerform:@selector(pointInside:withEvent:) withPrimitiveReturnValue:&isInside arguments:&point, &event, nil];
  @endcode
  */
 - (void)safePerform:(SEL)selector withPrimitiveReturnValue:(nullable void *)returnValue arguments:(nullable void *)firstArgument, ...;

@@ -67,7 +67,7 @@ static inline dispatch_time_t dTimeDelay(NSTimeInterval time) {
 }
 
 - (id)safePerform:(SEL)selector withObject:(id)object {
-    return [self safePerform:selector withArguments:(__bridge void * _Nullable)(object)];
+    return [self safePerform:selector withArguments:&object, nil];
 }
 
 - (id)safePerform:(SEL)selector withObjects:(nonnull NSArray *)objects {
