@@ -62,12 +62,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  Network traffic type:
- 
+
  WWAN: Wireless Wide Area Network.
        For example: 3G/4G.
- 
+
  WIFI: Wi-Fi.
- 
+
  AWDL: Apple Wireless Direct Link (peer-to-peer connection).
        For exmaple: AirDrop, AirPlay, GameKit.
  */
@@ -90,19 +90,19 @@ typedef NS_OPTIONS(NSUInteger, ZKNetworkTrafficType) {
 
 /**
  Get device network traffic bytes.
- 
+
  @discussion This is a counter since the device's last boot time.
  Usage:
- 
+
      uint64_t bytes = [[UIDevice currentDevice] getNetworkTrafficBytes:ZKNetworkTrafficTypeALL];
      NSTimeInterval time = CACurrentMediaTime();
- 
+
      uint64_t bytesPerSecond = (bytes - _lastBytes) / (time - _lastTime);
- 
+
      _lastBytes = bytes;
      _lastTime = time;
- 
- 
+
+
  @param types traffic types
  @return bytes counter.
  */

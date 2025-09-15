@@ -6,16 +6,16 @@
 //  Copyright © 2018年 Kaiser. All rights reserved.
 //
 
+#import "NSString+ZKAdd.h"
 #import "UIDevice+ZKAdd.h"
-#include <sys/socket.h>
-#include <sys/sysctl.h>
-#include <net/if.h>
-#include <net/if_dl.h>
-#include <mach/mach.h>
+#import "ZKCategoriesMacro.h"
 #include <arpa/inet.h>
 #include <ifaddrs.h>
-#import "ZKCategoriesMacro.h"
-#import "NSString+ZKAdd.h"
+#include <mach/mach.h>
+#include <net/if.h>
+#include <net/if_dl.h>
+#include <sys/socket.h>
+#include <sys/sysctl.h>
 
 ZKSYNTH_DUMMY_CLASS(UIDevice_ZKAdd)
 
@@ -32,15 +32,15 @@ ZKSYNTH_DUMMY_CLASS(UIDevice_ZKAdd)
 
 - (BOOL)iPhoneX {
     if (UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPhone) return NO;
-    
+
     BOOL returnValue = NO;
     if (@available(iOS 13.0, *)) {
         UIWindow *window = [UIApplication sharedApplication].windows.lastObject;
-        returnValue = window.safeAreaInsets.bottom > 0;
+        returnValue      = window.safeAreaInsets.bottom > 0;
     } else if (@available(iOS 11.0, *)) {
         returnValue = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom > 0;
     }
-    
+
     return returnValue;
 }
 
@@ -257,13 +257,25 @@ static kai_net_interface_counter kai_get_net_interface_counter() {
         NSString *model = [self machineModel];
         if (!model) return;
         NSDictionary *dic = @{
+            // Apple Watch
             @"Watch1,1": @"Apple Watch 38mm",
             @"Watch1,2": @"Apple Watch 42mm",
             @"Watch2,3": @"Apple Watch Series 2 38mm",
             @"Watch2,4": @"Apple Watch Series 2 42mm",
             @"Watch2,6": @"Apple Watch Series 1 38mm",
             @"Watch1,7": @"Apple Watch Series 1 42mm",
+            @"Watch3,1": @"Apple Watch Series 3 38mm",
+            @"Watch3,2": @"Apple Watch Series 3 42mm",
+            @"Watch4,1": @"Apple Watch Series 4 40mm",
+            @"Watch4,2": @"Apple Watch Series 4 44mm",
+            @"Watch5,1": @"Apple Watch Series 5 40mm",
+            @"Watch5,2": @"Apple Watch Series 5 44mm",
+            @"Watch6,1": @"Apple Watch Series 6 40mm",
+            @"Watch6,2": @"Apple Watch Series 6 44mm",
+            @"Watch6,3": @"Apple Watch Series 7 41mm",
+            @"Watch6,4": @"Apple Watch Series 7 45mm",
 
+            // iPod
             @"iPod1,1": @"iPod touch 1",
             @"iPod2,1": @"iPod touch 2",
             @"iPod3,1": @"iPod touch 3",
@@ -272,6 +284,7 @@ static kai_net_interface_counter kai_get_net_interface_counter() {
             @"iPod7,1": @"iPod touch 6",
             @"iPod9,1": @"iPod touch 7",
 
+            // iPhone
             @"iPhone1,1": @"iPhone 1G",
             @"iPhone1,2": @"iPhone 3G",
             @"iPhone2,1": @"iPhone 3GS",
@@ -307,7 +320,21 @@ static kai_net_interface_counter kai_get_net_interface_counter() {
             @"iPhone12,3": @"iPhone 11 Pro",
             @"iPhone12,5": @"iPhone 11 Pro Max",
             @"iPhone12,8": @"iPhone SE (2nd generation)",
+            @"iPhone13,1": @"iPhone 12 mini",
+            @"iPhone13,2": @"iPhone 12",
+            @"iPhone13,3": @"iPhone 12 Pro",
+            @"iPhone13,4": @"iPhone 12 Pro Max",
+            @"iPhone14,4": @"iPhone 13 mini",
+            @"iPhone14,5": @"iPhone 13",
+            @"iPhone14,2": @"iPhone 13 Pro",
+            @"iPhone14,3": @"iPhone 13 Pro Max",
+            @"iPhone14,6": @"iPhone SE (3rd generation)",
+            @"iPhone14,7": @"iPhone 14",
+            @"iPhone14,8": @"iPhone 14 Plus",
+            @"iPhone15,2": @"iPhone 14 Pro",
+            @"iPhone15,3": @"iPhone 14 Pro Max",
 
+            // iPad
             @"iPad1,1": @"iPad 1",
             @"iPad2,1": @"iPad 2 (WiFi)",
             @"iPad2,2": @"iPad 2 (GSM)",
@@ -339,16 +366,53 @@ static kai_net_interface_counter kai_get_net_interface_counter() {
             @"iPad6,4": @"iPad Pro (9.7 inch)",
             @"iPad6,7": @"iPad Pro (12.9 inch)",
             @"iPad6,8": @"iPad Pro (12.9 inch)",
+            @"iPad6,11": @"iPad 5 (WiFi)",
+            @"iPad6,12": @"iPad 5 (Cellular)",
+            @"iPad7,1": @"iPad Pro (12.9 inch) 2nd gen",
+            @"iPad7,2": @"iPad Pro (12.9 inch) 2nd gen",
+            @"iPad7,3": @"iPad Pro (10.5 inch)",
+            @"iPad7,4": @"iPad Pro (10.5 inch)",
+            @"iPad7,5": @"iPad 6 (WiFi)",
+            @"iPad7,6": @"iPad 6 (Cellular)",
+            @"iPad7,11": @"iPad 7 (WiFi)",
+            @"iPad7,12": @"iPad 7 (Cellular)",
+            @"iPad8,1": @"iPad Pro (11 inch)",
+            @"iPad8,2": @"iPad Pro (11 inch)",
+            @"iPad8,3": @"iPad Pro (11 inch)",
+            @"iPad8,4": @"iPad Pro (11 inch)",
+            @"iPad8,5": @"iPad Pro (12.9 inch) 3rd gen",
+            @"iPad8,6": @"iPad Pro (12.9 inch) 3rd gen",
+            @"iPad8,7": @"iPad Pro (12.9 inch) 3rd gen",
+            @"iPad8,8": @"iPad Pro (12.9 inch) 3rd gen",
+            @"iPad8,9": @"iPad Pro (11 inch) 2nd gen",
+            @"iPad8,10": @"iPad Pro (11 inch) 2nd gen",
+            @"iPad8,11": @"iPad Pro (12.9 inch) 4th gen",
+            @"iPad8,12": @"iPad Pro (12.9 inch) 4th gen",
+            @"iPad11,1": @"iPad mini 5",
+            @"iPad11,2": @"iPad mini 5",
+            @"iPad11,3": @"iPad Air 3",
+            @"iPad11,4": @"iPad Air 3",
+            @"iPad11,6": @"iPad 8 (WiFi)",
+            @"iPad11,7": @"iPad 8 (Cellular)",
+            @"iPad12,1": @"iPad 9 (WiFi)",
+            @"iPad12,2": @"iPad 9 (Cellular)",
+            @"iPad14,1": @"iPad mini 6",
+            @"iPad14,2": @"iPad mini 6",
 
+            // Apple TV
             @"AppleTV2,1": @"Apple TV 2",
             @"AppleTV3,1": @"Apple TV 3",
             @"AppleTV3,2": @"Apple TV 3",
             @"AppleTV5,3": @"Apple TV 4",
+            @"AppleTV6,2": @"Apple TV 4K",
+            @"AppleTV11,1": @"Apple TV 4K (2nd generation)",
 
+            // Simulator
             @"i386": @"Simulator x86",
             @"x86_64": @"Simulator x64",
+            @"arm64": @"Simulator ARM"
         };
-        name            = dic[model];
+        name = dic[model];
         if (!name) name = model;
     });
     return name;
@@ -363,7 +427,7 @@ static kai_net_interface_counter kai_get_net_interface_counter() {
     NSError *error      = nil;
     NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:&error];
     if (error) return -1;
-    int64_t space        = [[attrs objectForKey:NSFileSystemSize] longLongValue];
+    int64_t space = [[attrs objectForKey:NSFileSystemSize] longLongValue];
     if (space < 0) space = -1;
     return space;
 }
@@ -372,7 +436,7 @@ static kai_net_interface_counter kai_get_net_interface_counter() {
     NSError *error      = nil;
     NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:&error];
     if (error) return -1;
-    int64_t space        = [[attrs objectForKey:NSFileSystemFreeSize] longLongValue];
+    int64_t space = [[attrs objectForKey:NSFileSystemFreeSize] longLongValue];
     if (space < 0) space = -1;
     return space;
 }
@@ -381,13 +445,13 @@ static kai_net_interface_counter kai_get_net_interface_counter() {
     int64_t total = self.diskSpace;
     int64_t free  = self.diskSpaceFree;
     if (total < 0 || free < 0) return -1;
-    int64_t used       = total - free;
+    int64_t used = total - free;
     if (used < 0) used = -1;
     return used;
 }
 
 - (int64_t)memoryTotal {
-    int64_t mem       = [[NSProcessInfo processInfo] physicalMemory];
+    int64_t mem = [[NSProcessInfo processInfo] physicalMemory];
     if (mem < -1) mem = -1;
     return mem;
 }

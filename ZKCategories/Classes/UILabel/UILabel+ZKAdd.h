@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 唯一例外的极端情况是：先用方法2将文字设成红色，再用方法1将文字设成蓝色，最后再 setText，这时虽然代码执行顺序靠后的是方法1，但最终生效的会是方法2，为了避免这种极端情况的困扰，建议不要同时使用方法1和方法2去设置同一种样式。
  *
  */
-@property(nullable, nonatomic, copy) NSDictionary<NSAttributedStringKey, id> *kai_textAttributes;
+@property (nullable, nonatomic, copy) NSDictionary<NSAttributedStringKey, id> *kai_textAttributes;
 
 /**
  *  Setter 设置当前整段文字的行高
@@ -50,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @warning 除上述情况外，计算的数值都可能不准确，会返回 0。
  *
  */
-@property(nonatomic, assign) CGFloat kai_lineHeight;
+@property (nonatomic, assign) CGFloat kai_lineHeight;
 
 /**
  * 在UILabel的样式（如字体）设置完后，将label的text设置为一个测试字符，再调用sizeToFit，从而令label的高度适应字体

@@ -8,13 +8,13 @@
 
 #import "UIImage+ZKAdd.h"
 #import "ZKCGUtilities.h"
-#import <ImageIO/ImageIO.h>
-#import <Accelerate/Accelerate.h>
-#import <CoreText/CoreText.h>
-#import <CoreImage/CoreImage.h>
-#import <CoreImage/CIFilterBuiltins.h>
-#import <objc/runtime.h>
 #import "ZKCategoriesMacro.h"
+#import <Accelerate/Accelerate.h>
+#import <CoreImage/CIFilterBuiltins.h>
+#import <CoreImage/CoreImage.h>
+#import <CoreText/CoreText.h>
+#import <ImageIO/ImageIO.h>
+#import <objc/runtime.h>
 
 static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef source, size_t index) {
     NSTimeInterval delay = 0;
@@ -79,14 +79,14 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
 }
 
 - (UIColor *)averageColor {
-    unsigned char rgba[4] = {};
+    unsigned char rgba[4]      = {};
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef context = CGBitmapContextCreate(rgba, 1, 1, 8, 4, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+    CGContextRef context       = CGBitmapContextCreate(rgba, 1, 1, 8, 4, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
     CGContextInspectContext(context, nil);
     CGContextDrawImage(context, CGRectMake(0, 0, 1, 1), self.CGImage);
     CGColorSpaceRelease(colorSpace);
     CGContextRelease(context);
-    if(rgba[3] > 0) {
+    if (rgba[3] > 0) {
         return [UIColor colorWithRed:((CGFloat)rgba[0] / rgba[3])
                                green:((CGFloat)rgba[1] / rgba[3])
                                 blue:((CGFloat)rgba[2] / rgba[3])
@@ -117,9 +117,9 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
     for (size_t i = 0; i < count; i++) {
         NSTimeInterval delay = _kai_CGImageSourceGetGIFFrameDelayAtIndex(source, i);
         totalTime += delay;
-        NSInteger frame      = lrint(delay / oneFrameTime);
+        NSInteger frame = lrint(delay / oneFrameTime);
         if (frame < 1) frame = 1;
-        frames[i]            = frame;
+        frames[i] = frame;
         totalFrame += frames[i];
         if (i == 0)
             gcdFrame = frames[i];
@@ -337,7 +337,7 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
     NSAssert(data, @"`data` must be non-nil!");
     UIImage *tmp = image;
     if (tmp && !CGSizeEqualToSize(centerImgSize, CGSizeZero) && !CGSizeEqualToSize(centerImgSize, image.size)) tmp = [image imageByResizeToSize:centerImgSize];
-    
+
     CIImage *outputImage = [UIImage.new imageWithString:data];
     return [UIImage createNonInterpolatedUIImageFormCIImage:outputImage size:size image:tmp];
 }
@@ -353,16 +353,16 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
     // 1.创建bitmap;//
     size_t width  = CGRectGetWidth(extent) * scale;
     size_t height = CGRectGetHeight(extent) * scale;
-    //创建一个DeviceGray颜色空间
+    // 创建一个DeviceGray颜色空间
     CGColorSpaceRef cs = CGColorSpaceCreateDeviceGray();
-    //CGBitmapContextCreate(void * _Nullable data, size_t width, size_t height, size_t bitsPerComponent, size_t bytesPerRow, CGColorSpaceRef  _Nullable space, uint32_t bitmapInfo)
-    //width：图片宽度像素
-    //height：图片高度像素
-    //bitsPerComponent：每个颜色的比特值，例如在rgba-32模式下为8
-    //bitmapInfo：指定的位图应该包含一个alpha通道。
+    // CGBitmapContextCreate(void * _Nullable data, size_t width, size_t height, size_t bitsPerComponent, size_t bytesPerRow, CGColorSpaceRef  _Nullable space, uint32_t bitmapInfo)
+    // width：图片宽度像素
+    // height：图片高度像素
+    // bitsPerComponent：每个颜色的比特值，例如在rgba-32模式下为8
+    // bitmapInfo：指定的位图应该包含一个alpha通道。
     CGContextRef bitmapRef = CGBitmapContextCreate(nil, width, height, 8, 0, cs, (CGBitmapInfo)kCGImageAlphaNone);
     CIContext *context     = [CIContext contextWithOptions:nil];
-    //创建CoreGraphics image
+    // 创建CoreGraphics image
     CGImageRef bitmapImage = [context createCGImage:image fromRect:extent];
 
     CGContextSetInterpolationQuality(bitmapRef, kCGInterpolationNone);
@@ -374,17 +374,17 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
     CGContextRelease(bitmapRef);
     CGImageRelease(bitmapImage);
 
-    //原图
+    // 原图
     UIImage *outputImage = [UIImage imageWithCGImage:scaledImage];
 
     if (extra == nil) return outputImage;
 
-    //给二维码加 logo 图
+    // 给二维码加 logo 图
     UIGraphicsBeginImageContextWithOptions(outputImage.size, NO, [[UIScreen mainScreen] scale]);
     [outputImage drawInRect:CGRectMake(0, 0, size.width, size.height)];
     CGFloat waterImagesizeWidth  = size.width * 0.2;
     CGFloat waterImagesizeHeight = size.height * 0.2;
-    //把logo图画到生成的二维码图片上，注意尺寸不要太大（最大不超过二维码图片的%30），太大会造成扫不出来
+    // 把logo图画到生成的二维码图片上，注意尺寸不要太大（最大不超过二维码图片的%30），太大会造成扫不出来
     [extra drawInRect:CGRectMake((size.width - waterImagesizeWidth) / 2.0, (size.height - waterImagesizeHeight) / 2.0, waterImagesizeWidth, waterImagesizeHeight)];
     UIImage *result = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -401,10 +401,10 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
     // 3. 将字符串转换成NSData
     NSData *data = [strings dataUsingEncoding:NSUTF8StringEncoding];
     // 4. 通过KVO设置滤镜inputMessage数据
-    [filter setValue:data forKey:@"inputMessage"];         //通过kvo方式给一个字符串，生成二维码
-    [filter setValue:@"H" forKey:@"inputCorrectionLevel"]; //设置二维码的纠错水平，越高纠错水平越高，可以污损的范围越大
+    [filter setValue:data forKey:@"inputMessage"];         // 通过kvo方式给一个字符串，生成二维码
+    [filter setValue:@"H" forKey:@"inputCorrectionLevel"]; // 设置二维码的纠错水平，越高纠错水平越高，可以污损的范围越大
     // 5. 获得滤镜输出的图像
-    CIImage *outPutImage = [filter outputImage]; //拿到二维码图片
+    CIImage *outPutImage = [filter outputImage]; // 拿到二维码图片
 
     // 6. 将CIImage转换成UIImage，并放大显示
     // (此时获取到的二维码比较模糊,所以需要用下面的createNonInterpolatedUIImageFormCIImage方法重绘二维码)
@@ -727,7 +727,7 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
         .bitsPerComponent = 8,
         .bitsPerPixel     = 32,
         .colorSpace       = NULL,
-        .bitmapInfo       = kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little, //requests a BGRA buffer.
+        .bitmapInfo       = kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little, // requests a BGRA buffer.
         .version          = 0,
         .decode           = NULL,
         .renderingIntent  = kCGRenderingIntentDefault};
@@ -779,9 +779,9 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
         //
         // ... if d is odd, use three box-blurs of size 'd', centered on the output pixel.
         //
-        CGFloat inputRadius                                  = blurRadius * scale;
+        CGFloat inputRadius = blurRadius * scale;
         if (inputRadius - 2.0 < __FLT_EPSILON__) inputRadius = 2.0;
-        uint32_t radius                                      = floor((inputRadius * 3.0 * sqrt(2 * M_PI) / 4 + 0.5) / 2);
+        uint32_t radius = floor((inputRadius * 3.0 * sqrt(2 * M_PI) / 4 + 0.5) / 2);
         radius |= 1; // force radius to be odd so that the three box-blur methodology works.
         int iterations;
         if (blurRadius * scale < 0.5)
@@ -789,7 +789,7 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
         else if (blurRadius * scale < 1.5)
             iterations = 2;
         else
-            iterations     = 3;
+            iterations = 3;
         NSInteger tempSize = vImageBoxConvolve_ARGB8888(input, output, NULL, 0, 0, radius, radius, NULL, kvImageGetTempBufferSize | kvImageEdgeExtend);
         void *temp         = malloc(tempSize);
         for (int i = 0; i < iterations; i++) {
@@ -804,7 +804,22 @@ static NSTimeInterval _kai_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef
         // https://dvcs.w3.org/hg/FXTF/raw-file/default/filters/Publish.html#grayscaleEquivalent
         CGFloat s             = saturation;
         CGFloat matrixFloat[] = {
-            0.0722 + 0.9278 * s, 0.0722 - 0.0722 * s, 0.0722 - 0.0722 * s, 0, 0.7152 - 0.7152 * s, 0.7152 + 0.2848 * s, 0.7152 - 0.7152 * s, 0, 0.2126 - 0.2126 * s, 0.2126 - 0.2126 * s, 0.2126 + 0.7873 * s, 0, 0, 0, 0, 1,
+            0.0722 + 0.9278 * s,
+            0.0722 - 0.0722 * s,
+            0.0722 - 0.0722 * s,
+            0,
+            0.7152 - 0.7152 * s,
+            0.7152 + 0.2848 * s,
+            0.7152 - 0.7152 * s,
+            0,
+            0.2126 - 0.2126 * s,
+            0.2126 - 0.2126 * s,
+            0.2126 + 0.7873 * s,
+            0,
+            0,
+            0,
+            0,
+            1,
         };
         const int32_t divisor = 256;
         NSUInteger matrixSize = sizeof(matrixFloat) / sizeof(matrixFloat[0]);

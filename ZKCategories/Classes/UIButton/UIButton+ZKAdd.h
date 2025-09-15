@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  @brief  响应区域需要改变的大小，负值表示往外扩大，正值表示往内缩小。
  */
-@property(nonatomic, assign) UIEdgeInsets outsideEdge;
+@property (nonatomic, assign) UIEdgeInsets outsideEdge;
 
 /**
  *  @brief  设置标题普通与高亮

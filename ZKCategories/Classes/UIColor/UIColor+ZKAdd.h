@@ -29,7 +29,7 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
 /*
  Create UIColor with a hex string.
  Example: UIColorHex(0xF0F), UIColorHex(66ccff), UIColorHex(#66CCFF88)
- 
+
  Valid format: #RGB #RGBA #RRGGBB #RRGGBBAA 0xRGB ...
  The `#` or "0x" sign is not required.
  */
@@ -52,19 +52,19 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
 /**
  Creates and returns a color object using the specified opacity
  and HSL color space component values.
- 
+
  @param hue        The hue component of the color object in the HSL color space,
  specified as a value from 0.0 to 1.0.
- 
+
  @param saturation The saturation component of the color object in the HSL color space,
  specified as a value from 0.0 to 1.0.
- 
+
  @param lightness  The lightness component of the color object in the HSL color space,
  specified as a value from 0.0 to 1.0.
- 
+
  @param alpha      The opacity value of the color object,
  specified as a value from 0.0 to 1.0.
- 
+
  @return           The color object. The color information represented by this
  object is in the device RGB colorspace.
  */
@@ -76,22 +76,22 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
 /**
  Creates and returns a color object using the specified opacity
  and CMYK color space component values.
- 
+
  @param cyan    The cyan component of the color object in the CMYK color space,
  specified as a value from 0.0 to 1.0.
- 
+
  @param magenta The magenta component of the color object in the CMYK color space,
  specified as a value from 0.0 to 1.0.
- 
+
  @param yellow  The yellow component of the color object in the CMYK color space,
  specified as a value from 0.0 to 1.0.
- 
+
  @param black   The black component of the color object in the CMYK color space,
  specified as a value from 0.0 to 1.0.
- 
+
  @param alpha   The opacity value of the color object,
  specified as a value from 0.0 to 1.0.
- 
+
  @return        The color object. The color information represented by this
  object is in the device RGB colorspace.
  */
@@ -103,9 +103,9 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
 
 /**
  Creates and returns a color object using the hex RGB color values.
- 
+
  @param rgbValue  The rgb value such as 0x66ccff.
- 
+
  @return          The color object. The color information represented by this
  object is in the device RGB colorspace.
  */
@@ -113,9 +113,9 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
 
 /**
  Creates and returns a color object using the hex RGBA color values.
- 
+
  @param rgbaValue  The rgb value such as 0x66ccffff.
- 
+
  @return           The color object. The color information represented by this
  object is in the device RGB colorspace.
  */
@@ -123,12 +123,12 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
 
 /**
  Creates and returns a color object using the specified opacity and RGB hex value.
- 
+
  @param rgbValue  The rgb value such as 0x66CCFF.
- 
+
  @param alpha     The opacity value of the color object,
  specified as a value from 0.0 to 1.0.
- 
+
  @return          The color object. The color information represented by this
  object is in the device RGB colorspace.
  */
@@ -136,42 +136,42 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
 
 /**
  Creates and returns a color object from hex string.
- 
+
  @discussion:
  Valid format: #RGB #RGBA #RRGGBB #RRGGBBAA 0xRGB ...
  The `#` or "0x" sign is not required.
  The alpha will be set to 1.0 if there is no alpha component.
  It will return nil when an error occurs in parsing.
- 
+
  Example: @"0xF0F", @"66ccff", @"#66CCFF88"
- 
+
  @param string  The hex string value for the new color.
- 
+
  @return        An UIColor object from string, or nil if an error occurs.
  */
 + (nullable UIColor *)colorWithHexString:(NSString *)string NS_SWIFT_NAME(hex(_:));
 
 /**
  Creates and returns a color object by add new color.
- 
+
  @param add        the color added
- 
+
  @param blendMode  add color blend mode
  */
 - (UIColor *)colorByAddColor:(UIColor *)add blendMode:(CGBlendMode)blendMode;
 
 /**
  Creates and returns a color object by change components.
- 
+
  @param hueDelta         the hue change delta specified as a value
  from -1.0 to 1.0. 0 means no change.
- 
+
  @param saturationDelta  the saturation change delta specified as a value
  from -1.0 to 1.0. 0 means no change.
- 
+
  @param brightnessDelta  the brightness change delta specified as a value
  from -1.0 to 1.0. 0 means no change.
- 
+
  @param alphaDelta       the alpha change delta specified as a value
  from -1.0 to 1.0. 0 means no change.
  */
@@ -193,7 +193,7 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
 
 /**
  Returns the rgba value in hex.
- 
+
  @return hex value of RGBA,such as 0x66ccffff.
  */
 - (uint32_t)rgbaValue;
@@ -201,9 +201,9 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
 /**
  Returns the color's RGB value as a hex string (lowercase).
  Such as @"0066cc".
- 
+
  It will return nil when the color space is not RGB
- 
+
  @return The color's value as a hex string.
  */
 - (nullable NSString *)hexString;
@@ -211,9 +211,9 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
 /**
  Returns the color's RGBA value as a hex string (lowercase).
  Such as @"0066ccff".
- 
+
  It will return nil when the color space is not RGBA
- 
+
  @return The color's value as a hex string.
  */
 - (nullable NSString *)hexStringWithAlpha;
@@ -225,19 +225,19 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
 
 /**
  Returns the components that make up the color in the HSL color space.
- 
+
  @param hue         On return, the hue component of the color object,
  specified as a value between 0.0 and 1.0.
- 
+
  @param saturation  On return, the saturation component of the color object,
  specified as a value between 0.0 and 1.0.
- 
+
  @param lightness   On return, the lightness component of the color object,
  specified as a value between 0.0 and 1.0.
- 
+
  @param alpha       On return, the alpha component of the color object,
  specified as a value between 0.0 and 1.0.
- 
+
  @return            YES if the color could be converted, NO otherwise.
  */
 - (BOOL)getHue:(CGFloat *)hue
@@ -247,22 +247,22 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
 
 /**
  Returns the components that make up the color in the CMYK color space.
- 
+
  @param cyan     On return, the cyan component of the color object,
  specified as a value between 0.0 and 1.0.
- 
+
  @param magenta  On return, the magenta component of the color object,
  specified as a value between 0.0 and 1.0.
- 
+
  @param yellow   On return, the yellow component of the color object,
  specified as a value between 0.0 and 1.0.
- 
+
  @param black    On return, the black component of the color object,
  specified as a value between 0.0 and 1.0.
- 
+
  @param alpha    On return, the alpha component of the color object,
  specified as a value between 0.0 and 1.0.
- 
+
  @return         YES if the color could be converted, NO otherwise.
  */
 - (BOOL)getCyan:(CGFloat *)cyan

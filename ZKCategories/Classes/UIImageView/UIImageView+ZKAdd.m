@@ -6,9 +6,9 @@
 //  Copyright © 2018年 Kaiser. All rights reserved.
 //
 
-#import "UIImageView+ZKAdd.h"
-#import "NSObject+ZKAdd.h"
 #import "NSNumber+ZKAdd.h"
+#import "NSObject+ZKAdd.h"
+#import "UIImageView+ZKAdd.h"
 
 @interface UIImageView ()
 
@@ -55,7 +55,7 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:@"image"]) {
-        UIImage *newImage = change[ NSKeyValueChangeNewKey ];
+        UIImage *newImage = change[NSKeyValueChangeNewKey];
         if ([newImage isMemberOfClass:[NSNull class]]) {
             return;
         } else if ([[self associatedValueForKey:@selector(updateImage:withRadius:withCorner:)] integerValue] == 1) {
@@ -108,8 +108,8 @@
     CGSize size       = self.bounds.size;
     CGFloat scale     = [UIScreen mainScreen].scale;
     CGSize resultSize = CGSizeMake(radius, radius);
-    if (size.width <= 0 || size.height <= 0) return ;
-    
+    if (size.width <= 0 || size.height <= 0) return;
+
     UIGraphicsBeginImageContextWithOptions(size, NO, scale);
     CGContextRef currentContext = UIGraphicsGetCurrentContext();
     if (nil == currentContext) {

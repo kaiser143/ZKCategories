@@ -7,10 +7,10 @@
 //  Copyright © 2017年 Kaiser. All rights reserved.
 //
 
-#import "UIColor+ZKAdd.h"
 #import "NSString+ZKAdd.h"
+#import "UIColor+ZKAdd.h"
 
-#define CLAMP_COLOR_VALUE(v) (v) = (v) < 0 ? 0 : (v) > 1 ? 1 : (v)
+#define CLAMP_COLOR_VALUE(v) (v) = ((v) < 0 ? 0 : ((v) > 1 ? 1 : (v)))
 
 void ZK_RGB2HSL(CGFloat r, CGFloat g, CGFloat b, CGFloat *h, CGFloat *s, CGFloat *l) {
     CLAMP_COLOR_VALUE(r);
@@ -56,8 +56,8 @@ void ZK_HSL2RGB(CGFloat h, CGFloat s, CGFloat l, CGFloat *r, CGFloat *g, CGFloat
         *r = *g = *b = 0;
         int sextant;
         CGFloat m, sv, fract, vsf, mid1, mid2;
-        m             = l + l - q;
-        sv            = (q - m) / q;
+        m  = l + l - q;
+        sv = (q - m) / q;
         if (h == 1) h = 0;
         h *= 6.0;
         sextant = h;
@@ -329,7 +329,7 @@ static BOOL hexStrToRGBA(NSString *str,
         return NO;
     }
 
-    //RGB,RGBA,RRGGBB,RRGGBBAA
+    // RGB,RGBA,RRGGBB,RRGGBBAA
     if (length < 5) {
         *r = hexStrToInt([str substringWithRange:NSMakeRange(0, 1)]) / 255.0f;
         *g = hexStrToInt([str substringWithRange:NSMakeRange(1, 1)]) / 255.0f;
@@ -415,9 +415,12 @@ static BOOL hexStrToRGBA(NSString *str,
     aa += a;
     hh -= (int)hh;
     hh = hh < 0 ? hh + 1 : hh;
-    ss = ss < 0 ? 0 : ss > 1 ? 1 : ss;
-    bb = bb < 0 ? 0 : bb > 1 ? 1 : bb;
-    aa = aa < 0 ? 0 : aa > 1 ? 1 : aa;
+    ss = ss < 0 ? 0 : ss > 1 ? 1
+                             : ss;
+    bb = bb < 0 ? 0 : bb > 1 ? 1
+                             : bb;
+    aa = aa < 0 ? 0 : aa > 1 ? 1
+                             : aa;
     return [UIColor colorWithHue:hh saturation:ss brightness:bb alpha:aa];
 }
 
