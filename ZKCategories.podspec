@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ZKCategories'
-  s.version          = "0.4.13"
+  s.version          = "0.4.14"
   s.summary          = 'A short description of ZKCategories.'
 
 # This description is used to generate tags and improve search results.
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+ZKCategories provides a set of useful Objective-C categories for UIKit, Foundation, and other frameworks.
                        DESC
 
   s.homepage         = 'https://github.com/kaiser143/ZKCategories'
