@@ -212,7 +212,7 @@
 				6003F586195388D20070C39A /* Sources */,
 				6003F587195388D20070C39A /* Frameworks */,
 				6003F588195388D20070C39A /* Resources */,
-				4988A955F6014B670E4BCB12 /* [CP] Embed Pods Frameworks */,
+				E4103914ED31E4DB042A9925 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -304,24 +304,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4988A955F6014B670E4BCB12 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ZKCategories_Example/Pods-ZKCategories_Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/ZKCategories/ZKCategories.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ZKCategories.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ZKCategories_Example/Pods-ZKCategories_Example-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		8B41097A4725957A6B62A17D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -374,6 +356,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ZKCategories_Tests/Pods-ZKCategories_Tests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E4103914ED31E4DB042A9925 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ZKCategories_Example/Pods-ZKCategories_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/ZKCategories/ZKCategories.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ZKCategories.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ZKCategories_Example/Pods-ZKCategories_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

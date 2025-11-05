@@ -1,6 +1,6 @@
 {
   "name": "ZKCategories",
-  "version": "0.4.13",
+  "version": "0.4.14",
   "summary": "A short description of ZKCategories.",
   "description": "ZKCategories provides a set of useful Objective-C categories for UIKit, Foundation, and other frameworks.",
   "homepage": "https://github.com/kaiser143/ZKCategories",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/kaiser143/ZKCategories.git",
-    "tag": "0.4.13"
+    "tag": "0.4.14"
   },
   "requires_arc": true,
   "platforms": {
@@ -29,7 +29,9 @@
     {
       "name": "ZKKVOSAFE",
       "dependencies": {
-        "ZKCategories/Core": []
+        "ZKCategories/Core": [
+
+        ]
       },
       "pod_target_xcconfig": {
         "GCC_PREPROCESSOR_DEFINITIONS": "KVOSAFE=1"

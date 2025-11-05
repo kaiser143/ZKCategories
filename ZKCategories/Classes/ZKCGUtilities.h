@@ -554,4 +554,22 @@ CG_INLINE BOOL OverrideImplementation(Class targetClass, SEL targetSelector, id 
     return YES;
 }
 
+CG_INLINE BOOL ExtendImplementationOfVoidMethodWithoutArguments(Class targetClass, SEL targetSelector, void (^implementationBlock)(__kindof NSObject *selfObject)) {
+    return OverrideImplementation(targetClass, targetSelector, ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
+        void (^block)(__unsafe_unretained __kindof NSObject *selfObject) = ^(__unsafe_unretained __kindof NSObject *selfObject) {
+
+            void (*originSelectorIMP)(id, SEL);
+            originSelectorIMP = (void (*)(id, SEL))originalIMPProvider();
+            originSelectorIMP(selfObject, originCMD);
+
+            implementationBlock(selfObject);
+        };
+#if __has_feature(objc_arc)
+        return block;
+#else
+        return [block copy];
+#endif
+    });
+}
+
 NS_ASSUME_NONNULL_END

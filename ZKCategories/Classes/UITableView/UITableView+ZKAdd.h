@@ -12,11 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// cell 在当前 section 里的位置，注意判断时要用 (var & xxx) == xxx 的方式
 typedef NS_OPTIONS(NSInteger, KAITableViewCellPosition) {
-    KAITableViewCellPositionNone               = 0, // 默认
-    KAITableViewCellPositionFirstInSection     = 1 << 0,
-    KAITableViewCellPositionMiddleInSection    = 1 << 1,
-    KAITableViewCellPositionLastInSection      = 1 << 2,
-    KAITableViewCellPositionSingleInSection    = KAITableViewCellPositionFirstInSection | KAITableViewCellPositionLastInSection,
+    KAITableViewCellPositionNone            = 0, // 默认
+    KAITableViewCellPositionFirstInSection  = 1 << 0,
+    KAITableViewCellPositionMiddleInSection = 1 << 1,
+    KAITableViewCellPositionLastInSection   = 1 << 2,
+    KAITableViewCellPositionSingleInSection = KAITableViewCellPositionFirstInSection | KAITableViewCellPositionLastInSection,
 };
 
 @interface UITableView (ZKAdd)
@@ -43,39 +43,39 @@ typedef NS_OPTIONS(NSInteger, KAITableViewCellPosition) {
 /**
  Perform a series of method calls that insert, delete, or select rows and
  sections of the receiver.
- 
+
  @discussion Perform a series of method calls that insert, delete, or select
  rows and sections of the table. Call this method if you want
  subsequent insertions, deletion, and selection operations (for
  example, cellForRowAtIndexPath: and indexPathsForVisibleRows)
  to be animated simultaneously.
- 
+
  @discussion If you do not make the insertion, deletion, and selection calls
  inside this block, table attributes such as row count might become
  invalid. You should not call reloadData within the block; if you
  call this method within the group, you will need to perform any
  animations yourself.
- 
+
  @param block  A block combine a series of method calls.
  */
 - (void)updateWithBlock:(void (^)(UITableView *tableView))block;
 
 /**
  Scrolls the receiver until a row or section location on the screen.
- 
+
  @discussion            Invoking this method does not cause the delegate to
  receive a scrollViewDidScroll: message, as is normal for
  programmatically-invoked user interface operations.
- 
+
  @param row             Row index in section. NSNotFound is a valid value for
  scrolling to a section with zero rows.
- 
+
  @param section         Section index in table.
- 
+
  @param scrollPosition  A constant that identifies a relative position in the
  receiving table view (top, middle, bottom) for row when
  scrolling concludes.
- 
+
  @param animated        YES if you want to animate the change in position,
  NO if it should be immediate.
  */
@@ -83,11 +83,11 @@ typedef NS_OPTIONS(NSInteger, KAITableViewCellPosition) {
 
 /**
  Inserts a row in the receiver with an option to animate the insertion.
- 
+
  @param row        Row index in section.
- 
+
  @param section    Section index in table.
- 
+
  @param animation  A constant that either specifies the kind of animation to
  perform when inserting the cell or requests no animation.
  */
@@ -95,11 +95,11 @@ typedef NS_OPTIONS(NSInteger, KAITableViewCellPosition) {
 
 /**
  Reloads the specified row using a certain animation effect.
- 
+
  @param row        Row index in section.
- 
+
  @param section    Section index in table.
- 
+
  @param animation  A constant that indicates how the reloading is to be animated,
  for example, fade out or slide out from the bottom. The animation
  constant affects the direction in which both the old and the
@@ -111,11 +111,11 @@ typedef NS_OPTIONS(NSInteger, KAITableViewCellPosition) {
 
 /**
  Deletes the row with an option to animate the deletion.
- 
+
  @param row        Row index in section.
- 
+
  @param section    Section index in table.
- 
+
  @param animation  A constant that indicates how the deletion is to be animated,
  for example, fade out or slide out from the bottom.
  */
@@ -124,10 +124,10 @@ typedef NS_OPTIONS(NSInteger, KAITableViewCellPosition) {
 /**
  Inserts the row in the receiver at the locations identified by the indexPath,
  with an option to animate the insertion.
- 
+
  @param indexPath  An NSIndexPath object representing a row index and section
  index that together identify a row in the table view.
- 
+
  @param animation  A constant that either specifies the kind of animation to
  perform when inserting the cell or requests no animation.
  */
@@ -135,10 +135,10 @@ typedef NS_OPTIONS(NSInteger, KAITableViewCellPosition) {
 
 /**
  Reloads the specified row using a certain animation effect.
- 
+
  @param indexPath  An NSIndexPath object representing a row index and section
  index that together identify a row in the table view.
- 
+
  @param animation A constant that indicates how the reloading is to be animated,
  for example, fade out or slide out from the bottom. The animation
  constant affects the direction in which both the old and the
@@ -151,10 +151,10 @@ typedef NS_OPTIONS(NSInteger, KAITableViewCellPosition) {
 /**
  Deletes the row specified by an array of index paths,
  with an option to animate the deletion.
- 
+
  @param indexPath  An NSIndexPath object representing a row index and section
  index that together identify a row in the table view.
- 
+
  @param animation  A constant that indicates how the deletion is to be animated,
  for example, fade out or slide out from the bottom.
  */
@@ -162,11 +162,11 @@ typedef NS_OPTIONS(NSInteger, KAITableViewCellPosition) {
 
 /**
  Inserts a section in the receiver, with an option to animate the insertion.
- 
+
  @param section    An index specifies the section to insert in the receiving
  table view. If a section already exists at the specified
  index location, it is moved down one index location.
- 
+
  @param animation  A constant that indicates how the insertion is to be animated,
  for example, fade in or slide in from the left.
  */
@@ -174,11 +174,11 @@ typedef NS_OPTIONS(NSInteger, KAITableViewCellPosition) {
 
 /**
  Deletes a section in the receiver, with an option to animate the deletion.
- 
+
  @param section    An index that specifies the sections to delete from the
  receiving table view. If a section exists after the specified
  index location, it is moved up one index location.
- 
+
  @param animation  A constant that either specifies the kind of animation to
  perform when deleting the section or requests no animation.
  */
@@ -186,9 +186,9 @@ typedef NS_OPTIONS(NSInteger, KAITableViewCellPosition) {
 
 /**
  Reloads the specified section using a given animation effect.
- 
+
  @param section    An index identifying the section to reload.
- 
+
  @param animation  A constant that indicates how the reloading is to be animated,
  for example, fade out or slide out from the bottom. The
  animation constant affects the direction in which both the
@@ -200,7 +200,7 @@ typedef NS_OPTIONS(NSInteger, KAITableViewCellPosition) {
 
 /**
  Unselect all rows in tableView.
- 
+
  @param animated YES to animate the transition, NO to make the transition immediate.
  */
 - (void)clearSelectedRowsAnimated:(BOOL)animated;
@@ -217,7 +217,6 @@ typedef NS_OPTIONS(NSInteger, KAITableViewCellPosition) {
 
 @end
 
-
 /**
  系统在 iOS 13 新增了 UITableViewStyleInsetGrouped 类型用于展示往内缩进、cell 带圆角的列表，而这个 Category 让 iOS 12 及以下的系统也能支持这种样式，iOS 13 也可以通过这个 Category 修改左右的缩进值和 cell 的圆角。
  使用方式：
@@ -228,10 +227,10 @@ typedef NS_OPTIONS(NSInteger, KAITableViewCellPosition) {
 @interface UITableView (ZKAdd_InsetGrouped)
 
 /// 当使用 UITableViewStyleInsetGrouped 时可通过这个属性修改 cell 的圆角值，默认值为 10，也即 iOS 13 系统默认表现。如果要为不同 indexPath 指定不同圆角值，可在 -[UITableViewDelegate tableView:willDisplayCell:forRowAtIndexPath:] 内修改 cell.layer.cornerRadius 的值。
-@property(nonatomic, assign) CGFloat kai_insetGroupedCornerRadius UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) CGFloat kai_insetGroupedCornerRadius UI_APPEARANCE_SELECTOR API_AVAILABLE(ios(13.0));
 
 /// 当使用 UITableViewStyleInsetGrouped 时可通过这个属性修改列表的左右缩进值，默认值为 20，也即 iOS 13 系统默认表现。
-@property(nonatomic, assign) CGFloat kai_insetGroupedHorizontalInset UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) CGFloat kai_insetGroupedHorizontalInset UI_APPEARANCE_SELECTOR API_AVAILABLE(ios(13.0));
 
 @end
 
