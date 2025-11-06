@@ -227,10 +227,10 @@ typedef NS_OPTIONS(NSInteger, KAITableViewCellPosition) {
 @interface UITableView (ZKAdd_InsetGrouped)
 
 /// 当使用 UITableViewStyleInsetGrouped 时可通过这个属性修改 cell 的圆角值，默认值为 10，也即 iOS 13 系统默认表现。如果要为不同 indexPath 指定不同圆角值，可在 -[UITableViewDelegate tableView:willDisplayCell:forRowAtIndexPath:] 内修改 cell.layer.cornerRadius 的值。
-@property (nonatomic, assign) CGFloat kai_insetGroupedCornerRadius UI_APPEARANCE_SELECTOR API_AVAILABLE(ios(13.0));
+@property (nonatomic, assign) IBInspectable CGFloat kai_insetGroupedCornerRadius UI_APPEARANCE_SELECTOR API_AVAILABLE(ios(13.0));
 
 /// 当使用 UITableViewStyleInsetGrouped 时可通过这个属性修改列表的左右缩进值，默认值为 20，也即 iOS 13 系统默认表现。
-@property (nonatomic, assign) CGFloat kai_insetGroupedHorizontalInset UI_APPEARANCE_SELECTOR API_AVAILABLE(ios(13.0));
+@property (nonatomic, assign) IBInspectable CGFloat kai_insetGroupedHorizontalInset UI_APPEARANCE_SELECTOR API_AVAILABLE(ios(13.0));
 
 @end
 
