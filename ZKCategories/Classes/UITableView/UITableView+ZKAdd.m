@@ -195,68 +195,41 @@
     }
 
     KAITableViewCellPosition position = cell.cellPosition;
-    CGFloat cornerRadius              = tableView.kai_insetGroupedCornerRadius;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+    CGFloat cornerRadius = tableView.kai_insetGroupedCornerRadius;
+#pragma clang diagnostic pop
 
-    // 如果 position 还是 MiddleInSection（可能是未正确设置），尝试通过检查 separator 位置来判断（参考 TOInsetGroupedTableView 的方式）
-    // 注意：这里只有当 position 是 MiddleInSection 时才判断，因为其他位置已经明确
     if (position == KAITableViewCellPositionMiddleInSection) {
-        BOOL topRounded         = NO;
-        BOOL bottomRounded      = NO;
-        CGFloat separatorHeight = 1.0f;
-
-        // 检查 separator 位置来判断 cell 位置
-        for (UIView *subview in cell.subviews) {
-            CGRect frame = subview.frame;
-            if (frame.size.height > separatorHeight) continue;
-            if (frame.origin.x > FLT_EPSILON) continue; // 这是有偏移的 separator，跳过
-
-            if (frame.origin.y < FLT_EPSILON) {
-                topRounded = YES;
-            } else {
-                bottomRounded = YES;
+        // 通过 indexPath 重新准确判断位置，而不是通过 separator
+        NSIndexPath *indexPath = [tableView indexPathForCell:cell];
+        if (indexPath) {
+            KAITableViewCellPosition correctPosition = [tableView positionForRowAtIndexPath:indexPath];
+            if (correctPosition != KAITableViewCellPositionMiddleInSection) {
+                position          = correctPosition;
+                cell.cellPosition = position;
             }
-        }
-
-        // 如果检测到 separator，说明这不是真正的中间位置，需要重新判断
-        if (topRounded || bottomRounded) {
-            if (topRounded && bottomRounded) {
-                position = KAITableViewCellPositionSingleInSection;
-            } else if (topRounded) {
-                position = KAITableViewCellPositionFirstInSection;
-            } else if (bottomRounded) {
-                position = KAITableViewCellPositionLastInSection;
-            }
-            cell.cellPosition = position;
         }
     }
 
-    // 中间位置的 cell 不需要圆角
     if (position == KAITableViewCellPositionMiddleInSection) {
         cornerRadius = 0;
     }
 
-    // 设置 cell 的 masksToBounds
     cell.layer.masksToBounds = YES;
 
     if (cornerRadius > 0) {
-        // 确定哪些角需要圆角
         UIRectCorner corners = 0;
 
         if (position == KAITableViewCellPositionSingleInSection) {
-            // 唯一的 cell：设置所有圆角
             corners = UIRectCornerAllCorners;
         } else if (position == KAITableViewCellPositionFirstInSection) {
-            // 第一个 cell：只设置上圆角
             corners = UIRectCornerTopLeft | UIRectCornerTopRight;
         } else if (position == KAITableViewCellPositionLastInSection) {
-            // 最后一个 cell：只设置下圆角
             corners = UIRectCornerBottomLeft | UIRectCornerBottomRight;
         }
 
-        // iOS 26 及以上：使用 CAShapeLayer mask 实现圆角（兼容模式下更可靠，不会被系统覆盖）
-        // iOS 26 以下：使用 cornerRadius + maskedCorners 方式
         if (@available(iOS 26.0, *)) {
-            // 使用 CAShapeLayer mask 实现圆角（参考 TOInsetGroupedTableView 的实现）
             CGRect bounds           = cell.bounds;
             UIBezierPath *maskPath  = [UIBezierPath bezierPathWithRoundedRect:bounds
                                                            byRoundingCorners:corners
@@ -266,7 +239,6 @@
             maskLayer.path          = maskPath.CGPath;
             cell.layer.mask         = maskLayer;
         } else {
-            // iOS 26 以下：使用原有的实现方式
             cell.layer.cornerRadius = cornerRadius;
             if (@available(iOS 11.0, *)) {
                 CACornerMask maskedCorners = 0;
@@ -279,11 +251,9 @@
                 }
                 cell.layer.maskedCorners = maskedCorners;
             }
-            // 移除可能存在的 mask（如果之前是 iOS 26+ 创建的）
             cell.layer.mask = nil;
         }
     } else {
-        // 没有圆角时，清除所有圆角设置
         cell.layer.mask         = nil;
         cell.layer.cornerRadius = 0;
         if (@available(iOS 11.0, *)) {
@@ -303,15 +273,13 @@
                 originSelectorIMP = (void (*)(id, SEL, UITableViewCell *, NSIndexPath *))originalIMPProvider();
                 originSelectorIMP(selfObject, originCMD, cell, indexPath);
 
-                // UITableViewCell 内会根据 cellPosition 调整 separator 的布局，所以先在这里赋值以供那边使用
                 KAITableViewCellPosition position = [selfObject positionForRowAtIndexPath:indexPath];
                 cell.cellPosition                 = position;
 
-                // 应用圆角设置：先立即应用一次，然后延迟再次应用确保在系统设置之后（iOS 26 兼容模式）
                 if (@available(iOS 13.0, *)) {
                     if (selfObject.style == UITableViewStyleInsetGrouped) {
                         [UITableView kai_applyCornerRadiusToCell:cell forTableView:selfObject];
-                        dispatch_async(dispatch_get_main_queue(), ^{
+                        dispatch_async_on_main_queue(^{
                             if (selfObject.style == UITableViewStyleInsetGrouped) {
                                 [UITableView kai_applyCornerRadiusToCell:cell forTableView:selfObject];
                             }
@@ -336,7 +304,7 @@
                     if (@available(iOS 13.0, *)) {
                         if (tableView && tableView.style == UITableViewStyleInsetGrouped) {
                             [UITableView kai_applyCornerRadiusToCell:selfObject forTableView:tableView];
-                            dispatch_async(dispatch_get_main_queue(), ^{
+                            dispatch_sync_on_main_queue(^{
                                 if (tableView && tableView.style == UITableViewStyleInsetGrouped) {
                                     [UITableView kai_applyCornerRadiusToCell:selfObject forTableView:tableView];
                                 }
@@ -353,14 +321,12 @@
             UITableView *tableView = selfObject.tableView;
             if (@available(iOS 13.0, *)) {
                 if (tableView && tableView.style == UITableViewStyleInsetGrouped) {
-                    // 确保 cellPosition 已设置
                     if (selfObject.cellPosition == KAITableViewCellPositionMiddleInSection) {
                         NSIndexPath *indexPath = [tableView indexPathForCell:selfObject];
                         if (indexPath) {
                             selfObject.cellPosition = [tableView positionForRowAtIndexPath:indexPath];
                         }
                     }
-                    // 应用圆角设置（在 layoutSubviews 中不需要再次 layout，但会重新创建 mask 以匹配新的 bounds）
                     [UITableView kai_applyCornerRadiusToCell:selfObject forTableView:tableView forceLayout:NO];
                 }
             }
@@ -376,8 +342,11 @@
 
                 if (@available(iOS 13.0, *)) {
                     if (selfObject.style == UITableViewStyleInsetGrouped) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
                         result.left  = selfObject.safeAreaInsets.left + selfObject.kai_insetGroupedHorizontalInset;
                         result.right = selfObject.safeAreaInsets.right + selfObject.kai_insetGroupedHorizontalInset;
+#pragma clang diagnostic pop
                     }
                 }
 
@@ -387,11 +356,19 @@
     });
 }
 
-- (void)setKai_insetGroupedCornerRadius:(CGFloat)kai_insetGroupedCornerRadius {
+- (void)setKai_insetGroupedCornerRadius:(CGFloat)kai_insetGroupedCornerRadius API_AVAILABLE(ios(13.0)) {
     [self setAssociateValue:@(kai_insetGroupedCornerRadius) withKey:@selector(kai_insetGroupedCornerRadius)];
-    if (@available(iOS 13.0, *)) {
-        if (self.style == UITableViewStyleInsetGrouped) {
-            // 立即对所有可见的 cell 应用圆角
+    if (self.style == UITableViewStyleInsetGrouped) {
+        for (NSIndexPath *indexPath in self.indexPathsForVisibleRows) {
+            UITableViewCell *cell = [self cellForRowAtIndexPath:indexPath];
+            if (cell) {
+                if (cell.cellPosition == KAITableViewCellPositionMiddleInSection) {
+                    cell.cellPosition = [self positionForRowAtIndexPath:indexPath];
+                }
+                [UITableView kai_applyCornerRadiusToCell:cell forTableView:self];
+            }
+        }
+        dispatch_async_on_main_queue(^{
             for (NSIndexPath *indexPath in self.indexPathsForVisibleRows) {
                 UITableViewCell *cell = [self cellForRowAtIndexPath:indexPath];
                 if (cell) {
@@ -401,23 +378,11 @@
                     [UITableView kai_applyCornerRadiusToCell:cell forTableView:self];
                 }
             }
-            // 延迟再次应用，确保在系统设置之后（iOS 26 兼容模式）
-            dispatch_async(dispatch_get_main_queue(), ^{
-                for (NSIndexPath *indexPath in self.indexPathsForVisibleRows) {
-                    UITableViewCell *cell = [self cellForRowAtIndexPath:indexPath];
-                    if (cell) {
-                        if (cell.cellPosition == KAITableViewCellPositionMiddleInSection) {
-                            cell.cellPosition = [self positionForRowAtIndexPath:indexPath];
-                        }
-                        [UITableView kai_applyCornerRadiusToCell:cell forTableView:self];
-                    }
-                }
-            });
-        }
+        });
     }
 }
 
-- (CGFloat)kai_insetGroupedCornerRadius {
+- (CGFloat)kai_insetGroupedCornerRadius API_AVAILABLE(ios(13.0)) {
     NSNumber *value = [self associatedValueForKey:_cmd];
     if (!value) {
         // 从来没设置过（包括业务主动设置或者通过 UIAppearance 方式设置），则用 iOS 13 系统默认值
@@ -427,16 +392,14 @@
     return [value CGFloatValue];
 }
 
-- (void)setKai_insetGroupedHorizontalInset:(CGFloat)kai_insetGroupedHorizontalInset {
+- (void)setKai_insetGroupedHorizontalInset:(CGFloat)kai_insetGroupedHorizontalInset API_AVAILABLE(ios(13.0)) {
     [self setAssociateValue:@(kai_insetGroupedHorizontalInset) withKey:@selector(kai_insetGroupedHorizontalInset)];
-    if (@available(iOS 13.0, *)) {
-        if (self.style == UITableViewStyleInsetGrouped && self.indexPathsForVisibleRows.count) {
-            [self reloadData];
-        }
+    if (self.style == UITableViewStyleInsetGrouped && self.indexPathsForVisibleRows.count) {
+        [self reloadData];
     }
 }
 
-- (CGFloat)kai_insetGroupedHorizontalInset {
+- (CGFloat)kai_insetGroupedHorizontalInset API_AVAILABLE(ios(13.0)) {
     NSNumber *associatedValue = [self associatedValueForKey:_cmd];
     if (!associatedValue) {
         // 从来没设置过（包括业务主动设置或者通过 UIAppearance 方式设置），则用 iOS 13 系统默认值
