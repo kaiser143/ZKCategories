@@ -50,18 +50,17 @@
                                      [self kai_pushViewController:ZKViewController.new];
                                  }];
     } else {
-        self.kai_interactivePopDisabled = YES;
-//        UIScrollView *scrollView   = [[UIScrollView alloc] initWithFrame:self.view.bounds];
-//        scrollView.backgroundColor = UIColor.randomColor;
-//        scrollView.delegate        = self;
-//        scrollView.contentSize     = CGSizeMake(kScreenSize.width, 2 * kScreenSize.height);
-//        [self.view addSubview:scrollView];
-//
-//        @weakify(self);
-//        self.kai_prefersPopViewControllerInjectBlock = ^(UIViewController *_Nonnull controller) {
-//            @strongify(self);
-//            [self kai_popViewControllerAnimated];
-//        };
+        UIScrollView *scrollView   = [[UIScrollView alloc] initWithFrame:self.view.bounds];
+        scrollView.backgroundColor = UIColor.randomColor;
+        scrollView.delegate        = self;
+        scrollView.contentSize     = CGSizeMake(kScreenSize.width, 2 * kScreenSize.height);
+        [self.view addSubview:scrollView];
+
+        @weakify(self);
+        self.kai_prefersPopViewControllerInjectBlock = ^(UIViewController *_Nonnull controller) {
+            @strongify(self);
+            [self kai_popViewControllerAnimated];
+        };
 
         //        [scrollView.panGestureRecognizer requireGestureRecognizerToFail:self.navigationController.interactivePopGestureRecognizer];
     }
