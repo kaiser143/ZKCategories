@@ -16,165 +16,151 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSString *)URLEncodedStringValue;
 
-/// Merges the keys and values from the given dictionary into the receiver. If
-/// both the receiver and `dictionary` have a given key, the value from
-/// `dictionary` is used.
-///
-/// Returns a new dictionary containing the entries of the receiver combined with
-/// those of `dictionary`.
+/// 将给定字典的键值合并到接收者。若同一 key 在两边都存在，以 dictionary 中的值为准。
+/// 返回新字典，包含接收者与 dictionary 的合并结果。
 - (NSDictionary<KeyType, ValueType> *)dictionaryByAddingEntriesFromDictionary:(NSDictionary<KeyType, ValueType> *)dictionary;
 
-/// Creates a new dictionary with all the entries for the given keys removed from
-/// the receiver.
+/// 从接收者中移除指定 keys 对应的条目，返回新字典。
 - (NSDictionary<KeyType, ValueType> *)dictionaryByRemovingValuesForKeys:(NSArray<KeyType> *)keys;
 
 /**
- Returns a new array containing the dictionary's keys sorted.
- The keys should be NSString, and they will be sorted ascending.
+ 返回字典所有 key 排序后的新数组。key 应为 NSString，按升序排列。
  
- @return A new array containing the dictionary's keys,
- or an empty array if the dictionary has no entries.
+ @return 排序后的 key 数组，字典为空时返回空数组。
  */
 - (NSArray<KeyType> *)allKeysSorted;
 
 /**
- Returns a new array containing the dictionary's values sorted by keys.
+ 按 key 排序后返回字典所有 value 的新数组。顺序由 key 决定，key 应为 NSString，按升序。
  
- The order of the values in the array is defined by keys.
- The keys should be NSString, and they will be sorted ascending.
- 
- @return A new array containing the dictionary's values sorted by keys,
- or an empty array if the dictionary has no entries.
+ @return 按 key 排序的 value 数组，字典为空时返回空数组。
  */
 - (NSArray<ValueType> *)allValuesSortedByKeys;
 
 /**
- Returns a new dictionary containing the entries for keys.
- If the keys is empty or nil, it just returns an empty dictionary.
+ 返回仅包含指定 keys 对应条目的新字典。keys 为空或 nil 时返回空字典。
  
- @param keys The keys.
- @return The entries for the keys.
+ @param keys 键数组。
+ @return 这些 key 对应的条目字典。
  */
 - (NSDictionary<KeyType, ValueType> *)entriesForKeys:(NSArray<KeyType> *)keys;
 
 /**
- Convert dictionary to json string. return nil if an error occurs.
+ 将字典转为 JSON 字符串。失败返回 nil。
  */
 - (nullable NSString *)jsonStringEncoded;
 
 /**
- Convert dictionary to json string formatted. return nil if an error occurs.
+ 将字典转为格式化后的 JSON 字符串。失败返回 nil。
  */
 - (nullable NSString *)jsonPrettyStringEncoded;
 
 /**
- Try to parse an XML and wrap it into a dictionary.
- If you just want to get some value from a small xml, try this.
+ 尝试解析 XML 并包装为字典。适合从小段 XML 中取值。
  
- example XML: "<config><a href="test.com">link</a></config>"
- example Return: @{@"_name":@"config", @"a":{@"_text":@"link",@"href":@"test.com"}}
+ 示例 XML: "<config><a href="test.com">link</a></config>"
+ 示例返回: @{@"_name":@"config", @"a":{@"_text":@"link",@"href":@"test.com"}}
  
- @param xmlDataOrString XML in NSData or NSString format.
- @return Return a new dictionary, or nil if an error occurs.
+ @param xmlDataOrString NSData 或 NSString 形式的 XML。
+ @return 新字典，解析失败返回 nil。
  */
 + (nullable NSDictionary<KeyType, ValueType> *)dictionaryWithXML:(id)xmlDataOrString;
 
 #pragma mark - :. SafeAccess
 
 /**
- Returns a BOOL value tells if the dictionary has an object for key.
+ 返回字典是否包含指定 key 对应的对象。
  
- @param key The key.
+ @param key 键。
  */
 - (BOOL)hasKey:(KeyType)key;
 
 /**
- Returns a NSString value for the specified key.
+ 返回指定 key 对应的 NSString。若不是 NSString 且无法转换则返回 nil。
  
- @param key The key for which to return the corresponding value
- @returns the resulting string. If the result is not a NSString and can't converted to one, it returns nil
+ @param key 键。
+ @returns 对应的字符串。
  */
 - (NSString *)stringForKey:(KeyType)key;
 
 /**
- Returns a NSNumber value for the specified key.
- @note this method, if it found a string on the specified key, uses a number formatter based on the en_US_POSIX locale to parse the number, if the number does not follow that format it will return nil.
+ 返回指定 key 对应的 NSNumber。若该 key 对应字符串，则用 en_US_POSIX 数字格式解析，格式不符返回 nil。
  
- @param key The key for which to return the corresponding value
- @returns the resulting number. If the result is not a NSNumber and can't converted to one, it returns nil
+ @param key 键。
+ @returns 对应的数字。
  */
 - (NSNumber *)numberForKey:(KeyType)key;
 
 /**
- Returns a NSNumber value for the specified key.
- @param key The key for which to return the corresponding value
- @param numberFormatter The formatter to use to parse the number if the object found on the key is a string
- @returns the resulting number. If the result is not a NSNumber and can't converted to one, it returns nil
+ 返回指定 key 对应的 NSNumber。若该 key 对应字符串，用 numberFormatter 解析。
+ 
+ @param key 键。
+ @param numberFormatter 当 key 对应字符串时用于解析的格式器。
+ @returns 对应的数字。
  */
 - (NSNumber *)numberForKey:(KeyType)key usingFormatter:(NSNumberFormatter *)numberFormatter;
 
 /**
- Returns a NSArray value for the specified key.
+ 返回指定 key 对应的 NSArray。若不是 NSArray 则返回 nil。
  
- @param key The key for which to return the corresponding value
- @returns the resulting array. If the result is not a NSArray, it returns nil
+ @param key 键。
+ @returns 对应的数组。
  */
 - (NSArray<ValueType> *)arrayForKey:(KeyType)key;
 
 /**
- Returns a NSDictionary value for the specified key.
+ 返回指定 key 对应的 NSDictionary。若不是 NSDictionary 则返回 nil。
  
- @param key The key for which to return the corresponding value
- @returns the resulting dictionary. If the result is not a NSDictionary, it returns nil
+ @param key 键。
+ @returns 对应的字典。
  */
 - (NSDictionary<KeyType, ValueType> *)dictionaryForKey:(KeyType)key;
 
 /**
- Returns an object for the specified keyPath
- 
- @param keyPath A key path of the form relationship.property (with one or more relationships); for example “department.name” or “department.manager.lastName”
- @returns The value for the derived property identified by keyPath. If the keyPath is not valid, it returns nil
+ 按 keyPath 取嵌套对象（如 relationship.property 形式，例如 “department.name” 或 “department.manager.lastName”）。
+ @param keyPath 键路径。
+ @returns keyPath 对应的值，无效时返回 nil。
  */
 - (ValueType)objectForKeyPath:(NSString *)keyPath;
 
 /**
- Returns an object for the specified keyPath
+ 按 keyPath 取嵌套对象并转为 NSString。无效或无法转为字符串时返回 nil。
  
- @param keyPath A key path of the form relationship.property, see objectForKeyPath:
- @returns The value for the derived property identified by keyPath. If the keyPath is not valid or the result is not a NSString or can't be converted to one, it returns nil
+ @param keyPath 键路径，参见 objectForKeyPath:。
+ @returns 对应的字符串。
  */
 - (NSString *)stringForKeyPath:(NSString *)keyPath;
 
 /**
- Returns an object for the specified keyPath
- @note this method, if it found a string on the specified keypath, uses a number formatter based on the en_US_POSIX locale to parse the number, if the number does not follow that format it will return nil.
- @param keyPath A key path of the form relationship.property, see objectForKeyPath:
- @returns The value for the derived property identified by keyPath. If the keyPath is not valid or the result is not a NSNumber or can't be converted to one, it returns nil
+ 按 keyPath 取嵌套对象并转为 NSNumber。keyPath 对应字符串时用 en_US_POSIX 解析，格式不符返回 nil。
+ 
+ @param keyPath 键路径，参见 objectForKeyPath:。
+ @returns 对应的数字。
  */
 - (NSNumber *)numberForKeyPath:(NSString *)keyPath;
 
 /**
- Returns an object for the specified keyPath
+ 按 keyPath 取嵌套对象并转为 NSNumber。keyPath 对应字符串时用 numberFormatter 解析。
  
- @param keyPath A key path of the form relationship.property, see objectForKeyPath:
- @param numberFormatter The formatter to use to parse the number if the object found on the keypath is a string
- @returns The value for the derived property identified by keyPath. If the keyPath is not valid or the result is not a NSNumber or can't be converted to one, it returns nil
+ @param keyPath 键路径。
+ @param numberFormatter 当 keyPath 对应字符串时用于解析的格式器。
+ @returns 对应的数字。
  */
 - (NSNumber *)numberForKeyPath:(NSString *)keyPath usingFormatter:(NSNumberFormatter *)numberFormatter;
 
 /**
- Returns an object for the specified keyPath
+ 按 keyPath 取嵌套对象并转为 NSArray。无效或非 NSArray 时返回 nil。
  
- @param keyPath A key path of the form relationship.property, see objectForKeyPath:
- @returns The value for the derived property identified by keyPath. If the keyPath is not valid or the result is not a NSArray, it returns nil
+ @param keyPath 键路径，参见 objectForKeyPath:。
+ @returns 对应的数组。
  */
 - (NSArray *)arrayForKeyPath:(NSString *)keyPath;
 
 /**
- Returns an object for the specified keyPath
+ 按 keyPath 取嵌套对象并转为 NSDictionary。无效或非 NSDictionary 时返回 nil。
  
- @param keyPath A key path of the form relationship.property, see objectForKeyPath:
- @returns The value for the derived property identified by keyPath. If the keyPath is not valid or the result is not a NSDictionary, it returns nil
+ @param keyPath 键路径，参见 objectForKeyPath:。
+ @returns 对应的字典。
  */
 - (NSDictionary<KeyType, ValueType> *)dictionaryForKeyPath:(NSString *)keyPath;
 
@@ -212,7 +198,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)XMLString;
 
 /*
- * Checks to see if the dictionary is empty
+ * 判断字典是否为空
  */
 @property(nonatomic, readonly, getter=isEmpty) BOOL empty;
 
@@ -221,20 +207,18 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSMutableDictionary<KeyType, ValueType> (ZKAdd)
 
 /**
- Removes and returns the value associated with a given key.
+ 移除并返回指定 key 对应的值。
  
- @param aKey The key for which to return and remove the corresponding value.
- @return The value associated with aKey, or nil if no value is associated with aKey.
+ @param aKey 键。
+ @return 该 key 对应的值，不存在则返回 nil。
  */
 - (nullable ValueType)popObjectForKey:(KeyType)aKey;
 
 /**
- Returns a new dictionary containing the entries for keys, and remove these
- entries from reciever. If the keys is empty or nil, it just returns an
- empty dictionary.
+ 返回由指定 keys 对应条目组成的新字典，并从接收者中移除这些条目。keys 为空或 nil 时返回空字典。
  
- @param keys The keys.
- @return The entries for the keys.
+ @param keys 键数组。
+ @return 这些 key 对应的条目字典。
  */
 - (NSDictionary<KeyType, ValueType> *)popEntriesForKeys:(NSArray<KeyType> *)keys;
 

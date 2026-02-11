@@ -13,32 +13,32 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSArray<__covariant ValueType> (ZKAdd)
 
 /**
- * @return NSArray with only the elements that pass the truth test
+ * @return 仅包含通过条件测试的元素的 NSArray
  */
 - (NSArray *)filter:(BOOL (^)(ValueType object))condition;
 
 /**
- * @return NSArray with only the elements that pass the truth test
+ * @return 仅包含通过条件测试的元素的 NSArray
  */
 - (NSArray *)ignore:(id)value;
 
 /**
- * performs the operation to each element
+ * 对每个元素执行操作
  */
 - (void)each:(void (^ _Nonnull)(ValueType object))operation;
 
 /**
- * @return new NSArray from the result of the block performed to each element
+ * @return 对每个元素执行 block 后得到的新 NSArray
  */
 - (NSArray *)map:(id (^ _Nonnull)(ValueType obj, NSUInteger idx))block;
 
 /**
- * @return new NSArray by flatting it and performing a map to each element(把二维数组中的对象 经过block 转换为另一个对象)
+ * @return 先扁平化再对每个元素执行 map 得到的新 NSArray（把二维数组中的对象经过 block 转换为另一个对象）
  */
 - (NSArray *)flattenMap:(id (^ _Nonnull)(ValueType obj, NSUInteger idx))block;
 
 /**
- * @return new NSArray by flatting it with the key and performing a map to each element
+ * @return 按 key 扁平化并对每个元素执行 map 得到的新 NSArray
  */
 - (NSArray *)flattenMap:(NSString *_Nonnull)key block:(id (^ _Nonnull)(ValueType obj, NSUInteger idx))block;
 
@@ -112,7 +112,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /*
- * Checks to see if the array is empty
+ * 判断数组是否为空
  */
 @property(nonatomic, readonly, getter=isEmpty) BOOL empty;
 
@@ -136,94 +136,77 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSMutableArray<ValueType> (SafeAccess)
 
 /**
- Removes the object with the lowest-valued index in the array.
- If the array is empty, this method has no effect.
+ 移除数组中索引最小的对象。若数组为空则无效果。
  
- @discussion Apple has implemented this method, but did not make it public.
- Override for safe.
+ @discussion Apple 已实现此方法但未公开，此处重写以保证安全。
  */
 - (void)removeFirstObject;
 
 /**
- Removes the object with the highest-valued index in the array.
- If the array is empty, this method has no effect.
+ 移除数组中索引最大的对象。若数组为空则无效果。
  
- @discussion Apple's implementation said it raises an NSRangeException if the
- array is empty, but in fact nothing will happen. Override for safe.
+ @discussion Apple 文档称数组为空会抛出 NSRangeException，实际不会。此处重写以保证安全。
  */
 - (void)removeLastObject;
 
 /**
- Removes and returns the object with the lowest-valued index in the array.
- If the array is empty, it just returns nil.
+ 移除并返回数组中索引最小的对象。若数组为空则返回 nil。
  
- @return The first object, or nil.
+ @return 第一个对象，或 nil。
  */
 - (nullable ValueType)popFirstObject;
 
 /**
- Removes and returns the object with the highest-valued index in the array.
- If the array is empty, it just returns nil.
+ 移除并返回数组中索引最大的对象。若数组为空则返回 nil。
  
- @return The first object, or nil.
+ @return 最后一个对象，或 nil。
  */
 - (nullable ValueType)popLastObject;
 
 /**
- Inserts a given object at the end of the array.
+ 在数组末尾插入给定对象。
  
- @param anObject The object to add to the end of the array's content.
- This value must not be nil. Raises an NSInvalidArgumentException if anObject is nil.
+ @param anObject 要插入到末尾的对象，不能为 nil，否则抛出 NSInvalidArgumentException。
  */
 - (void)appendObject:(ValueType)anObject;
 
 /**
- Inserts a given object at the beginning of the array.
+ 在数组开头插入给定对象。
  
- @param anObject The object to add to the end of the array's content.
- This value must not be nil. Raises an NSInvalidArgumentException if anObject is nil.
+ @param anObject 要插入到开头的对象，不能为 nil，否则抛出 NSInvalidArgumentException。
  */
 - (void)prependObject:(ValueType)anObject;
 
 /**
- Adds the objects contained in another given array to the end of the receiving
- array's content.
+ 将给定数组中的对象依次追加到接收数组末尾。
  
- @param objects An array of objects to add to the end of the receiving array's
- content. If the objects is empty or nil, this method has no effect.
+ @param objects 要追加的对象数组。若为 nil 或空则无效果。
  */
 - (void)appendObjects:(NSArray<ValueType> *)objects;
 
 /**
- Adds the objects contained in another given array to the beginnin of the receiving
- array's content.
+ 将给定数组中的对象依次插入到接收数组开头。
  
- @param objects An array of objects to add to the beginning of the receiving array's
- content. If the objects is empty or nil, this method has no effect.
+ @param objects 要插入的对象数组。若为 nil 或空则无效果。
  */
 - (void)prependObjects:(NSArray<ValueType> *)objects;
 
 /**
- Adds the objects contained in another given array at the index of the receiving
- array's content.
+ 在指定索引处将给定数组中的对象插入到接收数组中。
  
- @param objects An array of objects to add to the receiving array's
- content. If the objects is empty or nil, this method has no effect.
+ @param objects 要插入的对象数组。若为 nil 或空则无效果。
  
- @param index The index in the array at which to insert objects. This value must
- not be greater than the count of elements in the array. Raises an
- NSRangeException if index is greater than the number of elements in the array.
+ @param index 插入位置索引，不能大于数组元素个数，否则抛出 NSRangeException。
  */
 - (void)insertObjects:(NSArray<ValueType> *)objects atIndex:(NSUInteger)index;
 
 /**
- Reverse the index of object in this array.
- Example: Before @[ @1, @2, @3 ], After @[ @3, @2, @1 ].
+ 反转数组中元素的顺序。例如：@[ @1, @2, @3 ] -> @[ @3, @2, @1 ]。
  */
 - (void)reverse;
 
 /**
- Sort the object in this array randomly.
+ 随机打乱数组中元素的顺序。
  */
 - (void)shuffle;
 

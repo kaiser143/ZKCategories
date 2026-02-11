@@ -38,13 +38,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSInteger)getInputLengthWithText:(NSString *)text;
 
 /**
- *  convert UITextRange to NSRange, for example, [self convertNSRangeFromUITextRange:self.markedTextRange]
+ * 将 UITextRange 转为 NSRange，例如 [self convertNSRangeFromUITextRange:self.markedTextRange]
  */
 - (NSRange)convertNSRangeFromUITextRange:(UITextRange *)textRange;
 
 /**
- *  convert NSRange to UITextRange
- *  @return return nil if range is invalidate.
+ * 将 NSRange 转为 UITextRange
+ *  @return range 无效时返回 nil。
  */
 - (nullable UITextRange *)convertUITextRangeFromNSRange:(NSRange)range;
 

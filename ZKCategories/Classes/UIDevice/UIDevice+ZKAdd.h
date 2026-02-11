@@ -11,65 +11,60 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- Provides extensions for `UIDevice`.
+ 为 `UIDevice` 提供扩展。
  */
 @interface UIDevice (ZKAdd)
 
 #pragma mark - Device Information
 ///=============================================================================
-/// @name Device Information
+/// @name 设备信息
 ///=============================================================================
 
-/// Device system version (e.g. 8.1)
+/// 系统版本号（如 8.1）
 + (double)systemVersion;
 
 // 刘海屏
 @property (nonatomic, readonly) BOOL iPhoneX;
 
-/// Whether the device is iPad/iPad mini.
+/// 是否为 iPad / iPad mini。
 @property (nonatomic, readonly) BOOL isPad;
 
-/// Whether the device is a simulator.
+/// 是否为模拟器。
 @property (nonatomic, readonly) BOOL isSimulator;
 
-/// Whether the device is jailbroken.
+/// 是否越狱。
 @property (nonatomic, readonly) BOOL isJailbroken;
 
-/// Wherher the device can make phone calls.
+/// 是否支持拨打电话。
 @property (nonatomic, readonly) BOOL canMakePhoneCalls NS_EXTENSION_UNAVAILABLE_IOS("");
 
-/// The device's machine model.  e.g. "iPhone6,1" "iPad4,6"
+/// 设备机型标识，如 "iPhone6,1" "iPad4,6"
 /// @see http://theiphonewiki.com/wiki/Models
 @property (nullable, nonatomic, readonly) NSString *machineModel;
 
-/// The device's machine model name. e.g. "iPhone 5s" "iPad mini 2"
+/// 设备机型名称，如 "iPhone 5s" "iPad mini 2"
 /// @see http://theiphonewiki.com/wiki/Models
 @property (nullable, nonatomic, readonly) NSString *machineModelName;
 
-/// The System's startup time.
+/// 系统启动时间。
 @property (nonatomic, readonly) NSDate *systemUptime;
 
 #pragma mark - Network Information
 ///=============================================================================
-/// @name Network Information
+/// @name 网络信息
 ///=============================================================================
 
-/// WIFI IP address of this device (can be nil). e.g. @"192.168.1.111"
+/// 本机 WIFI IP（可能为 nil），如 @"192.168.1.111"
 @property (nullable, nonatomic, readonly) NSString *ipAddressWIFI;
 
-/// Cell IP address of this device (can be nil). e.g. @"10.2.2.222"
+/// 本机蜂窝网 IP（可能为 nil），如 @"10.2.2.222"
 @property (nullable, nonatomic, readonly) NSString *ipAddressCell;
 
 /**
- Network traffic type:
-
- WWAN: Wireless Wide Area Network.
-       For example: 3G/4G.
-
- WIFI: Wi-Fi.
-
- AWDL: Apple Wireless Direct Link (peer-to-peer connection).
-       For exmaple: AirDrop, AirPlay, GameKit.
+ 网络流量类型：
+ WWAN：无线广域网（如 3G/4G）。
+ WIFI：Wi-Fi。
+ AWDL：Apple 无线直连（点对点，如 AirDrop、AirPlay、GameKit）。
  */
 typedef NS_OPTIONS(NSUInteger, ZKNetworkTrafficType) {
     ZKNetworkTrafficTypeWWANSent     = 1 << 0,
@@ -89,77 +84,66 @@ typedef NS_OPTIONS(NSUInteger, ZKNetworkTrafficType) {
 };
 
 /**
- Get device network traffic bytes.
+ 获取设备网络流量字节数。
 
- @discussion This is a counter since the device's last boot time.
- Usage:
-
-     uint64_t bytes = [[UIDevice currentDevice] getNetworkTrafficBytes:ZKNetworkTrafficTypeALL];
-     NSTimeInterval time = CACurrentMediaTime();
-
-     uint64_t bytesPerSecond = (bytes - _lastBytes) / (time - _lastTime);
-
-     _lastBytes = bytes;
-     _lastTime = time;
-
-
- @param types traffic types
- @return bytes counter.
+ @discussion 为自设备上次启动以来的累计计数。可用于计算网速（两次调用间隔的字节差/时间差）。
+ @param types 流量类型掩码。
+ @return 字节计数。
  */
 - (uint64_t)getNetworkTrafficBytes:(ZKNetworkTrafficType)types;
 
 #pragma mark - Disk Space
 ///=============================================================================
-/// @name Disk Space
+/// @name 磁盘空间
 ///=============================================================================
 
-/// Total disk space in byte. (-1 when error occurs)
+/// 磁盘总空间（字节），错误时返回 -1。
 @property (nonatomic, readonly) int64_t diskSpace;
 
-/// Free disk space in byte. (-1 when error occurs)
+/// 磁盘可用空间（字节），错误时返回 -1。
 @property (nonatomic, readonly) int64_t diskSpaceFree;
 
-/// Used disk space in byte. (-1 when error occurs)
+/// 磁盘已用空间（字节），错误时返回 -1。
 @property (nonatomic, readonly) int64_t diskSpaceUsed;
 
 #pragma mark - Memory Information
 ///=============================================================================
-/// @name Memory Information
+/// @name 内存信息
 ///=============================================================================
 
-/// Total physical memory in byte. (-1 when error occurs)
+/// 物理内存总量（字节），错误时返回 -1。
 @property (nonatomic, readonly) int64_t memoryTotal;
 
-/// Used (active + inactive + wired) memory in byte. (-1 when error occurs)
+/// 已用内存（active + inactive + wired）（字节），错误时返回 -1。
 @property (nonatomic, readonly) int64_t memoryUsed;
 
-/// Free memory in byte. (-1 when error occurs)
+/// 空闲内存（字节），错误时返回 -1。
 @property (nonatomic, readonly) int64_t memoryFree;
 
-/// Acvite memory in byte. (-1 when error occurs)
+/// Active 内存（字节），错误时返回 -1。
 @property (nonatomic, readonly) int64_t memoryActive;
 
-/// Inactive memory in byte. (-1 when error occurs)
+/// Inactive 内存（字节），错误时返回 -1。
 @property (nonatomic, readonly) int64_t memoryInactive;
 
-/// Wired memory in byte. (-1 when error occurs)
+/// Wired 内存（字节），错误时返回 -1。
 @property (nonatomic, readonly) int64_t memoryWired;
 
-/// Purgable memory in byte. (-1 when error occurs)
+/// Purgable 内存（字节），错误时返回 -1。
 @property (nonatomic, readonly) int64_t memoryPurgable;
 
 #pragma mark - CPU Information
 ///=============================================================================
-/// @name CPU Information
+/// @name CPU 信息
 ///=============================================================================
 
-/// Avaliable CPU processor count.
+/// 可用 CPU 核心数。
 @property (nonatomic, readonly) NSUInteger cpuCount;
 
-/// Current CPU usage, 1.0 means 100%. (-1 when error occurs)
+/// 当前 CPU 使用率，1.0 表示 100%，错误时返回 -1。
 @property (nonatomic, readonly) float cpuUsage;
 
-/// Current CPU usage per processor (array of NSNumber), 1.0 means 100%. (nil when error occurs)
+/// 各核心 CPU 使用率（NSNumber 数组），1.0 表示 100%，错误时返回 nil。
 @property (nullable, nonatomic, readonly) NSArray<NSNumber *> *cpuUsagePerProcessor;
 
 @end

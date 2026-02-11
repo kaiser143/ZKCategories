@@ -15,7 +15,7 @@ typedef void (^ZKNSObjectDelayBlock)(BOOL cancel);
 
 @interface NSObject (ZKAdd)
 
-// URL Parameter Strings
+// URL 参数字符串
 - (NSString *)URLParameterStringValue NS_SWIFT_NAME(URLParameterStringValue());
 
 /// 返回值为对象或者 void
@@ -88,102 +88,101 @@ typedef void (^ZKNSObjectDelayBlock)(BOOL cancel);
 @interface NSObject (ZKRuntime)
 
 /**-------------------------------------------------------------------------------------
- @name Blocks
+ @name Block
  ---------------------------------------------------------------------------------------
  */
 
 /**
- Adds a block to be executed as soon as the receiver's memory is deallocated
- @param block The block to execute when the receiver is being deallocated
+ 在接收者内存被释放时执行传入的 block。
+ @param block 在接收者被释放时执行的 block。
  */
 - (void)addDeallocBlock:(void (^)(void))block;
 
 /**
- Adds a new instance method to a class. All instances of this class will have this method.
+ 为类添加新的实例方法，该类的所有实例都会拥有此方法。
  
- The block captures `self` in the calling context. To allow access to the instance from within the block it is passed as parameter to the block.
- @param selectorName The name of the method.
- @param block The block to execute for the instance method, a pointer to the instance is passed as the only parameter.
- @returns `YES` if the operation was successful
+ block 会捕获调用时的 `self`。为在 block 内访问实例，会将实例指针作为 block 的唯一参数传入。
+ @param selectorName 方法名。
+ @param block 实例方法对应的 block，其唯一参数为指向实例的指针。
+ @returns 操作成功返回 `YES`。
  */
 + (BOOL)addInstanceMethodWithSelectorName:(NSString *)selectorName block:(void (^)(id))block;
 
 /**-------------------------------------------------------------------------------------
- @name Method Swizzling
+ @name 方法交换 (Method Swizzling)
  ---------------------------------------------------------------------------------------
  */
 
 /**
- Exchanges two method implementations. After the call methods to the first selector will now go to the second one and vice versa.
- @param selector The first method
- @param otherSelector The second method
+ 交换两个方法的实现。调用后，对第一个 selector 的调用会走第二个实现，反之亦然。
+ @param selector 第一个方法。
+ @param otherSelector 第二个方法。
  */
 + (void)swizzleMethod:(SEL)selector withMethod:(SEL)otherSelector;
 
 /**
- Exchanges two class method implementations. After the call methods to the first selector will now go to the second one and vice versa.
- @param selector The first method
- @param otherSelector The second method
+ 交换两个类方法的实现。调用后，对第一个 selector 的调用会走第二个实现，反之亦然。
+ @param selector 第一个方法。
+ @param otherSelector 第二个方法。
  */
 + (void)swizzleClassMethod:(SEL)selector withMethod:(SEL)otherSelector;
 
 #pragma mark - :. Associate value
 
 ///=============================================================================
-/// @name Associate value
+/// @name 关联对象 (Associate value)
 ///=============================================================================
 
 /**
- Associate one object to `self`, as if it was a strong property (strong, nonatomic).
+ 将对象以强引用方式关联到 `self`（相当于 strong, nonatomic 属性）。
  
- @param value   The object to associate.
- @param key     The pointer to get value from `self`.
+ @param value 要关联的对象。
+ @param key   用于从 `self` 取值的指针。
  */
 - (void)setAssociateValue:(nullable id)value withKey:(void *)key;
 
 /**
- Associate one object to `self`, as if it was a weak property (week, nonatomic).
+ 将对象以弱引用方式关联到 `self`（相当于 weak, nonatomic 属性）。
  
- @param value  The object to associate.
- @param key    The pointer to get value from `self`.
+ @param value 要关联的对象。
+ @param key   用于从 `self` 取值的指针。
  */
 - (void)setAssociateWeakValue:(nullable id)value withKey:(void *)key;
 
 /**
- Associate one object to `self`, as if it was a weak property (copy, nonatomic).
+ 将对象以拷贝方式关联到 `self`（相当于 copy, nonatomic 属性）。
  
- @param value  The object to associate.
- @param key    The pointer to get value from `self`.
+ @param value 要关联的对象。
+ @param key   用于从 `self` 取值的指针。
  */
 - (void)setAssociateCopyValue:(nullable id)value withKey:(void *)key;
 
 /**
- Get the associated value from `self`.
+ 从 `self` 获取关联对象。
  
- @param key The pointer to get value from `self`.
+ @param key 用于从 `self` 取值的指针。
  */
 - (nullable id)associatedValueForKey:(void *)key;
 
 /**
- Remove all associated values.
+ 移除所有关联对象。
  */
 - (void)removeAssociatedValues;
 
 #pragma mark - :. Others
 ///=============================================================================
-/// @name Others
+/// @name 其他
 ///=============================================================================
 
 /**
- Returns the class name in NSString.
+ 以 NSString 返回类名。
  */
 + (NSString *)className;
 
 /**
- Returns the class name in NSString.
+ 以 NSString 返回类名。
  
- @discussion Apple has implemented this method in NSObject(NSLayoutConstraintCallsThis),
- but did not make it public.
+ @discussion Apple 在 NSObject(NSLayoutConstraintCallsThis) 中实现了此方法，但未公开。
  */
 - (NSString *)className;
 
@@ -208,17 +207,17 @@ typedef void (^ZKNSObjectDelayBlock)(BOOL cancel);
 - (NSArray *)methodListInfo;
 
 /**
- Returns a copy of the instance with `NSKeyedArchiver` and ``NSKeyedUnarchiver``.
- Returns nil if an error occurs.
+ 使用 `NSKeyedArchiver` 与 `NSKeyedUnarchiver` 返回实例的深拷贝。
+ 若发生错误则返回 nil。
  */
 - (nullable id)deepCopy;
 
 /**
- Returns a copy of the instance use archiver and unarchiver.
- Returns nil if an error occurs.
+ 使用指定的 archiver 与 unarchiver 返回实例的深拷贝。
+ 若发生错误则返回 nil。
  
- @param archiver   NSKeyedArchiver class or any class inherited.
- @param unarchiver NSKeyedUnarchiver clsas or any class inherited.
+ @param archiver   NSKeyedArchiver 或其子类。
+ @param unarchiver NSKeyedUnarchiver 或其子类。
  */
 - (nullable id)deepCopyWithArchiver:(Class)archiver unarchiver:(Class)unarchiver;
 
@@ -236,33 +235,28 @@ typedef void (^ZKNSObjectDelayBlock)(BOOL cancel);
 @interface NSObject (ZKKVOBlock)
 
 /**
- Registers a block to receive KVO notifications for the specified key-path
- relative to the receiver.
+ 为接收者注册一个 block，用于接收指定 key-path 的 KVO 通知。
  
- @discussion The block and block captured objects are retained. Call
- `removeObserverBlocksForKeyPath:` or `removeObserverBlocks` to release.
+ @discussion block 及其捕获的对象会被持有。请调用
+ `removeObserverBlocksForKeyPath:` 或 `removeObserverBlocks` 以释放。
  
- @param keyPath The key path, relative to the receiver, of the property to
- observe. This value must not be nil.
+ @param keyPath 相对于接收者、要观察属性的 key path，不能为 nil。
  
- @param block   The block to register for KVO notifications.
+ @param block   用于接收 KVO 通知的 block。
  */
 - (void)addObserverBlockForKeyPath:(NSString *)keyPath
                              block:(void (^)(id _Nonnull obj, id _Nonnull oldVal, id _Nonnull newVal))block;
 
 /**
- Stops all blocks (associated by `addObserverBlockForKeyPath:block:`) from
- receiving change notifications for the property specified by a given key-path
- relative to the receiver, and release these blocks.
+ 停止所有通过 `addObserverBlockForKeyPath:block:` 注册的 block 接收指定 key-path 的
+ 变更通知，并释放这些 block。
  
- @param keyPath A key-path, relative to the receiver, for which blocks is
- registered to receive KVO change notifications.
+ @param keyPath 相对于接收者的 key-path，即已注册接收 KVO 变更通知的 key-path。
  */
 - (void)removeObserverBlocksForKeyPath:(NSString *)keyPath;
 
 /**
- Stops all blocks (associated by `addObserverBlockForKeyPath:block:`) from
- receiving change notifications, and release these blocks.
+ 停止所有通过 `addObserverBlockForKeyPath:block:` 注册的 block 接收变更通知，并释放这些 block。
  */
 - (void)removeObserverBlocks;
 

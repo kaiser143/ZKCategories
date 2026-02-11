@@ -11,44 +11,44 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- Provides extensions for `UIApplication`.
+ 为 `UIApplication` 提供扩展。
  */
 @interface UIApplication (ZKAdd)
 
-/// "Documents" folder in this app's sandbox.
+/// 应用沙盒中的 "Documents" 目录。
 @property (nonatomic, readonly) NSURL *documentsURL;
 @property (nonatomic, readonly) NSString *documentsPath;
 
-/// "Caches" folder in this app's sandbox.
+/// 应用沙盒中的 "Caches" 目录。
 @property (nonatomic, readonly) NSURL *cachesURL;
 @property (nonatomic, readonly) NSString *cachesPath;
 
-/// "Library" folder in this app's sandbox.
+/// 应用沙盒中的 "Library" 目录。
 @property (nonatomic, readonly) NSURL *libraryURL;
 @property (nonatomic, readonly) NSString *libraryPath;
 
-/// Application's Bundle Name (show in SpringBoard).
+/// 应用 Bundle 名称（在 SpringBoard 中显示）。
 @property (nullable, nonatomic, readonly) NSString *appBundleName;
 
-/// Application's Bundle ID.  e.g. "com.kaiser.MyApp"
+/// 应用 Bundle ID，如 "com.kaiser.MyApp"
 @property (nullable, nonatomic, readonly) NSString *appBundleID;
 
-/// Application's Version.  e.g. "1.2.0"
+/// 应用版本号，如 "1.2.0"
 @property (nullable, nonatomic, readonly) NSString *appVersion;
 
-/// Application's Build number. e.g. "123"
+/// 应用 Build 号，如 "123"
 @property (nullable, nonatomic, readonly) NSString *appBuildVersion;
 
-/// Whether this app is priated (not install from appstore).
+/// 是否为盗版（非 App Store 安装）。
 @property (nonatomic, readonly) BOOL isPirated;
 
-/// Whether this app is being debugged (debugger attached).
+/// 是否正在被调试（已连接调试器）。
 @property (nonatomic, readonly) BOOL isBeingDebugged;
 
-/// Current thread real memory used in byte. (-1 when error occurs)
+/// 当前线程实际占用内存（字节），错误时返回 -1。
 @property (nonatomic, readonly) int64_t memoryUsage;
 
-/// Current thread CPU usage, 1.0 means 100%. (-1 when error occurs)
+/// 当前线程 CPU 使用率，1.0 表示 100%，错误时返回 -1。
 @property (nonatomic, readonly) float cpuUsage;
 
 @property (nonatomic, assign, readonly, getter=isRunningTestFlightBeta) BOOL runningTestFlightBeta;
@@ -60,20 +60,20 @@ NS_ASSUME_NONNULL_BEGIN
 @property(class, nonatomic, readonly) CGSize applicationSize;
 
 /**
- Increments the number of active network operations
+ 将“进行中的网络操作”计数加一（用于延迟休眠）。
  */
 - (void)pushActiveNetworkOperation;
 
 /**
- Decrements the number of active network operations
+ 将“进行中的网络操作”计数减一。
  */
 - (void)popActiveNetworkOperation;
 
 
-/// Returns YES in App Extension.
+/// 在 App Extension 中返回 YES。
 + (BOOL)isAppExtension;
 
-/// Same as sharedApplication, but returns nil in App Extension.
+/// 与 sharedApplication 相同，但在 App Extension 中返回 nil。
 + (nullable UIApplication *)sharedExtensionApplication;
 
 @end

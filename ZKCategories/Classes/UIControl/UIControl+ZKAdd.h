@@ -13,57 +13,39 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIControl (ZKAdd)
 
 /**
- Removes all targets and actions for a particular event (or events)
- from an internal dispatch table.
+ 从内部派发表中移除指定事件（或事件组合）的所有 target 和 action。
  */
 - (void)removeAllTargets;
 
 /**
- Adds or replaces a target and action for a particular event (or events)
- to an internal dispatch table.
+ 为指定事件（或事件组合）设置或替换 target 和 action。
 
- @param target         The target object—that is, the object to which the
- action message is sent. If this is nil, the responder
- chain is searched for an object willing to respond to the
- action message.
-
- @param action         A selector identifying an action message. It cannot be NULL.
-
- @param controlEvents  A bitmask specifying the control events for which the
- action message is sent.
+ @param target        接收 action 的目标对象；nil 时在响应链中查找能响应该 action 的对象。
+ @param action        要执行的 selector，不能为 NULL。
+ @param controlEvents 触发该 action 的控件事件掩码。
  */
 - (void)setTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents;
 
 /**
- Adds a block for a particular event (or events) to an internal dispatch table.
- It will cause a strong reference to @a block.
+ 为指定事件（或事件组合）添加一个 block。会对 block 强引用。
 
- @param block          The block which is invoked then the action message is
- sent  (cannot be nil). The block is retained.
-
- @param controlEvents  A bitmask specifying the control events for which the
- action message is sent.
+ @param block         事件触发时调用的 block（不能为 nil），会被持有。
+ @param controlEvents 触发该 block 的控件事件掩码。
  */
 - (void)addBlockForControlEvents:(UIControlEvents)controlEvents block:(void (^)(__kindof UIControl *sender))block;
 
 /**
- Adds or replaces a block for a particular event (or events) to an internal
- dispatch table. It will cause a strong reference to @a block.
+ 为指定事件（或事件组合）设置或替换 block。会对 block 强引用。
 
- @param block          The block which is invoked then the action message is
- sent (cannot be nil). The block is retained.
-
- @param controlEvents  A bitmask specifying the control events for which the
- action message is sent.
+ @param block         事件触发时调用的 block（不能为 nil），会被持有。
+ @param controlEvents 触发该 block 的控件事件掩码。
  */
 - (void)setBlockForControlEvents:(UIControlEvents)controlEvents block:(void (^)(__kindof UIControl *sender))block;
 
 /**
- Removes all blocks for a particular event (or events) from an internal
- dispatch table.
+ 从内部派发表中移除指定事件（或事件组合）的所有 block。
 
- @param controlEvents  A bitmask specifying the control events for which the
- action message is sent.
+ @param controlEvents 控件事件掩码。
  */
 - (void)removeAllBlocksForControlEvents:(UIControlEvents)controlEvents;
 

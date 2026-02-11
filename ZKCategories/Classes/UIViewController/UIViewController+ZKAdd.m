@@ -6,9 +6,9 @@
 //  Copyright © 2018年 Kaiser. All rights reserved.
 //
 
-#import "UIViewController+ZKAdd.h"
 #import "NSObject+ZKAdd.h"
 #import "UINavigationController+ZKAdd.h"
+#import "UIViewController+ZKAdd.h"
 
 @implementation UIViewController (ZKAdd)
 
@@ -26,9 +26,10 @@
         if (selectedIndexPath != nil) {
             id<UIViewControllerTransitionCoordinator> coordinator = self.transitionCoordinator;
             if (coordinator != nil) {
-                [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-                    [tableView deselectRowAtIndexPath:selectedIndexPath animated:YES];
-                }
+                [coordinator
+                    animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+                        [tableView deselectRowAtIndexPath:selectedIndexPath animated:YES];
+                    }
                     completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
                         if (context.cancelled) {
                             [tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
@@ -55,7 +56,7 @@
 
 - (void)setInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation completion:(nonnull dispatch_block_t)completion {
     [self setAssociateValue:@(interfaceOrientation) withKey:@selector(interfaceOrientation)];
-    
+
     if (@available(iOS 16.0, *)) {
         UIWindowScene *windowScene = self.view.window.windowScene;
         if (!windowScene) {
@@ -66,7 +67,7 @@
         geometryPreferences.interfaceOrientations                = interfaceOrientation;
         [windowScene requestGeometryUpdateWithPreferences:geometryPreferences
                                              errorHandler:^(NSError *_Nonnull error) {
-                                                 //业务代码
+                                                 // 业务代码
                                                  ZKLog(@"menglc errorHandler error %@", error);
                                              }];
     } else if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
@@ -78,7 +79,7 @@
         [invocation setArgument:&val atIndex:2];
         [invocation invoke];
     }
-    
+
     !completion ?: completion();
 }
 
@@ -88,19 +89,19 @@
         value = @([UIDevice currentDevice].orientation);
         [self setAssociateValue:value withKey:@selector(interfaceOrientation)];
     }
-    
+
     return [value integerValue];
 }
 
 #pragma mark - :. Back
 
-- (void)setKai_prefersPopViewControllerInjectBlock:(void (^)(UIViewController * _Nonnull))block {
+- (void)setKai_prefersPopViewControllerInjectBlock:(void (^)(UIViewController *_Nonnull))block {
     self.kai_interactivePopDisabled = block != nil;
-    
+
     [self setAssociateCopyValue:block withKey:@selector(kai_prefersPopViewControllerInjectBlock)];
 }
 
-- (void (^)(UIViewController * _Nonnull))kai_prefersPopViewControllerInjectBlock {
+- (void (^)(UIViewController *_Nonnull))kai_prefersPopViewControllerInjectBlock {
     return [self associatedValueForKey:_cmd];
 }
 
@@ -113,8 +114,8 @@
 }
 
 - (void)kai_pushViewController:(UIViewController *)viewController backTitle:(NSString *)title animated:(BOOL)animated {
-    UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStylePlain target:self action:nil];
-    backBarButtonItem.stringProperty = @"__KAIExtra";
+    UIBarButtonItem *backBarButtonItem                                           = [[UIBarButtonItem alloc] initWithTitle:title style:UIBarButtonItemStylePlain target:self action:nil];
+    backBarButtonItem.stringProperty                                             = @"__KAIExtra";
     self.navigationController.topViewController.navigationItem.backBarButtonItem = backBarButtonItem;
     [self.navigationController pushViewController:viewController animated:animated];
 }
@@ -143,8 +144,8 @@
     }
 }
 
-- (void)animateAlongsideTransition:(void (^ __nullable)(id <UIViewControllerTransitionCoordinatorContext>context))animation
-                        completion:(void (^ __nullable)(id <UIViewControllerTransitionCoordinatorContext>context))completion {
+- (void)animateAlongsideTransition:(void (^__nullable)(id<UIViewControllerTransitionCoordinatorContext> context))animation
+                        completion:(void (^__nullable)(id<UIViewControllerTransitionCoordinatorContext> context))completion {
     if (self.transitionCoordinator) {
         BOOL animationQueuedToRun = [self.transitionCoordinator animateAlongsideTransition:animation completion:completion];
         // 某些情况下传给 animateAlongsideTransition 的 animation 不会被执行，这时候要自己手动调用一下
@@ -171,18 +172,20 @@
 // 修复Xcode11 iOS13 `navigationBar:shouldPopItem:` 不运行的问题
 - (BOOL)_kai_navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item {
     if (self.topViewController.navigationItem != item) return YES;
-    
+
     // Should pop. It appears called the pop view controller methods. We should pop items directly.
     if ([[self valueForKey:@"_isTransitioning"] boolValue]) return YES;
-    
+
     UIView *barBackIndicatorView = navigationBar.subviews.lastObject;
-    barBackIndicatorView.alpha = 1;
-    
-    UIViewController *topViewController = self.topViewController;
+    barBackIndicatorView.alpha   = 1;
+
+    UIViewController *topViewController  = self.topViewController;
     void (^callback)(UIViewController *) = topViewController.kai_prefersPopViewControllerInjectBlock;
-    if (!callback) [self popViewControllerAnimated:YES];
-    else callback(topViewController);
-    
+    if (!callback)
+        [self popViewControllerAnimated:YES];
+    else
+        callback(topViewController);
+
     return NO;
 }
 
@@ -205,16 +208,16 @@
 - (BOOL)kai_hasOverrideUIKitMethod:(SEL)selector {
     // 排序依照 Xcode Interface Builder 里的控件排序，但保证子类在父类前面
     NSMutableArray<Class> *viewControllerSuperclasses = [[NSMutableArray alloc] initWithObjects:
-                                               [UIImagePickerController class],
-                                               [UINavigationController class],
-                                               [UITableViewController class],
-                                               [UICollectionViewController class],
-                                               [UITabBarController class],
-                                               [UISplitViewController class],
-                                               [UIPageViewController class],
-                                               [UIViewController class],
-                                               nil];
-    
+                                                                                    [UIImagePickerController class],
+                                                                                    [UINavigationController class],
+                                                                                    [UITableViewController class],
+                                                                                    [UICollectionViewController class],
+                                                                                    [UITabBarController class],
+                                                                                    [UISplitViewController class],
+                                                                                    [UIPageViewController class],
+                                                                                    [UIViewController class],
+                                                                                    nil];
+
     if (NSClassFromString(@"UIAlertController")) {
         [viewControllerSuperclasses addObject:[UIAlertController class]];
     }

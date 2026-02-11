@@ -25,23 +25,23 @@ NS_ASSUME_NONNULL_BEGIN
 /// @name Component Properties
 ///=============================================================================
 
-@property (nonatomic, readonly) NSInteger year;              ///< Year component
-@property (nonatomic, readonly) NSInteger month;             ///< Month component (1~12)
-@property (nonatomic, readonly) NSInteger day;               ///< Day component (1~31)
-@property (nonatomic, readonly) NSInteger hour;              ///< Hour component (0~23)
-@property (nonatomic, readonly) NSInteger minute;            ///< Minute component (0~59)
-@property (nonatomic, readonly) NSInteger second;            ///< Second component (0~59)
-@property (nonatomic, readonly) NSInteger nanosecond;        ///< Nanosecond component
-@property (nonatomic, readonly) NSInteger weekday;           ///< Weekday component (1~7, first day is based on user setting)
-@property (nonatomic, readonly) NSInteger weekdayOrdinal;    ///< WeekdayOrdinal component
-@property (nonatomic, readonly) NSInteger weekOfMonth;       ///< WeekOfMonth component (1~5)
-@property (nonatomic, readonly) NSInteger weekOfYear;        ///< WeekOfYear component (1~53)
-@property (nonatomic, readonly) NSInteger yearForWeekOfYear; ///< YearForWeekOfYear component
-@property (nonatomic, readonly) NSInteger quarter;           ///< Quarter component
-@property (nonatomic, readonly) BOOL isLeapMonth;            ///< Weather the month is leap month
-@property (nonatomic, readonly) BOOL isLeapYear;             ///< Weather the year is leap year
-@property (nonatomic, readonly) BOOL isToday;                ///< Weather date is today (based on current locale)
-@property (nonatomic, readonly) BOOL isYesterday;            ///< Weather date is yesterday (based on current locale)
+@property (nonatomic, readonly) NSInteger year;              ///< 年
+@property (nonatomic, readonly) NSInteger month;             ///< 月 (1~12)
+@property (nonatomic, readonly) NSInteger day;               ///< 日 (1~31)
+@property (nonatomic, readonly) NSInteger hour;              ///< 时 (0~23)
+@property (nonatomic, readonly) NSInteger minute;            ///< 分 (0~59)
+@property (nonatomic, readonly) NSInteger second;            ///< 秒 (0~59)
+@property (nonatomic, readonly) NSInteger nanosecond;        ///< 纳秒
+@property (nonatomic, readonly) NSInteger weekday;           ///< 星期 (1~7，首日依用户设置)
+@property (nonatomic, readonly) NSInteger weekdayOrdinal;    ///< WeekdayOrdinal 分量
+@property (nonatomic, readonly) NSInteger weekOfMonth;       ///< 当月周序 (1~5)
+@property (nonatomic, readonly) NSInteger weekOfYear;        ///< 当年周序 (1~53)
+@property (nonatomic, readonly) NSInteger yearForWeekOfYear; ///< 周所在年
+@property (nonatomic, readonly) NSInteger quarter;           ///< 季度
+@property (nonatomic, readonly) BOOL isLeapMonth;            ///< 是否闰月
+@property (nonatomic, readonly) BOOL isLeapYear;             ///< 是否闰年
+@property (nonatomic, readonly) BOOL isToday;                ///< 是否今天（基于当前 locale）
+@property (nonatomic, readonly) BOOL isYesterday;            ///< 是否昨天（基于当前 locale）
 
 #pragma mark - :. Date modify
 ///=============================================================================
@@ -49,58 +49,58 @@ NS_ASSUME_NONNULL_BEGIN
 ///=============================================================================
 
 /**
- Returns a date representing the receiver date shifted later by the provided number of years.
+ 返回在接收者日期上增加若干年后的日期。
  
- @param years  Number of years to add.
- @return Date modified by the number of desired years.
+ @param years  要增加的年数。
+ @return 增加后的日期。
  */
 - (nullable NSDate *)dateByAddingYears:(NSInteger)years;
 
 /**
- Returns a date representing the receiver date shifted later by the provided number of months.
+ 返回在接收者日期上增加若干月后的日期。
  
- @param months  Number of months to add.
- @return Date modified by the number of desired months.
+ @param months 要增加的月数。
+ @return 增加后的日期。
  */
 - (nullable NSDate *)dateByAddingMonths:(NSInteger)months;
 
 /**
- Returns a date representing the receiver date shifted later by the provided number of weeks.
+ 返回在接收者日期上增加若干周后的日期。
  
- @param weeks  Number of weeks to add.
- @return Date modified by the number of desired weeks.
+ @param weeks 要增加的周数。
+ @return 增加后的日期。
  */
 - (nullable NSDate *)dateByAddingWeeks:(NSInteger)weeks;
 
 /**
- Returns a date representing the receiver date shifted later by the provided number of days.
+ 返回在接收者日期上增加若干天后的日期。
  
- @param days  Number of days to add.
- @return Date modified by the number of desired days.
+ @param days 要增加的天数。
+ @return 增加后的日期。
  */
 - (nullable NSDate *)dateByAddingDays:(NSInteger)days;
 
 /**
- Returns a date representing the receiver date shifted later by the provided number of hours.
+ 返回在接收者日期上增加若干小时后的日期。
  
- @param hours  Number of hours to add.
- @return Date modified by the number of desired hours.
+ @param hours 要增加的小时数。
+ @return 增加后的日期。
  */
 - (nullable NSDate *)dateByAddingHours:(NSInteger)hours;
 
 /**
- Returns a date representing the receiver date shifted later by the provided number of minutes.
+ 返回在接收者日期上增加若干分钟后的日期。
  
- @param minutes  Number of minutes to add.
- @return Date modified by the number of desired minutes.
+ @param minutes 要增加的分钟数。
+ @return 增加后的日期。
  */
 - (nullable NSDate *)dateByAddingMinutes:(NSInteger)minutes;
 
 /**
- Returns a date representing the receiver date shifted later by the provided number of seconds.
+ 返回在接收者日期上增加若干秒后的日期。
  
- @param seconds  Number of seconds to add.
- @return Date modified by the number of desired seconds.
+ @param seconds 要增加的秒数。
+ @return 增加后的日期。
  */
 - (nullable NSDate *)dateByAddingSeconds:(NSInteger)seconds;
 
@@ -110,64 +110,49 @@ NS_ASSUME_NONNULL_BEGIN
 ///=============================================================================
 
 /**
- Returns a formatted string representing this date.
- see http://www.unicode.org/reports/tr35/tr35-31/tr35-dates.html#Date_Format_Patterns
- for format description.
+ 按指定格式返回日期的格式化字符串。格式说明见 http://www.unicode.org/reports/tr35/tr35-31/tr35-dates.html#Date_Format_Patterns
  
- @param format   String representing the desired date format.
- e.g. @"yyyy-MM-dd HH:mm:ss"
- 
- @return NSString representing the formatted date string.
+ @param format 日期格式，例如 @"yyyy-MM-dd HH:mm:ss"。
+ @return 格式化后的日期字符串。
  */
 - (nullable NSString *)stringWithFormat:(NSString *)format;
 
 /**
- Returns a formatted string representing this date.
- see http://www.unicode.org/reports/tr35/tr35-31/tr35-dates.html#Date_Format_Patterns
- for format description.
+ 按指定格式、时区和 locale 返回日期的格式化字符串。
  
- @param format    String representing the desired date format.
- e.g. @"yyyy-MM-dd HH:mm:ss"
- 
- @param timeZone  Desired time zone.
- 
- @param locale    Desired locale.
- 
- @return NSString representing the formatted date string.
+ @param format   日期格式，例如 @"yyyy-MM-dd HH:mm:ss"。
+ @param timeZone 时区。
+ @param locale   locale。
+ @return 格式化后的日期字符串。
  */
 - (nullable NSString *)stringWithFormat:(NSString *)format
                                timeZone:(nullable NSTimeZone *)timeZone
                                  locale:(nullable NSLocale *)locale;
 
 /**
- Returns a string representing this date in ISO8601 format.
- e.g. "2010-07-09T16:13:30+12:00"
+ 返回 ISO8601 格式的日期字符串，例如 "2010-07-09T16:13:30+12:00"。
  
- @return NSString representing the formatted date string in ISO8601.
+ @return ISO8601 格式的日期字符串。
  */
 - (nullable NSString *)stringWithISOFormat;
 
 /**
- Returns a date parsed from given string interpreted using the format.
+ 按给定格式解析字符串得到日期。
  
- @param dateString The string to parse.
- @param format     The string's date format.
- 
- @return A date representation of string interpreted using the format.
- If can not parse the string, returns nil.
+ @param dateString 要解析的字符串。
+ @param format    日期格式。
+ @return 解析得到的日期，失败返回 nil。
  */
 + (nullable NSDate *)dateWithString:(NSString *)dateString format:(NSString *)format;
 
 /**
- Returns a date parsed from given string interpreted using the format.
+ 按给定格式、时区和 locale 解析字符串得到日期。
  
- @param dateString The string to parse.
- @param format     The string's date format.
- @param timeZone   The time zone, can be nil.
- @param locale     The locale, can be nil.
- 
- @return A date representation of string interpreted using the format.
- If can not parse the string, returns nil.
+ @param dateString 要解析的字符串。
+ @param format     日期格式。
+ @param timeZone   时区，可为 nil。
+ @param locale     locale，可为 nil。
+ @return 解析得到的日期，失败返回 nil。
  */
 + (nullable NSDate *)dateWithString:(NSString *)dateString
                              format:(NSString *)format
@@ -175,12 +160,10 @@ NS_ASSUME_NONNULL_BEGIN
                              locale:(nullable NSLocale *)locale;
 
 /**
- Returns a date parsed from given string interpreted using the ISO8601 format.
+ 按 ISO8601 格式解析字符串得到日期。
  
- @param dateString The date string in ISO8601 format. e.g. "2010-07-09T16:13:30+12:00"
- 
- @return A date representation of string interpreted using the format.
- If can not parse the string, returns nil.
+ @param dateString ISO8601 格式的日期字符串，例如 "2010-07-09T16:13:30+12:00"。
+ @return 解析得到的日期，失败返回 nil。
  */
 + (nullable NSDate *)dateWithISOFormatString:(NSString *)dateString;
 

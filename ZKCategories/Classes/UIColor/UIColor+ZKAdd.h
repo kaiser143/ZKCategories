@@ -27,11 +27,9 @@ UIKIT_EXTERN void ZK_HSB2HSL(CGFloat h, CGFloat s, CGFloat b, CGFloat *hh, CGFlo
 UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFloat *ss, CGFloat *bb);
 
 /*
- Create UIColor with a hex string.
- Example: UIColorHex(0xF0F), UIColorHex(66ccff), UIColorHex(#66CCFF88)
-
- Valid format: #RGB #RGBA #RRGGBB #RRGGBBAA 0xRGB ...
- The `#` or "0x" sign is not required.
+ 使用十六进制字符串创建 UIColor。
+ 示例：UIColorHex(0xF0F)、UIColorHex(66ccff)、UIColorHex(#66CCFF88)
+ 合法格式：#RGB #RGBA #RRGGBB #RRGGBBAA 0xRGB ...，可不带 `#` 或 "0x"。
  */
 #ifndef UIColorHex
 #define UIColorHex(_hex_) [UIColor colorWithHexString:((__bridge NSString *)CFSTR(#_hex_))]
@@ -40,33 +38,23 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
 @interface UIColor (ZKAdd)
 
 /*!
- *    @abstract    for Debug
+ *    @abstract 用于调试的随机颜色
  */
 + (UIColor *)randomColor NS_SWIFT_NAME(random());
 
 #pragma mark - Create a UIColor Object
 ///=============================================================================
-/// @name Creating a UIColor Object
+/// @name 创建 UIColor
 ///=============================================================================
 
 /**
- Creates and returns a color object using the specified opacity
- and HSL color space component values.
+ 使用 HSL 分量和透明度创建颜色对象。
 
- @param hue        The hue component of the color object in the HSL color space,
- specified as a value from 0.0 to 1.0.
-
- @param saturation The saturation component of the color object in the HSL color space,
- specified as a value from 0.0 to 1.0.
-
- @param lightness  The lightness component of the color object in the HSL color space,
- specified as a value from 0.0 to 1.0.
-
- @param alpha      The opacity value of the color object,
- specified as a value from 0.0 to 1.0.
-
- @return           The color object. The color information represented by this
- object is in the device RGB colorspace.
+ @param hue        色相 (0.0~1.0)。
+ @param saturation 饱和度 (0.0~1.0)。
+ @param lightness  亮度 (0.0~1.0)。
+ @param alpha      透明度 (0.0~1.0)。
+ @return 颜色对象，对应设备 RGB 色彩空间。
  */
 + (UIColor *)colorWithHue:(CGFloat)hue
                saturation:(CGFloat)saturation
@@ -74,26 +62,14 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
                     alpha:(CGFloat)alpha;
 
 /**
- Creates and returns a color object using the specified opacity
- and CMYK color space component values.
+ 使用 CMYK 分量和透明度创建颜色对象。
 
- @param cyan    The cyan component of the color object in the CMYK color space,
- specified as a value from 0.0 to 1.0.
-
- @param magenta The magenta component of the color object in the CMYK color space,
- specified as a value from 0.0 to 1.0.
-
- @param yellow  The yellow component of the color object in the CMYK color space,
- specified as a value from 0.0 to 1.0.
-
- @param black   The black component of the color object in the CMYK color space,
- specified as a value from 0.0 to 1.0.
-
- @param alpha   The opacity value of the color object,
- specified as a value from 0.0 to 1.0.
-
- @return        The color object. The color information represented by this
- object is in the device RGB colorspace.
+ @param cyan    青 (0.0~1.0)。
+ @param magenta 品红 (0.0~1.0)。
+ @param yellow  黄 (0.0~1.0)。
+ @param black   黑 (0.0~1.0)。
+ @param alpha   透明度 (0.0~1.0)。
+ @return 颜色对象，对应设备 RGB 色彩空间。
  */
 + (UIColor *)colorWithCyan:(CGFloat)cyan
                    magenta:(CGFloat)magenta
@@ -102,78 +78,56 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
                      alpha:(CGFloat)alpha;
 
 /**
- Creates and returns a color object using the hex RGB color values.
+ 使用十六进制 RGB 值创建颜色（如 0x66ccff）。
 
- @param rgbValue  The rgb value such as 0x66ccff.
-
- @return          The color object. The color information represented by this
- object is in the device RGB colorspace.
+ @param rgbValue RGB 值。
+ @return 颜色对象，对应设备 RGB 色彩空间。
  */
 + (UIColor *)colorWithRGB:(uint32_t)rgbValue;
 
 /**
- Creates and returns a color object using the hex RGBA color values.
+ 使用十六进制 RGBA 值创建颜色（如 0x66ccffff）。
 
- @param rgbaValue  The rgb value such as 0x66ccffff.
-
- @return           The color object. The color information represented by this
- object is in the device RGB colorspace.
+ @param rgbaValue RGBA 值。
+ @return 颜色对象，对应设备 RGB 色彩空间。
  */
 + (UIColor *)colorWithRGBA:(uint32_t)rgbaValue;
 
 /**
- Creates and returns a color object using the specified opacity and RGB hex value.
+ 使用十六进制 RGB 和透明度创建颜色。
 
- @param rgbValue  The rgb value such as 0x66CCFF.
-
- @param alpha     The opacity value of the color object,
- specified as a value from 0.0 to 1.0.
-
- @return          The color object. The color information represented by this
- object is in the device RGB colorspace.
+ @param rgbValue RGB 值，如 0x66CCFF。
+ @param alpha    透明度 (0.0~1.0)。
+ @return 颜色对象，对应设备 RGB 色彩空间。
  */
 + (UIColor *)colorWithRGB:(uint32_t)rgbValue alpha:(CGFloat)alpha;
 
 /**
- Creates and returns a color object from hex string.
+ 从十六进制字符串创建颜色对象。
 
- @discussion:
- Valid format: #RGB #RGBA #RRGGBB #RRGGBBAA 0xRGB ...
- The `#` or "0x" sign is not required.
- The alpha will be set to 1.0 if there is no alpha component.
- It will return nil when an error occurs in parsing.
+ @discussion 合法格式：#RGB #RGBA #RRGGBB #RRGGBBAA 0xRGB ...，可不带 # 或 "0x"。
+ 无 alpha 时默认为 1.0。解析失败返回 nil。示例：@"0xF0F", @"66ccff", @"#66CCFF88"
 
- Example: @"0xF0F", @"66ccff", @"#66CCFF88"
-
- @param string  The hex string value for the new color.
-
- @return        An UIColor object from string, or nil if an error occurs.
+ @param string 十六进制字符串。
+ @return 颜色对象，失败返回 nil。
  */
 + (nullable UIColor *)colorWithHexString:(NSString *)string NS_SWIFT_NAME(hex(_:));
 
 /**
- Creates and returns a color object by add new color.
+ 将当前颜色与另一颜色按混合模式混合，返回新颜色。
 
- @param add        the color added
-
- @param blendMode  add color blend mode
+ @param add       要叠加的颜色。
+ @param blendMode 混合模式。
  */
 - (UIColor *)colorByAddColor:(UIColor *)add blendMode:(CGBlendMode)blendMode;
 
 /**
- Creates and returns a color object by change components.
+ 按分量偏移量生成新颜色。
 
- @param hueDelta         the hue change delta specified as a value
- from -1.0 to 1.0. 0 means no change.
-
- @param saturationDelta  the saturation change delta specified as a value
- from -1.0 to 1.0. 0 means no change.
-
- @param brightnessDelta  the brightness change delta specified as a value
- from -1.0 to 1.0. 0 means no change.
-
- @param alphaDelta       the alpha change delta specified as a value
- from -1.0 to 1.0. 0 means no change.
+ @param hueDelta        色相偏移 (-1.0~1.0)，0 表示不变。
+ @param saturationDelta 饱和度偏移 (-1.0~1.0)，0 表示不变。
+ @param brightnessDelta  亮度偏移 (-1.0~1.0)，0 表示不变。
+ @param alphaDelta      透明度偏移 (-1.0~1.0)，0 表示不变。
  */
 - (UIColor *)colorByChangeHue:(CGFloat)hueDelta
                    saturation:(CGFloat)saturationDelta
@@ -182,63 +136,42 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
 
 #pragma mark - Get color's description
 ///=============================================================================
-/// @name Get color's description
+/// @name 颜色的描述
 ///=============================================================================
 
 /**
- Returns the rgb value in hex.
- @return hex value of RGB,such as 0x66ccff.
+ 返回 RGB 的十六进制值，如 0x66ccff。
  */
 - (uint32_t)rgbValue;
 
 /**
- Returns the rgba value in hex.
-
- @return hex value of RGBA,such as 0x66ccffff.
+ 返回 RGBA 的十六进制值，如 0x66ccffff。
  */
 - (uint32_t)rgbaValue;
 
 /**
- Returns the color's RGB value as a hex string (lowercase).
- Such as @"0066cc".
-
- It will return nil when the color space is not RGB
-
- @return The color's value as a hex string.
+ 返回 RGB 的小写十六进制字符串，如 @"0066cc"。非 RGB 色彩空间时返回 nil。
  */
 - (nullable NSString *)hexString;
 
 /**
- Returns the color's RGBA value as a hex string (lowercase).
- Such as @"0066ccff".
-
- It will return nil when the color space is not RGBA
-
- @return The color's value as a hex string.
+ 返回 RGBA 的小写十六进制字符串，如 @"0066ccff"。非 RGBA 色彩空间时返回 nil。
  */
 - (nullable NSString *)hexStringWithAlpha;
 
 #pragma mark - Retrieving Color Information
 ///=============================================================================
-/// @name Retrieving Color Information
+/// @name 获取颜色信息
 ///=============================================================================
 
 /**
- Returns the components that make up the color in the HSL color space.
+ 返回颜色在 HSL 色彩空间中的分量（0.0~1.0）。通过指针输出。
 
- @param hue         On return, the hue component of the color object,
- specified as a value between 0.0 and 1.0.
-
- @param saturation  On return, the saturation component of the color object,
- specified as a value between 0.0 and 1.0.
-
- @param lightness   On return, the lightness component of the color object,
- specified as a value between 0.0 and 1.0.
-
- @param alpha       On return, the alpha component of the color object,
- specified as a value between 0.0 and 1.0.
-
- @return            YES if the color could be converted, NO otherwise.
+ @param hue        色相。
+ @param saturation 饱和度。
+ @param lightness  亮度。
+ @param alpha      透明度。
+ @return 能转换返回 YES，否则 NO。
  */
 - (BOOL)getHue:(CGFloat *)hue
     saturation:(CGFloat *)saturation
@@ -246,24 +179,14 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
          alpha:(CGFloat *)alpha;
 
 /**
- Returns the components that make up the color in the CMYK color space.
+ 返回颜色在 CMYK 色彩空间中的分量（0.0~1.0）。通过指针输出。
 
- @param cyan     On return, the cyan component of the color object,
- specified as a value between 0.0 and 1.0.
-
- @param magenta  On return, the magenta component of the color object,
- specified as a value between 0.0 and 1.0.
-
- @param yellow   On return, the yellow component of the color object,
- specified as a value between 0.0 and 1.0.
-
- @param black    On return, the black component of the color object,
- specified as a value between 0.0 and 1.0.
-
- @param alpha    On return, the alpha component of the color object,
- specified as a value between 0.0 and 1.0.
-
- @return         YES if the color could be converted, NO otherwise.
+ @param cyan    青。
+ @param magenta 品红。
+ @param yellow  黄。
+ @param black   黑。
+ @param alpha   透明度。
+ @return 能转换返回 YES，否则 NO。
  */
 - (BOOL)getCyan:(CGFloat *)cyan
         magenta:(CGFloat *)magenta
@@ -272,54 +195,47 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
           alpha:(CGFloat *)alpha;
 
 /**
- The color's red component value in RGB color space.
- The value of this property is a float in the range `0.0` to `1.0`.
+ RGB 色彩空间中的红色分量，范围 0.0~1.0。
  */
 @property (nonatomic, readonly) CGFloat red;
 
 /**
- The color's green component value in RGB color space.
- The value of this property is a float in the range `0.0` to `1.0`.
+ RGB 色彩空间中的绿色分量，范围 0.0~1.0。
  */
 @property (nonatomic, readonly) CGFloat green;
 
 /**
- The color's blue component value in RGB color space.
- The value of this property is a float in the range `0.0` to `1.0`.
+ RGB 色彩空间中的蓝色分量，范围 0.0~1.0。
  */
 @property (nonatomic, readonly) CGFloat blue;
 
 /**
- The color's hue component value in HSB color space.
- The value of this property is a float in the range `0.0` to `1.0`.
+ HSB 色彩空间中的色相分量，范围 0.0~1.0。
  */
 @property (nonatomic, readonly) CGFloat hue;
 
 /**
- The color's saturation component value in HSB color space.
- The value of this property is a float in the range `0.0` to `1.0`.
+ HSB 色彩空间中的饱和度分量，范围 0.0~1.0。
  */
 @property (nonatomic, readonly) CGFloat saturation;
 
 /**
- The color's brightness component value in HSB color space.
- The value of this property is a float in the range `0.0` to `1.0`.
+ HSB 色彩空间中的亮度分量，范围 0.0~1.0。
  */
 @property (nonatomic, readonly) CGFloat brightness;
 
 /**
- The color's alpha component value.
- The value of this property is a float in the range `0.0` to `1.0`.
+ 透明度分量，范围 0.0~1.0。
  */
 @property (nonatomic, readonly) CGFloat alpha;
 
 /**
- The color's colorspace model.
+ 色彩空间模型。
  */
 @property (nonatomic, readonly) CGColorSpaceModel colorSpaceModel;
 
 /**
- Readable colorspace string.
+ 色彩空间的可读字符串描述。
  */
 @property (nullable, nonatomic, readonly) NSString *colorSpaceString;
 

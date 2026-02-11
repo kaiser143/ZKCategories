@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- Provides extensions for `UITextField`.
+ 为 `UITextField` 提供扩展。
  */
 @interface UITextField (ZKAdd)
 
@@ -37,25 +37,25 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSRange)selectedRange;
 
 /**
- Set all text selected.
+ 选中全部文字。
  */
 - (void)selectAllText;
 
 /**
- Set text in range selected.
+ 选中指定范围的文字。
  
- @param range  The range of selected text in a document.
+ @param range 要选中的文字在文档中的范围。
  */
 - (void)setSelectedRange:(NSRange)range;
 
 /**
- *  convert UITextRange to NSRange, for example, [self convertNSRangeFromUITextRange:self.markedTextRange]
+ * 将 UITextRange 转为 NSRange，例如 [self convertNSRangeFromUITextRange:self.markedTextRange]
  */
 - (NSRange)convertNSRangeFromUITextRange:(UITextRange *)textRange;
 
 /**
- *  convert NSRange to UITextRange
- *  @return return nil if range is invalidate.
+ * 将 NSRange 转为 UITextRange
+ *  @return range 无效时返回 nil。
  */
 - (nullable UITextRange *)convertUITextRangeFromNSRange:(NSRange)range;
 

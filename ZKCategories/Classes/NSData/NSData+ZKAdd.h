@@ -18,164 +18,164 @@ NS_ASSUME_NONNULL_BEGIN
 ///=============================================================================
 
 /**
- Returns a lowercase NSString for md2 hash.
+ 返回 md2 哈希的小写 NSString。
  */
 - (NSString *)md2String;
 
 /**
- Returns an NSData for md2 hash.
+ 返回 md2 哈希的 NSData。
  */
 - (NSData *)md2Data;
 
 /**
- Returns a lowercase NSString for md4 hash.
+ 返回 md4 哈希的小写 NSString。
  */
 - (NSString *)md4String;
 
 /**
- Returns an NSData for md4 hash.
+ 返回 md4 哈希的 NSData。
  */
 - (NSData *)md4Data;
 
 /**
- Returns a lowercase NSString for md5 hash.
+ 返回 md5 哈希的小写 NSString。
  */
 - (NSString *)md5String;
 
 /**
- Returns an NSData for md5 hash.
+ 返回 md5 哈希的 NSData。
  */
 - (NSData *)md5Data;
 
 /**
- Returns a lowercase NSString for sha1 hash.
+ 返回 sha1 哈希的小写 NSString。
  */
 - (NSString *)sha1String;
 
 /**
- Returns an NSData for sha1 hash.
+ 返回 sha1 哈希的 NSData。
  */
 - (NSData *)sha1Data;
 
 /**
- Returns a lowercase NSString for sha224 hash.
+ 返回 sha224 哈希的小写 NSString。
  */
 - (NSString *)sha224String;
 
 /**
- Returns an NSData for sha224 hash.
+ 返回 sha224 哈希的 NSData。
  */
 - (NSData *)sha224Data;
 
 /**
- Returns a lowercase NSString for sha256 hash.
+ 返回 sha256 哈希的小写 NSString。
  */
 - (NSString *)sha256String;
 
 /**
- Returns an NSData for sha256 hash.
+ 返回 sha256 哈希的 NSData。
  */
 - (NSData *)sha256Data;
 
 /**
- Returns a lowercase NSString for sha384 hash.
+ 返回 sha384 哈希的小写 NSString。
  */
 - (NSString *)sha384String;
 
 /**
- Returns an NSData for sha384 hash.
+ 返回 sha384 哈希的 NSData。
  */
 - (NSData *)sha384Data;
 
 /**
- Returns a lowercase NSString for sha512 hash.
+ 返回 sha512 哈希的小写 NSString。
  */
 - (NSString *)sha512String;
 
 /**
- Returns an NSData for sha512 hash.
+ 返回 sha512 哈希的 NSData。
  */
 - (NSData *)sha512Data;
 
 /**
- Returns a lowercase NSString for hmac using algorithm md5 with key.
- @param key  The hmac key.
+ 使用 key 做 hmac-md5，返回小写 NSString。
+ @param key hmac 密钥。
  */
 - (NSString *)hmacMD5StringWithKey:(NSString *)key;
 
 /**
- Returns an NSData for hmac using algorithm md5 with key.
- @param key  The hmac key.
+ 使用 key 做 hmac-md5，返回 NSData。
+ @param key hmac 密钥。
  */
 - (NSData *)hmacMD5DataWithKey:(NSData *)key;
 
 /**
- Returns a lowercase NSString for hmac using algorithm sha1 with key.
- @param key  The hmac key.
+ 使用 key 做 hmac-sha1，返回小写 NSString。
+ @param key hmac 密钥。
  */
 - (NSString *)hmacSHA1StringWithKey:(NSString *)key;
 
 /**
- Returns an NSData for hmac using algorithm sha1 with key.
- @param key  The hmac key.
+ 使用 key 做 hmac-sha1，返回 NSData。
+ @param key hmac 密钥。
  */
 - (NSData *)hmacSHA1DataWithKey:(NSData *)key;
 
 /**
- Returns a lowercase NSString for hmac using algorithm sha224 with key.
- @param key  The hmac key.
+ 使用 key 做 hmac-sha224，返回小写 NSString。
+ @param key hmac 密钥。
  */
 - (NSString *)hmacSHA224StringWithKey:(NSString *)key;
 
 /**
- Returns an NSData for hmac using algorithm sha224 with key.
- @param key  The hmac key.
+ 使用 key 做 hmac-sha224，返回 NSData。
+ @param key hmac 密钥。
  */
 - (NSData *)hmacSHA224DataWithKey:(NSData *)key;
 
 /**
- Returns a lowercase NSString for hmac using algorithm sha256 with key.
- @param key  The hmac key.
+ 使用 key 做 hmac-sha256，返回小写 NSString。
+ @param key hmac 密钥。
  */
 - (NSString *)hmacSHA256StringWithKey:(NSString *)key;
 
 /**
- Returns an NSData for hmac using algorithm sha256 with key.
- @param key  The hmac key.
+ 使用 key 做 hmac-sha256，返回 NSData。
+ @param key hmac 密钥。
  */
 - (NSData *)hmacSHA256DataWithKey:(NSData *)key;
 
 /**
- Returns a lowercase NSString for hmac using algorithm sha384 with key.
- @param key  The hmac key.
+ 使用 key 做 hmac-sha384，返回小写 NSString。
+ @param key hmac 密钥。
  */
 - (NSString *)hmacSHA384StringWithKey:(NSString *)key;
 
 /**
- Returns an NSData for hmac using algorithm sha384 with key.
- @param key  The hmac key.
+ 使用 key 做 hmac-sha384，返回 NSData。
+ @param key hmac 密钥。
  */
 - (NSData *)hmacSHA384DataWithKey:(NSData *)key;
 
 /**
- Returns a lowercase NSString for hmac using algorithm sha512 with key.
- @param key  The hmac key.
+ 使用 key 做 hmac-sha512，返回小写 NSString。
+ @param key hmac 密钥。
  */
 - (NSString *)hmacSHA512StringWithKey:(NSString *)key;
 
 /**
- Returns an NSData for hmac using algorithm sha512 with key.
- @param key  The hmac key.
+ 使用 key 做 hmac-sha512，返回 NSData。
+ @param key hmac 密钥。
  */
 - (NSData *)hmacSHA512DataWithKey:(NSData *)key;
 
 /**
- Returns a lowercase NSString for crc32 hash.
+ 返回 crc32 哈希的小写 NSString。
  */
 - (NSString *)crc32String;
 
 /**
- Returns crc32 hash.
+ 返回 crc32 哈希值。
  */
 - (uint32_t)crc32;
 
@@ -185,26 +185,20 @@ NS_ASSUME_NONNULL_BEGIN
 ///=============================================================================
 
 /**
- Returns an encrypted NSData using AES.
+ 使用 AES 加密，返回加密后的 NSData。
  
- @param key   A key length of 16, 24 or 32 (128, 192 or 256bits).
- 
- @param iv    An initialization vector length of 16(128bits).
- Pass nil when you don't want to use iv.
- 
- @return      An NSData encrypted, or nil if an error occurs.
+ @param key 密钥长度 16、24 或 32 字节（128、192 或 256 位）。
+ @param iv  初始向量长度 16 字节（128 位），不使用可传 nil。
+ @return 加密后的 NSData，失败返回 nil。
  */
 - (nullable NSData *)aes256EncryptWithKey:(NSData *)key iv:(nullable NSData *)iv;
 
 /**
- Returns an decrypted NSData using AES.
+ 使用 AES 解密，返回解密后的 NSData。
  
- @param key   A key length of 16, 24 or 32 (128, 192 or 256bits).
- 
- @param iv    An initialization vector length of 16(128bits).
- Pass nil when you don't want to use iv.
- 
- @return      An NSData decrypted, or nil if an error occurs.
+ @param key 密钥长度 16、24 或 32 字节（128、192 或 256 位）。
+ @param iv  初始向量长度 16 字节（128 位），未使用可传 nil。
+ @return 解密后的 NSData，失败返回 nil。
  */
 - (nullable NSData *)aes256DecryptWithkey:(NSData *)key iv:(nullable NSData *)iv;
 
@@ -214,41 +208,39 @@ NS_ASSUME_NONNULL_BEGIN
 ///=============================================================================
 
 /**
- Returns string decoded in UTF8.
+ 按 UTF-8 解码返回字符串。
  */
 - (nullable NSString *)utf8String;
 
 /**
- Returns a uppercase NSString in HEX.
+ 返回大写的十六进制 NSString。
  */
 - (nullable NSString *)hexString;
 
 /**
- Returns an NSData from hex string.
+ 从十六进制字符串生成 NSData（大小写不敏感）。
  
- @param hexString   The hex string which is case insensitive.
- 
- @return a new NSData, or nil if an error occurs.
+ @param hexString 十六进制字符串。
+ @return 新 NSData，失败返回 nil。
  */
 + (nullable NSData *)dataWithHexString:(NSString *)hexString;
 
 /**
- Returns an NSString for base64 encoded.
+ 返回 base64 编码后的 NSString。
  */
 - (nullable NSString *)base64EncodedString;
 
 /**
- Returns an NSData from base64 encoded string.
+ 从 base64 编码字符串解析出 NSData。
  
- @warning This method has been implemented in iOS7.
+ @warning iOS7 已提供系统实现。
  
- @param base64EncodedString  The encoded string.
+ @param base64EncodedString 已编码的字符串。
  */
 + (nullable NSData *)dataWithBase64EncodedString:(NSString *)base64EncodedString;
 
 /**
- Returns an NSDictionary or NSArray for decoded self.
- Returns nil if an error occurs.
+ 将 self 按 JSON 解析为 NSDictionary 或 NSArray，失败返回 nil。
  */
 - (nullable id)jsonValueDecoded;
 
@@ -258,26 +250,26 @@ NS_ASSUME_NONNULL_BEGIN
 ///=============================================================================
 
 /**
- Decompress data from gzip data.
- @return Inflated data.
+ 对 gzip 压缩数据解压。
+ @return 解压后的数据。
  */
 - (nullable NSData *)gzipInflate;
 
 /**
- Comperss data to gzip in default compresssion level.
- @return Deflated data.
+ 使用默认压缩级别将数据压缩为 gzip 格式。
+ @return 压缩后的数据。
  */
 - (nullable NSData *)gzipDeflate;
 
 /**
- Decompress data from zlib-compressed data.
- @return Inflated data.
+ 对 zlib 压缩数据解压。
+ @return 解压后的数据。
  */
 - (nullable NSData *)zlibInflate;
 
 /**
- Comperss data to zlib-compressed in default compresssion level.
- @return Deflated data.
+ 使用默认压缩级别将数据压缩为 zlib 格式。
+ @return 压缩后的数据。
  */
 - (nullable NSData *)zlibDeflate;
 
@@ -287,11 +279,10 @@ NS_ASSUME_NONNULL_BEGIN
 ///=============================================================================
 
 /**
- Create data from the file in main bundle (similar to [UIImage imageNamed:]).
+ 从 main bundle 中按文件名读取并创建 NSData（类似 [UIImage imageNamed:]）。
  
- @param name The file name (in main bundle).
- 
- @return A new data create from the file.
+ @param name 文件名（位于 main bundle）。
+ @return 从文件读取得到的新 NSData。
  */
 + (nullable NSData *)dataNamed:(NSString *)name;
 

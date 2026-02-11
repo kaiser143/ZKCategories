@@ -22,15 +22,14 @@ typedef NS_OPTIONS(NSInteger, KAITableViewCellPosition) {
 @interface UITableView (ZKAdd)
 
 /**
- * The view that contains the "index" along the right side of the table.
+ * 表格右侧的索引视图。
  */
 @property (nonatomic, readonly) UIView *indexView;
 
 /**
- * Returns the margin used to inset table cells.
+ * 返回用于内嵌 table cell 的边距。
  *
- * Grouped tables have a margin but plain tables don't.  This is useful in table cell
- * layout calculations where you don't want to hard-code the table style.
+ * Grouped 样式有边距，Plain 没有。在 cell 布局计算时可用于避免写死表格样式。
  */
 @property (nonatomic, readonly) CGFloat tableCellMargin;
 
@@ -41,167 +40,110 @@ typedef NS_OPTIONS(NSInteger, KAITableViewCellPosition) {
 - (void)touchRowAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated;
 
 /**
- Perform a series of method calls that insert, delete, or select rows and
- sections of the receiver.
+ 在 block 内批量执行插入、删除或选中行/section 的操作。
 
- @discussion Perform a series of method calls that insert, delete, or select
- rows and sections of the table. Call this method if you want
- subsequent insertions, deletion, and selection operations (for
- example, cellForRowAtIndexPath: and indexPathsForVisibleRows)
- to be animated simultaneously.
+ @discussion 将一系列插入、删除、选中操作放在此 block 中，可使这些操作（以及
+ cellForRowAtIndexPath:、indexPathsForVisibleRows 等）一起动画执行。
 
- @discussion If you do not make the insertion, deletion, and selection calls
- inside this block, table attributes such as row count might become
- invalid. You should not call reloadData within the block; if you
- call this method within the group, you will need to perform any
- animations yourself.
+ @discussion 若不在 block 内进行插入/删除/选中，表格的行数等属性可能失效。不要在 block 内
+ 调用 reloadData；若在 block 内调用本方法，需自行处理动画。
 
- @param block  A block combine a series of method calls.
+ @param block 包含一系列表格更新调用的 block。
  */
 - (void)updateWithBlock:(void (^)(UITableView *tableView))block;
 
 /**
- Scrolls the receiver until a row or section location on the screen.
+ 滚动表格使指定行或 section 出现在屏幕上。
 
- @discussion            Invoking this method does not cause the delegate to
- receive a scrollViewDidScroll: message, as is normal for
- programmatically-invoked user interface operations.
+ @discussion 调用此方法不会触发 delegate 的 scrollViewDidScroll:，与其它代码触发的 UI 操作一致。
 
- @param row             Row index in section. NSNotFound is a valid value for
- scrolling to a section with zero rows.
-
- @param section         Section index in table.
-
- @param scrollPosition  A constant that identifies a relative position in the
- receiving table view (top, middle, bottom) for row when
- scrolling concludes.
-
- @param animated        YES if you want to animate the change in position,
- NO if it should be immediate.
+ @param row             所在 section 内的行索引。若目标 section 无行，可传 NSNotFound。
+ @param section         section 索引。
+ @param scrollPosition  滚动结束后行在表格中的相对位置（顶部、中间、底部）。
+ @param animated        YES 为动画滚动，NO 为立即滚动。
  */
 - (void)scrollToRow:(NSUInteger)row inSection:(NSUInteger)section atScrollPosition:(UITableViewScrollPosition)scrollPosition animated:(BOOL)animated NS_SWIFT_NAME(scroll(to:inSection:atPosition:animated:));
 
 /**
- Inserts a row in the receiver with an option to animate the insertion.
+ 在指定位置插入一行，可选择是否动画。
 
- @param row        Row index in section.
-
- @param section    Section index in table.
-
- @param animation  A constant that either specifies the kind of animation to
- perform when inserting the cell or requests no animation.
+ @param row        section 内的行索引。
+ @param section    section 索引。
+ @param animation  插入时的动画类型，或表示无动画的常量。
  */
 - (void)insertRow:(NSUInteger)row inSection:(NSUInteger)section withRowAnimation:(UITableViewRowAnimation)animation;
 
 /**
- Reloads the specified row using a certain animation effect.
+ 使用指定动画效果重载某行。
 
- @param row        Row index in section.
-
- @param section    Section index in table.
-
- @param animation  A constant that indicates how the reloading is to be animated,
- for example, fade out or slide out from the bottom. The animation
- constant affects the direction in which both the old and the
- new rows slide. For example, if the animation constant is
- UITableViewRowAnimationRight, the old rows slide out to the
- right and the new cells slide in from the right.
+ @param row        section 内的行索引。
+ @param section    section 索引。
+ @param animation  重载动画类型（如淡出、从底部滑出等），会同时影响旧行滑出和新行滑入方向，
+ 例如 UITableViewRowAnimationRight 表示旧行向右滑出、新行从右侧滑入。
  */
 - (void)reloadRow:(NSUInteger)row inSection:(NSUInteger)section withRowAnimation:(UITableViewRowAnimation)animation;
 
 /**
- Deletes the row with an option to animate the deletion.
+ 删除指定行，可选择是否动画。
 
- @param row        Row index in section.
-
- @param section    Section index in table.
-
- @param animation  A constant that indicates how the deletion is to be animated,
- for example, fade out or slide out from the bottom.
+ @param row        section 内的行索引。
+ @param section    section 索引。
+ @param animation  删除时的动画类型（如淡出、从底部滑出等）。
  */
 - (void)deleteRow:(NSUInteger)row inSection:(NSUInteger)section withRowAnimation:(UITableViewRowAnimation)animation;
 
 /**
- Inserts the row in the receiver at the locations identified by the indexPath,
- with an option to animate the insertion.
+ 在 indexPath 指定位置插入一行，可选择是否动画。
 
- @param indexPath  An NSIndexPath object representing a row index and section
- index that together identify a row in the table view.
-
- @param animation  A constant that either specifies the kind of animation to
- perform when inserting the cell or requests no animation.
+ @param indexPath  用于标识表格中某行的 NSIndexPath。
+ @param animation  插入时的动画类型，或表示无动画的常量。
  */
 - (void)insertRowAtIndexPath:(NSIndexPath *)indexPath withRowAnimation:(UITableViewRowAnimation)animation NS_SWIFT_NAME(insertRow(at:animation:));
 
 /**
- Reloads the specified row using a certain animation effect.
+ 使用指定动画效果重载 indexPath 对应的行。
 
- @param indexPath  An NSIndexPath object representing a row index and section
- index that together identify a row in the table view.
-
- @param animation A constant that indicates how the reloading is to be animated,
- for example, fade out or slide out from the bottom. The animation
- constant affects the direction in which both the old and the
- new rows slide. For example, if the animation constant is
- UITableViewRowAnimationRight, the old rows slide out to the
- right and the new cells slide in from the right.
+ @param indexPath  用于标识表格中某行的 NSIndexPath。
+ @param animation  重载动画类型（如淡出、从底部滑出等），会同时影响旧行滑出和新行滑入方向。
  */
 - (void)reloadRowAtIndexPath:(NSIndexPath *)indexPath withRowAnimation:(UITableViewRowAnimation)animation;
 
 /**
- Deletes the row specified by an array of index paths,
- with an option to animate the deletion.
+ 删除 indexPath 对应的行，可选择是否动画。
 
- @param indexPath  An NSIndexPath object representing a row index and section
- index that together identify a row in the table view.
-
- @param animation  A constant that indicates how the deletion is to be animated,
- for example, fade out or slide out from the bottom.
+ @param indexPath  用于标识表格中某行的 NSIndexPath。
+ @param animation  删除时的动画类型（如淡出、从底部滑出等）。
  */
 - (void)deleteRowAtIndexPath:(NSIndexPath *)indexPath withRowAnimation:(UITableViewRowAnimation)animation;
 
 /**
- Inserts a section in the receiver, with an option to animate the insertion.
+ 在指定位置插入一个 section，可选择是否动画。
 
- @param section    An index specifies the section to insert in the receiving
- table view. If a section already exists at the specified
- index location, it is moved down one index location.
-
- @param animation  A constant that indicates how the insertion is to be animated,
- for example, fade in or slide in from the left.
+ @param section   要插入的 section 索引；若该位置已有 section，会整体后移。
+ @param animation 插入时的动画类型（如淡入、从左侧滑入等）。
  */
 - (void)insertSection:(NSUInteger)section withRowAnimation:(UITableViewRowAnimation)animation;
 
 /**
- Deletes a section in the receiver, with an option to animate the deletion.
+ 删除指定 section，可选择是否动画。
 
- @param section    An index that specifies the sections to delete from the
- receiving table view. If a section exists after the specified
- index location, it is moved up one index location.
-
- @param animation  A constant that either specifies the kind of animation to
- perform when deleting the section or requests no animation.
+ @param section   要删除的 section 索引；其后 section 会前移。
+ @param animation 删除时的动画类型，或表示无动画的常量。
  */
 - (void)deleteSection:(NSUInteger)section withRowAnimation:(UITableViewRowAnimation)animation;
 
 /**
- Reloads the specified section using a given animation effect.
+ 使用指定动画效果重载某个 section。
 
- @param section    An index identifying the section to reload.
-
- @param animation  A constant that indicates how the reloading is to be animated,
- for example, fade out or slide out from the bottom. The
- animation constant affects the direction in which both the
- old and the new section rows slide. For example, if the
- animation constant is UITableViewRowAnimationRight, the old
- rows slide out to the right and the new cells slide in from the right.
+ @param section   要重载的 section 索引。
+ @param animation 重载动画类型，会同时影响该 section 内旧行滑出和新行滑入方向。
  */
 - (void)reloadSection:(NSUInteger)section withRowAnimation:(UITableViewRowAnimation)animation;
 
 /**
- Unselect all rows in tableView.
+ 取消 tableView 中所有行的选中状态。
 
- @param animated YES to animate the transition, NO to make the transition immediate.
+ @param animated YES 为动画过渡，NO 为立即取消。
  */
 - (void)clearSelectedRowsAnimated:(BOOL)animated;
 
