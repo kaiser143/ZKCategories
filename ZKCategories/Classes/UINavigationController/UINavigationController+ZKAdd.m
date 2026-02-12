@@ -150,13 +150,21 @@
 @implementation UINavigationController (KAIFullscreenPopGesture)
 
 // Helper method to update gesture recognizer state for iOS 26+
+// 使用 performSelector 访问 interactiveContentPopGestureRecognizer，避免在 Xcode 26 之前编译报错（该 API 仅 iOS 26 可用）
 - (void)kai_updatePopGestureState {
     if (@available(iOS 26, *)) {
-        UIViewController *topVC = self.topViewController;
-        if (topVC) {
-            BOOL disabled                                       = topVC.kai_interactivePopDisabled;
-            self.interactivePopGestureRecognizer.enabled        = !disabled;
-            self.interactiveContentPopGestureRecognizer.enabled = !disabled;
+        UIViewController *topViewController = self.topViewController;
+        if (topViewController) {
+            BOOL disabled                                = topViewController.kai_interactivePopDisabled;
+            self.interactivePopGestureRecognizer.enabled = !disabled;
+            SEL sel                                      = NSSelectorFromString(@"interactiveContentPopGestureRecognizer");
+            if ([self respondsToSelector:sel]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                UIGestureRecognizer *contentPop = [self performSelector:sel];
+#pragma clang diagnostic pop
+                if (contentPop) contentPop.enabled = !disabled;
+            }
         }
     }
 }
@@ -534,19 +542,28 @@
     [self setAssociateValue:@(disabled) withKey:@selector(kai_interactivePopDisabled)];
 
     // For iOS 26+, update system gesture recognizers dynamically
+    // 使用 performSelector 访问 interactiveContentPopGestureRecognizer，兼容 Xcode 26 之前版本编译
     if (@available(iOS 26, *)) {
         UINavigationController *navigationController = self.navigationController;
         if (navigationController) {
-            // Update immediately if this is the top view controller
+            SEL sel                                                         = NSSelectorFromString(@"interactiveContentPopGestureRecognizer");
+            void (^updateContentPopEnabled)(UINavigationController *, BOOL) = ^(UINavigationController *nav, BOOL en) {
+                nav.interactivePopGestureRecognizer.enabled = en;
+                if ([nav respondsToSelector:sel]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                    UIGestureRecognizer *contentPop = [nav performSelector:sel];
+#pragma clang diagnostic pop
+                    if (contentPop) contentPop.enabled = en;
+                }
+            };
+            BOOL enabled = !disabled;
             if (navigationController.topViewController == self) {
-                navigationController.interactivePopGestureRecognizer.enabled        = !disabled;
-                navigationController.interactiveContentPopGestureRecognizer.enabled = !disabled;
+                updateContentPopEnabled(navigationController, enabled);
             }
-            // Also schedule an update on next run loop in case we're called during transition
             dispatch_async_on_main_queue(^{
                 if (navigationController.topViewController == self) {
-                    navigationController.interactivePopGestureRecognizer.enabled        = !disabled;
-                    navigationController.interactiveContentPopGestureRecognizer.enabled = !disabled;
+                    updateContentPopEnabled(navigationController, enabled);
                 }
             });
         }
