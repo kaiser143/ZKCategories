@@ -70,12 +70,11 @@ ZK_EXTERN_C_BEGIN
 
 
 /**
- Add this macro before each category implementation, so we don't have to use
- -all_load or -force_load to load object files from static libraries that only
- contain categories and no classes.
- More info: http://developer.apple.com/library/mac/#qa/qa2006/qa1490.html .
+ 在每个 category 实现前使用此宏，可避免对仅包含 category、无类的静态库使用
+ -all_load 或 -force_load 来加载目标文件。
+ 更多说明：http://developer.apple.com/library/mac/#qa/qa2006/qa1490.html
  *******************************************************************************
- Example:
+ 示例：
     ZKSYNTH_DUMMY_CLASS(NSString_ZKAdd)
  */
 #ifndef ZKSYNTH_DUMMY_CLASS
@@ -86,13 +85,13 @@ ZK_EXTERN_C_BEGIN
 
 
 /**
- Synthsize a dynamic object property in @implementation scope.
- It allows us to add custom properties to existing classes in categories.
+ 在 @implementation 作用域内合成动态对象属性。
+ 用于在 category 中为已有类添加自定义属性。
  
  @param association  ASSIGN / RETAIN / COPY / RETAIN_NONATOMIC / COPY_NONATOMIC
- @warning #import <objc/runtime.h>
+ @warning 需 #import <objc/runtime.h>
  *******************************************************************************
- Example:
+ 示例：
     @interface NSObject (MyAdd)
     @property (nonatomic, retain) UIColor *myColor;
     @end
@@ -116,12 +115,12 @@ ZK_EXTERN_C_BEGIN
 
 
 /**
- Synthsize a dynamic c type property in @implementation scope.
- It allows us to add custom properties to existing classes in categories.
+ 在 @implementation 作用域内合成动态 C 类型属性。
+ 用于在 category 中为已有类添加自定义属性。
  
- @warning #import <objc/runtime.h>
+ @warning 需 #import <objc/runtime.h>
  *******************************************************************************
- Example:
+ 示例：
     @interface NSObject (MyAdd)
     @property (nonatomic, retain) CGPoint myPoint;
     @end
@@ -175,7 +174,7 @@ ZK_EXTERN_C_BEGIN
 
 #ifndef metamacro_concat
 /**
- * Returns A and B concatenated after full macro expansion.
+ * 在宏完全展开后将 A 与 B 拼接。
  */
 #define metamacro_concat(A, B) \
     metamacro_concat_(A, B)
@@ -200,17 +199,14 @@ ZK_EXTERN_C_BEGIN
 
 #ifndef metamacro_head
 /**
- * Returns the first argument given. At least one argument must be provided.
+ * 返回传入的第一个参数。至少需要传入一个参数。
  *
- * This is useful when implementing a variadic macro, where you may have only
- * one variadic argument, but no way to retrieve it (for example, because \c ...
- * always needs to match at least one argument).
+ * 在实现可变参数宏时有用，例如只有一个可变参数且无法直接取到
+ *（因 \c ... 至少匹配一个参数）。
  *
  * @code
- 
  #define varmacro(...) \
  metamacro_head(__VA_ARGS__)
- 
  * @endcode
  */
 #define metamacro_head(...) \
@@ -340,9 +336,7 @@ ZK_EXTERN_C_BEGIN
 
 #ifndef metamacro_at
 /**
- * Returns the Nth variadic argument (starting from zero). At least
- * N + 1 variadic arguments must be given. N must be between zero and twenty,
- * inclusive.
+ * 返回第 N 个可变参数（从 0 起）。至少需传入 N+1 个参数，N 为 0～20。
  */
 #define metamacro_at(N, ...) \
     metamacro_concat(metamacro_at, N)(__VA_ARGS__)
@@ -350,10 +344,9 @@ ZK_EXTERN_C_BEGIN
 
 #ifndef metamacro_dec
 /**
- * Decrements VAL, which must be a number between zero and twenty, inclusive.
+ * 将 VAL 减一，VAL 须为 0～20 的整数。
  *
- * This is primarily useful when dealing with indexes and counts in
- * metaprogramming.
+ * 主要用于元编程中的索引与计数。
  */
 #define metamacro_dec(VAL) \
     metamacro_at(VAL, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19)
@@ -361,22 +354,16 @@ ZK_EXTERN_C_BEGIN
 
 #ifndef metamacro_if_eq
 /**
- * If A is equal to B, the next argument list is expanded; otherwise, the
- * argument list after that is expanded. A and B must be numbers between zero
- * and twenty, inclusive. Additionally, B must be greater than or equal to A.
+ * 若 A 等于 B 则展开下一组参数，否则展开再下一组。A、B 须为 0～20 的整数，且 B >= A。
  *
  * @code
- 
- // expands to true
+ // 展开为 true
  metamacro_if_eq(0, 0)(true)(false)
- 
- // expands to false
+ // 展开为 false
  metamacro_if_eq(0, 1)(true)(false)
- 
  * @endcode
  *
- * This is primarily useful when dealing with indexes and counts in
- * metaprogramming.
+ * 主要用于元编程中的索引与计数。
  */
 #define metamacro_if_eq(A, B) \
     metamacro_concat(metamacro_if_eq, A)(B)
@@ -433,10 +420,9 @@ ZK_EXTERN_C_BEGIN
 
 #ifndef metamacro_argcount
 /**
- * Returns the number of arguments (up to twenty) provided to the macro. At
- * least one argument must be provided.
+ * 返回传入宏的参数个数（最多二十个）。至少需传入一个参数。
  *
- * Inspired by P99: http://p99.gforge.inria.fr
+ * 参考 P99: http://p99.gforge.inria.fr
  */
 #define metamacro_argcount(...) \
     metamacro_at(20, __VA_ARGS__, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
@@ -445,12 +431,10 @@ ZK_EXTERN_C_BEGIN
 
 #ifndef metamacro_foreach_cxt
 /**
- * For each consecutive variadic argument (up to twenty), MACRO is passed the
- * zero-based index of the current argument, CONTEXT, and then the argument
- * itself. The results of adjoining invocations of MACRO are then separated by
- * SEP.
+ * 对每个连续的可变参数（最多二十个）调用 MACRO，传入当前参数从 0 起的索引、
+ * CONTEXT 和参数本身。相邻 MACRO 调用的结果用 SEP 分隔。
  *
- * Inspired by P99: http://p99.gforge.inria.fr
+ * 参考 P99: http://p99.gforge.inria.fr
  */
 #define metamacro_foreach_cxt(MACRO, SEP, CONTEXT, ...) \
     metamacro_concat(metamacro_foreach_cxt, metamacro_argcount(__VA_ARGS__))(MACRO, SEP, CONTEXT, __VA_ARGS__)
@@ -459,8 +443,7 @@ ZK_EXTERN_C_BEGIN
 
 #ifndef metamacro_foreach
 /**
- * Identical to #metamacro_foreach_cxt, except that no CONTEXT argument is
- * given. Only the index and current argument will thus be passed to MACRO.
+ * 与 #metamacro_foreach_cxt 相同，但不传入 CONTEXT，仅向 MACRO 传入索引与当前参数。
  */
 #define metamacro_foreach(MACRO, SEP, ...) \
     metamacro_foreach_cxt(metamacro_foreach_iter, SEP, MACRO, __VA_ARGS__)
@@ -468,8 +451,7 @@ ZK_EXTERN_C_BEGIN
 
 #ifndef metamacro_tail
 /**
- * Returns every argument except the first. At least two arguments must be
- * provided.
+ * 返回除第一个以外的所有参数。至少需传入两个参数。
  */
 #define metamacro_tail(...) \
     metamacro_tail_(__VA_ARGS__)
@@ -477,29 +459,21 @@ ZK_EXTERN_C_BEGIN
 
 #ifndef keypath
 /**
- * \@keypath allows compile-time verification of key paths. Given a real object
- * receiver and key path:
+ * \@keypath 在编译期校验 key path。传入实际对象与 key path：
  *
  * @code
- 
  NSString *UTF8StringPath = @keypath(str.lowercaseString.UTF8String);
  // => @"lowercaseString.UTF8String"
- 
  NSString *versionPath = @keypath(NSObject, version);
  // => @"version"
- 
  NSString *lowercaseStringPath = @keypath(NSString.new, lowercaseString);
  // => @"lowercaseString"
- 
  * @endcode
  *
- * ... the macro returns an \c NSString containing all but the first path
- * component or argument (e.g., @"lowercaseString.UTF8String", @"version").
+ * 宏返回去掉第一段的 \c NSString（如 @"lowercaseString.UTF8String", @"version"）。
  *
- * In addition to simply creating a key path, this macro ensures that the key
- * path is valid at compile-time (causing a syntax error if not), and supports
- * refactoring, such that changing the name of the property will also update any
- * uses of \@keypath.
+ * 除生成 key path 外，还可保证编译期合法（非法时产生语法错误），并支持重构：
+ * 属性名修改后，\@keypath 的用法会一并更新。
  */
 #define keypath(...) \
     metamacro_if_eq(1, metamacro_argcount(__VA_ARGS__))(keypath1(__VA_ARGS__))(keypath2(__VA_ARGS__))
@@ -513,14 +487,11 @@ ZK_EXTERN_C_BEGIN
 
 #ifndef weakify
 /**
- * Creates \c __weak shadow variables for each of the variables provided as
- * arguments, which can later be made strong again with #strongify.
+ * 为传入的每个变量创建 \c __weak 影子变量，之后可用 #strongify 再次强引用。
  *
- * This is typically used to weakly reference variables in a block, but then
- * ensure that the variables stay alive during the actual execution of the block
- * (if they were live upon entry).
+ * 常用于在 block 内弱引用变量，并在 block 实际执行时（若进入时仍存活）用 strongify 保证存活。
  *
- * See #strongify for an example of usage.
+ * 用法示例见 #strongify。
  */
 #define weakify(...) \
     autoreleasepool {} \
@@ -532,29 +503,20 @@ ZK_EXTERN_C_BEGIN
 
 #ifndef strongify
 /**
- * Strongly references each of the variables provided as arguments, which must
- * have previously been passed to #weakify.
+ * 对传入的变量做强引用，这些变量须事先通过 #weakify 传入。
  *
- * The strong references created will shadow the original variable names, such
- * that the original names can be used without issue (and a significantly
- * reduced risk of retain cycles) in the current scope.
+ * 生成的强引用会遮蔽原变量名，从而在当前作用域内可安全使用原名称，并显著降低循环引用风险。
  *
  * @code
- 
     id foo = [[NSObject alloc] init];
     id bar = [[NSObject alloc] init];
- 
     @weakify(foo, bar);
- 
-    // this block will not keep 'foo' or 'bar' alive
+    // 该 block 不会持有 'foo' 或 'bar'
     BOOL (^matchesFooOrBar)(id) = ^ BOOL (id obj){
-     // but now, upon entry, 'foo' and 'bar' will stay alive until the block has
-     // finished executing
+     // 进入 block 后 'foo'、'bar' 会保持存活直至 block 执行完毕
      @strongify(foo, bar);
- 
      return [foo isEqual:obj] || [bar isEqual:obj];
      };
- 
  * @endcode
  */
 #define strongify(...) \
@@ -601,24 +563,27 @@ ZK_EXTERN_C_BEGIN
 #define CGContextInspectContext(context, returnValue) if(![ZKHelper inspectContextIfInvalidated:context]){return returnValue;}
 
 /**
- Convert CFRange to NSRange
- @param range CFRange @return NSRange
+ 将 CFRange 转为 NSRange
+ @param range CFRange
+ @return NSRange
  */
 static inline NSRange ZKNSRangeFromCFRange(CFRange range) {
     return NSMakeRange(range.location, range.length);
 }
 
 /**
- Convert NSRange to CFRange
- @param range NSRange @return CFRange
+ 将 NSRange 转为 CFRange
+ @param range NSRange
+ @return CFRange
  */
 static inline CFRange ZKCFRangeFromNSRange(NSRange range) {
     return CFRangeMake(range.location, range.length);
 }
 
 /**
- Same as CFAutorelease(), compatible for iOS6
- @param arg CFObject @return same as input
+ 与 CFAutorelease() 等效，兼容 iOS6
+ @param arg CF 对象
+ @return 与传入值相同
  */
 static inline CFTypeRef ZKCFAutorelease(CFTypeRef CF_RELEASES_ARGUMENT arg) {
     if (((long)CFAutorelease + 1) != 1) {
@@ -630,17 +595,16 @@ static inline CFTypeRef ZKCFAutorelease(CFTypeRef CF_RELEASES_ARGUMENT arg) {
 }
 
 /**
- Profile time cost.
- @param block     code to benchmark
- @param complete  code time cost (millisecond)
+ 测量代码耗时。
+ @param block    待测代码
+ @param complete 耗时回调（毫秒）
  
- Usage:
+ 用法：
  ZKBenchmark(^{
- // code
+   // 待测代码
  }, ^(double ms) {
- NSLog("time cost: %.2f ms",ms);
+   NSLog("time cost: %.2f ms", ms);
  });
- 
  */
 static inline void ZKBenchmark(void (^block)(void), void (^complete)(double ms)) {
     // <QuartzCore/QuartzCore.h> version
@@ -673,30 +637,30 @@ static inline NSDate *_ZKCompileTime(const char *data, const char *time) {
 }
 
 /**
- Get compile timestamp.
- @return A new date object set to the compile date and time.
+ 获取编译时间戳。
+ @return 表示编译日期与时间的新 NSDate 对象。
  */
 #ifndef ZKCompileTime
-// use macro to avoid compile warning when use pch file
+// 使用宏避免在 pch 中引用时的编译警告
 #define ZKCompileTime() _ZKCompileTime(__DATE__, __TIME__)
 #endif
 
 /**
- Returns a dispatch_time delay from now.
+ 返回从当前时间起延迟指定秒数的 dispatch_time。
  */
 static inline dispatch_time_t dispatch_time_delay(NSTimeInterval second) {
     return dispatch_time(DISPATCH_TIME_NOW, (int64_t)(second * NSEC_PER_SEC));
 }
 
 /**
- Returns a dispatch_wall_time delay from now.
+ 返回从当前时间起延迟指定秒数的 dispatch_wall_time。
  */
 static inline dispatch_time_t dispatch_walltime_delay(NSTimeInterval second) {
     return dispatch_walltime(DISPATCH_TIME_NOW, (int64_t)(second * NSEC_PER_SEC));
 }
 
 /**
- Returns a dispatch_wall_time from NSDate.
+ 根据 NSDate 返回 dispatch_wall_time。
  */
 static inline dispatch_time_t dispatch_walltime_date(NSDate *date) {
     NSTimeInterval interval;
@@ -713,14 +677,14 @@ static inline dispatch_time_t dispatch_walltime_date(NSDate *date) {
 }
 
 /**
- Whether in main queue/thread.
+ 是否在主队列/主线程。
  */
 static inline bool dispatch_is_main_queue() {
     return pthread_main_np() != 0;
 }
 
 /**
- Submits a block for asynchronous execution on a main queue and returns immediately.
+ 将 block 提交到主队列异步执行并立即返回。
  */
 static inline void dispatch_async_on_main_queue(void (^block)(void)) {
     if (pthread_main_np()) {
@@ -731,7 +695,7 @@ static inline void dispatch_async_on_main_queue(void (^block)(void)) {
 }
 
 /**
- Submits a block for execution on a main queue and waits until the block completes.
+ 将 block 提交到主队列执行并等待其完成。
  */
 static inline void dispatch_sync_on_main_queue(void (^block)(void)) {
     if (pthread_main_np()) {
@@ -742,7 +706,7 @@ static inline void dispatch_sync_on_main_queue(void (^block)(void)) {
 }
 
 /**
- Initialize a pthread mutex.
+ 初始化 pthread 互斥锁。
  */
 static inline void pthread_mutex_init_recursive(pthread_mutex_t *mutex, bool recursive) {
 #define ZKMUTEX_ASSERT_ON_ERROR(x_) do { \

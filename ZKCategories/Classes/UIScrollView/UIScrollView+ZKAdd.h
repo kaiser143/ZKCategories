@@ -18,7 +18,7 @@ typedef NS_ENUM(NSUInteger, ZKScrollDirection) {
 };
 
 /**
- Provides extensions for `UIScrollView`.
+ 为 `UIScrollView` 提供扩展。
  */
 @interface UIScrollView (ZKAdd)
 
@@ -42,50 +42,50 @@ typedef NS_ENUM(NSUInteger, ZKScrollDirection) {
 - (BOOL)canScroll;
 
 /**
- Scroll content to top with animation.
+ 带动画滚动到顶部。
  */
 - (void)scrollToTop;
 
 /**
- Scroll content to bottom with animation.
+ 带动画滚动到底部。
  */
 - (void)scrollToBottom;
 
 /**
- Scroll content to left with animation.
+ 带动画滚动到左侧。
  */
 - (void)scrollToLeft;
 
 /**
- Scroll content to right with animation.
+ 带动画滚动到右侧。
  */
 - (void)scrollToRight;
 
 /**
- Scroll content to top.
+ 滚动到顶部。
  
- @param animated  Use animation.
+ @param animated 是否使用动画
  */
 - (void)scrollToTopAnimated:(BOOL)animated;
 
 /**
- Scroll content to bottom.
+ 滚动到底部。
  
- @param animated  Use animation.
+ @param animated 是否使用动画
  */
 - (void)scrollToBottomAnimated:(BOOL)animated;
 
 /**
- Scroll content to left.
+ 滚动到左侧。
  
- @param animated  Use animation.
+ @param animated 是否使用动画
  */
 - (void)scrollToLeftAnimated:(BOOL)animated;
 
 /**
- Scroll content to right.
+ 滚动到右侧。
  
- @param animated  Use animation.
+ @param animated 是否使用动画
  */
 - (void)scrollToRightAnimated:(BOOL)animated;
 

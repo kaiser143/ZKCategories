@@ -15,11 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)itemWithImage:(UIImage *)image target:(nullable id)target action:(nullable SEL)action;
 
 /**
- The block that invoked when the item is selected. The objects captured by block
- will retained by the ButtonItem.
+ 点击该 item 时调用的 block。block 捕获的对象会被 BarButtonItem 持有。
  
- @discussion This param is conflict with `target` and `action` property.
- Set this will set `target` and `action` property to some internal objects.
+ @discussion 此属性与 `target`、`action` 互斥；设置后会将 `target` 和 `action` 指向内部对象。
  */
 @property (nullable, nonatomic, copy) void (^actionBlock)(id);
 

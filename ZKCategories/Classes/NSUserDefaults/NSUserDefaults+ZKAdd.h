@@ -49,10 +49,33 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - :. READ ARCHIVE FOR STANDARD
 
+/**
+ *  @brief  从 [NSUserDefaults standardUserDefaults] 读取并解档对象。
+ *  @param defaultName 存储时使用的 key。
+ *  @return 解档后的对象，未存储或解档失败时返回 nil。
+ *  @note 对象须支持 NSCoding（实现 encodeWithCoder: 与 initWithCoder:）。
+ *
+ *  @code
+ *  // 读取
+ *  MyModel *model = [NSUserDefaults arcObjectForKey:@"my_model"];
+ *  @endcode
+ */
 + (id)arcObjectForKey:(NSString *)defaultName;
 
 #pragma mark - :. WRITE ARCHIVE FOR STANDARD
 
+/**
+ *  @brief  将对象归档后写入 [NSUserDefaults standardUserDefaults] 并 synchronize。
+ *  @param value       要存储的对象，须支持 NSCoding；传 nil 会写入空数据。
+ *  @param defaultName 存储使用的 key。
+ *  @note 对象须支持 NSCoding（实现 encodeWithCoder: 与 initWithCoder:）。
+ *
+ *  @code
+ *  // 存储
+ *  MyModel *model = [[MyModel alloc] init];
+ *  [NSUserDefaults setArcObject:model forKey:@"my_model"];
+ *  @endcode
+ */
 + (void)setArcObject:(id)value forKey:(NSString *)defaultName;
 
 @end

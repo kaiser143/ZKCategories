@@ -38,11 +38,11 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
 @interface UIColor (ZKAdd)
 
 /*!
- *    @abstract 用于调试的随机颜色
+ *    @brief 用于调试的随机颜色
  */
 + (UIColor *)randomColor NS_SWIFT_NAME(random());
 
-#pragma mark - Create a UIColor Object
+#pragma mark - 创建 UIColor
 ///=============================================================================
 /// @name 创建 UIColor
 ///=============================================================================
@@ -134,7 +134,7 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
                    brightness:(CGFloat)brightnessDelta
                         alpha:(CGFloat)alphaDelta NS_SWIFT_NAME(change(hue:saturation:brightness:alpha:));
 
-#pragma mark - Get color's description
+#pragma mark - 颜色的描述
 ///=============================================================================
 /// @name 颜色的描述
 ///=============================================================================
@@ -159,7 +159,7 @@ UIKIT_EXTERN void ZK_HSL2HSB(CGFloat h, CGFloat s, CGFloat l, CGFloat *hh, CGFlo
  */
 - (nullable NSString *)hexStringWithAlpha;
 
-#pragma mark - Retrieving Color Information
+#pragma mark - 获取颜色信息
 ///=============================================================================
 /// @name 获取颜色信息
 ///=============================================================================

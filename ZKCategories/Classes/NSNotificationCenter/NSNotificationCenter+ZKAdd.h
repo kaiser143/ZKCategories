@@ -13,72 +13,51 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSNotificationCenter (ZKAdd)
 
 /**
- Posts a given notification to the receiver on main thread.
- If current thread is main thread, the notification is posted synchronized;
- otherwise, is posted asynchronized.
- 
- @param notification  The notification to post.
- An exception is raised if notification is nil.
+ 在主线程向接收者派发指定通知。
+ 若当前已是主线程则同步派发，否则异步派发。
+
+ @param notification 要派发的通知，为 nil 会抛异常。
  */
 - (void)postNotificationOnMainThread:(NSNotification *)notification;
 
 /**
- Posts a given notification to the receiver on main thread.
- 
- @param notification The notification to post.
- An exception is raised if notification is nil.
- 
- @param wait         A Boolean that specifies whether the current thread blocks
- until after the specified notification is posted on the
- receiver on the main thread. Specify YES to block this
- thread; otherwise, specify NO to have this method return
- immediately.
+ 在主线程向接收者派发指定通知。
+
+ @param notification 要派发的通知，为 nil 会抛异常。
+ @param wait 是否阻塞当前线程直到主线程派发完成。YES 阻塞，NO 则立即返回。
  */
 - (void)postNotificationOnMainThread:(NSNotification *)notification
                        waitUntilDone:(BOOL)wait;
 
 /**
- Creates a notification with a given name and sender and posts it to the
- receiver on main thread. If current thread is main thread, the notification
- is posted synchronized; otherwise, is posted asynchronized.
- 
- @param name    The name of the notification.
- 
- @param object  The object posting the notification.
+ 根据指定名称和发送者创建通知，并在主线程向接收者派发。
+ 若当前已是主线程则同步派发，否则异步派发。
+
+ @param name   通知名称。
+ @param object 发送通知的对象。
  */
 - (void)postNotificationOnMainThreadWithName:(NSString *)name
                                       object:(nullable id)object;
 
 /**
- Creates a notification with a given name and sender and posts it to the
- receiver on main thread. If current thread is main thread, the notification
- is posted synchronized; otherwise, is posted asynchronized.
- 
- @param name      The name of the notification.
- 
- @param object    The object posting the notification.
- 
- @param userInfo  Information about the the notification. May be nil.
+ 根据指定名称、发送者和 userInfo 创建通知，并在主线程向接收者派发。
+ 若当前已是主线程则同步派发，否则异步派发。
+
+ @param name     通知名称。
+ @param object   发送通知的对象。
+ @param userInfo 通知附加信息，可为 nil。
  */
 - (void)postNotificationOnMainThreadWithName:(NSString *)name
                                       object:(nullable id)object
                                     userInfo:(nullable NSDictionary *)userInfo;
 
 /**
- Creates a notification with a given name and sender and posts it to the
- receiver on main thread.
- 
- @param name     The name of the notification.
- 
- @param object   The object posting the notification.
- 
- @param userInfo Information about the the notification. May be nil.
- 
- @param wait     A Boolean that specifies whether the current thread blocks
- until after the specified notification is posted on the
- receiver on the main thread. Specify YES to block this
- thread; otherwise, specify NO to have this method return
- immediately.
+ 根据指定名称、发送者和 userInfo 创建通知，并在主线程向接收者派发。
+
+ @param name     通知名称。
+ @param object   发送通知的对象。
+ @param userInfo 通知附加信息，可为 nil。
+ @param wait     是否阻塞当前线程直到主线程派发完成。YES 阻塞，NO 则立即返回。
  */
 - (void)postNotificationOnMainThreadWithName:(NSString *)name
                                       object:(nullable id)object

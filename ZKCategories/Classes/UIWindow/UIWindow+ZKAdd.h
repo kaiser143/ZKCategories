@@ -13,12 +13,12 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIWindow (ZKAdd)
 
 /**
- * Searches the view hierarchy recursively for the first responder, starting with this window.
+ * 从当前 window 起递归查找视图层级中的第一响应者。
  */
 - (__kindof UIView *)findFirstResponder;
 
 /**
- * Searches the view hierarchy recursively for the first responder, starting with topView.
+ * 从 topView 起递归查找视图层级中的第一响应者。
  */
 - (__kindof UIView *)findFirstResponderInView:(UIView *)topView;
 

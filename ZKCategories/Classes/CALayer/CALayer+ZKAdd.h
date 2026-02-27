@@ -12,51 +12,51 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- Provides extensions for `CALayer`.
+ 为 `CALayer` 提供扩展。
  */
 @interface CALayer (ZKAdd)
 
 /**
- Take snapshot without transform, image's size equals to bounds.
+ 不应用变换截取快照，图片尺寸等于 bounds。
  */
 - (nullable UIImage *)snapshotImage;
 
 /**
- Take snapshot without transform, PDF's page size equals to bounds.
+ 不应用变换截取快照，PDF 页面尺寸等于 bounds。
  */
 - (nullable NSData *)snapshotPDF;
 
 /**
- Shortcut to set the layer's shadow
+ 快捷设置 layer 的阴影
  
- @param color  Shadow Color
- @param offset Shadow offset
- @param radius Shadow radius
+ @param color  阴影颜色
+ @param offset 阴影偏移
+ @param radius 阴影圆角半径
  */
 - (void)setLayerShadow:(UIColor*)color offset:(CGSize)offset radius:(CGFloat)radius;
 
 /**
- Remove all sublayers.
+ 移除所有子 layer。
  */
 - (void)removeAllSublayers;
 
-@property (nonatomic) CGFloat left;        ///< Shortcut for frame.origin.x.
-@property (nonatomic) CGFloat top;         ///< Shortcut for frame.origin.y
-@property (nonatomic) CGFloat right;       ///< Shortcut for frame.origin.x + frame.size.width
-@property (nonatomic) CGFloat bottom;      ///< Shortcut for frame.origin.y + frame.size.height
-@property (nonatomic) CGFloat width;       ///< Shortcut for frame.size.width.
-@property (nonatomic) CGFloat height;      ///< Shortcut for frame.size.height.
-@property (nonatomic) CGPoint center;      ///< Shortcut for center.
-@property (nonatomic) CGFloat centerX;     ///< Shortcut for center.x
-@property (nonatomic) CGFloat centerY;     ///< Shortcut for center.y
-@property (nonatomic) CGPoint origin;      ///< Shortcut for frame.origin.
-@property (nonatomic, getter=frameSize, setter=setFrameSize:) CGSize  size; ///< Shortcut for frame.size.
+@property (nonatomic) CGFloat left;        ///< frame.origin.x 的快捷方式
+@property (nonatomic) CGFloat top;         ///< frame.origin.y 的快捷方式
+@property (nonatomic) CGFloat right;       ///< frame.origin.x + frame.size.width 的快捷方式
+@property (nonatomic) CGFloat bottom;      ///< frame.origin.y + frame.size.height 的快捷方式
+@property (nonatomic) CGFloat width;       ///< frame.size.width 的快捷方式
+@property (nonatomic) CGFloat height;      ///< frame.size.height 的快捷方式
+@property (nonatomic) CGPoint center;      ///< center 的快捷方式
+@property (nonatomic) CGFloat centerX;     ///< center.x 的快捷方式
+@property (nonatomic) CGFloat centerY;     ///< center.y 的快捷方式
+@property (nonatomic) CGPoint origin;      ///< frame.origin 的快捷方式
+@property (nonatomic, getter=frameSize, setter=setFrameSize:) CGSize  size; ///< frame.size 的快捷方式
 
 
 @property (nonatomic) CGFloat transformRotation;     ///< key path "tranform.rotation"
 @property (nonatomic) CGFloat transformRotationX;    ///< key path "tranform.rotation.x"
 @property (nonatomic) CGFloat transformRotationY;    ///< key path "tranform.rotation.y"
-@property (nonatomic) CGFloat transformRotationZ;    ///< key path "tranform.rotation.z"
+@property (nonatomic) CGFloat transformRotationZ;   ///< key path "tranform.rotation.z"
 @property (nonatomic) CGFloat transformScale;        ///< key path "tranform.scale"
 @property (nonatomic) CGFloat transformScaleX;       ///< key path "tranform.scale.x"
 @property (nonatomic) CGFloat transformScaleY;       ///< key path "tranform.scale.y"
@@ -66,26 +66,26 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) CGFloat transformTranslationZ; ///< key path "tranform.translation.z"
 
 /**
- Shortcut for transform.m34, -1/1000 is a good value.
- It should be set before other transform shortcut.
+ transform.m34 的快捷方式，-1/1000 为常用值。
+ 应在其他 transform 快捷方式之前设置。
  */
 @property (nonatomic) CGFloat transformDepth;
 
 /**
- Wrapper for `contentsGravity` property.
+ `contentsGravity` 属性的封装。
  */
 @property (nonatomic) UIViewContentMode contentMode;
 
 /**
- Add a fade animation to layer's contents when the contents is changed.
+ 当 layer 的 contents 变化时添加淡入淡出动画。
  
- @param duration Animation duration
- @param curve    Animation curve.
+ @param duration 动画时长
+ @param curve    动画曲线
  */
 - (void)addFadeAnimationWithDuration:(NSTimeInterval)duration curve:(UIViewAnimationCurve)curve;
 
 /**
- Cancel fade animation which is added with "-addFadeAnimationWithDuration:curve:".
+ 取消通过 "-addFadeAnimationWithDuration:curve:" 添加的淡入淡出动画。
  */
 - (void)removePreviousFadeAnimation;
 

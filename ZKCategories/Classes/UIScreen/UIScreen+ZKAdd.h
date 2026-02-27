@@ -11,47 +11,44 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- Provides extensions for `UIScreen`.
+ 为 `UIScreen` 提供扩展。
  */
 @interface UIScreen (ZKAdd)
 
 /**
- Main screen's scale
+ 主屏的 scale。
  
- @return screen's scale
+ @return 主屏 scale
  */
 + (CGFloat)screenScale;
 
 /**
- Returns the bounds of the screen for the current device orientation.
+ 返回当前设备方向下的屏幕边界。
  
- @return A rect indicating the bounds of the screen.
+ @return 表示屏幕边界的矩形。
  @see    boundsForOrientation:
  */
 - (CGRect)currentBounds NS_EXTENSION_UNAVAILABLE_IOS("");
 
 /**
- Returns the bounds of the screen for a given device orientation.
- `UIScreen`'s `bounds` method always returns the bounds of the
- screen of it in the portrait orientation.
+ 返回指定设备方向下的屏幕边界。
+ `UIScreen` 的 `bounds` 始终返回竖屏下的边界。
  
- @param orientation  The orientation to get the screen's bounds.
- @return A rect indicating the bounds of the screen.
+ @param orientation 用于获取屏幕边界的方向。
+ @return 表示屏幕边界的矩形。
  @see  currentBounds
  */
 - (CGRect)boundsForOrientation:(UIInterfaceOrientation)orientation;
 
 /**
- The screen's real size in pixel (width is always smaller than height).
- This value may not be very accurate in an unknown device, or simulator.
- e.g. (768,1024)
+ 屏幕的像素尺寸（宽度恒小于高度）。
+ 在未知设备或模拟器上可能不够准确。例如 (768,1024)。
  */
 @property (nonatomic, readonly) CGSize sizeInPixel;
 
 /**
- The screen's PPI.
- This value may not be very accurate in an unknown device, or simulator.
- Default value is 96.
+ 屏幕 PPI（每英寸像素）。
+ 在未知设备或模拟器上可能不够准确，默认 96。
  */
 @property (nonatomic, readonly) CGFloat pixelsPerInch;
 

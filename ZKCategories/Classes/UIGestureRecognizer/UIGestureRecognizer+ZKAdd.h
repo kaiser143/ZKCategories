@@ -11,31 +11,28 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- Provides extensions for `UIGestureRecognizer`.
+ 为 `UIGestureRecognizer` 提供扩展。
  */
 @interface UIGestureRecognizer (ZKAdd)
 
 /**
- Initializes an allocated gesture-recognizer object with a action block.
+ 使用一个 action block 初始化已分配的手势识别器。
  
- @param block  An action block that to handle the gesture recognized by the
-               receiver. nil is invalid. It is retained by the gesture.
+ @param block  处理接收者识别到的手势的 action block。不能为 nil，由手势持有。
  
- @return An initialized instance of a concrete UIGestureRecognizer subclass or
-         nil if an error occurred in the attempt to initialize the object.
+ @return 初始化后的 UIGestureRecognizer 子类实例，初始化失败时返回 nil。
  */
 - (instancetype)initWithActionBlock:(void (^)(__kindof UIGestureRecognizer *sender))block;
 
 /**
- Adds an action block to a gesture-recognizer object. It is retained by the
- gesture.
+ 为手势识别器添加一个 action block，由手势持有。
  
- @param block A block invoked by the action message. nil is not a valid value.
+ @param block 手势触发时调用的 block，不能为 nil。
  */
 - (void)addActionBlock:(void (^)(__kindof UIGestureRecognizer *sender))block;
 
 /**
- Remove all action blocks.
+ 移除所有 action block。
  */
 - (void)removeAllActionBlocks;
 

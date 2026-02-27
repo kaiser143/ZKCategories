@@ -10,8 +10,9 @@
 #import <Foundation/Foundation.h>
 
 /*!
- * @code
-
+ *  @brief  通过 eventStrategy 字典 + NSInvocation 将事件名映射到对应方法，在 responderDidReceiveEvent:userInfo: 中统一派发。
+ *
+ *  e.g.
  @interface ZKViewController : UIViewController
  @property (nonatomic, strong) NSDictionary<NSString *, NSInvocation *> *eventStrategy;
  @end
@@ -29,35 +30,32 @@
      NSMethodSignature *sig = [[self class] instanceMethodSignatureForSelector:selector];
      NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
      [invocation setSelector:selector];
-    
      return invocation;
  }
 
  - (NSDictionary<NSString *, NSInvocation *> *)eventStrategy {
      if (_eventStrategy == nil) {
          _eventStrategy = @{
-                                kBLGoodsDetailTicketEvent:[self createInvocationWithSelector:@selector(ticketEvent:)],
-                                kBLGoodsDetailPromotionEvent:[self createInvocationWithSelector:@selector(promotionEvent:)],
-                                kBLGoodsDetailScoreEvent:[self createInvocationWithSelector:@selector(scoreEvent:)],
-                                kBLGoodsDetailTargetAddressEvent:[self createInvocationWithSelector:@selector(targetAddressEvent:)],
-                                kBLGoodsDetailServiceEvent:[self createInvocationWithSelector:@selector(serviceEvent:)],
-                                kBLGoodsDetailSKUSelectionEvent:[self createInvocationWithSelector:@selector(skuSelectionEvent:)],
-                                };
+             kBLGoodsDetailTicketEvent:        [self createInvocationWithSelector:@selector(ticketEvent:)],
+             kBLGoodsDetailPromotionEvent:     [self createInvocationWithSelector:@selector(promotionEvent:)],
+             kBLGoodsDetailScoreEvent:         [self createInvocationWithSelector:@selector(scoreEvent:)],
+             kBLGoodsDetailTargetAddressEvent: [self createInvocationWithSelector:@selector(targetAddressEvent:)],
+             kBLGoodsDetailServiceEvent:       [self createInvocationWithSelector:@selector(serviceEvent:)],
+             kBLGoodsDetailSKUSelectionEvent:  [self createInvocationWithSelector:@selector(skuSelectionEvent:)],
+         };
      }
      return _eventStrategy;
  }
 
  @end
- 
- * @endcode
  */
 
 @interface UIResponder (ZKAdd)
 
 /**
- Returns the current first responder object.
+ 返回当前第一响应者。
  
- @return A UIResponder instance.
+ @return UIResponder 实例。
  */
 + (nullable instancetype)currentFirstResponder;
 

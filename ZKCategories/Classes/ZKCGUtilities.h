@@ -14,78 +14,78 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// Create an `ARGB` Bitmap context. Returns NULL if an error occurs.
+/// 创建 `ARGB` 位图上下文。出错时返回 NULL。
 ///
-/// @discussion The function is same as UIGraphicsBeginImageContextWithOptions(),
-/// but it doesn't push the context to UIGraphic, so you can retain the context for reuse.
+/// @discussion 与 UIGraphicsBeginImageContextWithOptions() 类似，
+/// 但不会将上下文压入 UIGraphic，因此可保留上下文以便复用。
 CGContextRef _Nullable ZKCGContextCreateARGBBitmapContext(CGSize size, BOOL opaque, CGFloat scale);
 
-/// Create a `DeviceGray` Bitmap context. Returns NULL if an error occurs.
+/// 创建 `DeviceGray` 位图上下文。出错时返回 NULL。
 CGContextRef _Nullable ZKCGContextCreateGrayBitmapContext(CGSize size, CGFloat scale);
 
 
 
-/// Get main screen's scale.
+/// 获取主屏 scale。
 CGFloat ZKScreenScale(void);
 
-/// Get main screen's size. Height is always larger than width.
+/// 获取主屏尺寸（竖屏下高度大于宽度）。
 CGSize ZKScreenSize(void);
 
 
 
-/// Convert degrees to radians.
+/// 角度转弧度。
 CG_INLINE CGFloat DegreesToRadians(CGFloat degrees) {
     return degrees * M_PI / 180;
 }
 
-/// Convert radians to degrees.
+/// 弧度转角度。
 CG_INLINE CGFloat RadiansToDegrees(CGFloat radians) {
     return radians * 180 / M_PI;
 }
 
 
 
-/// Get the transform rotation.
-/// @return the rotation in radians [-PI,PI] ([-180°,180°])
+/// 获取变换的旋转角。
+/// @return 弧度 [-PI,PI]（即 [-180°,180°]）
 CG_INLINE CGFloat CGAffineTransformGetRotation(CGAffineTransform transform) {
     return atan2(transform.b, transform.a);
 }
 
-/// Get the transform's scale.x
+/// 获取变换的 scale.x
 CG_INLINE CGFloat CGAffineTransformGetScaleX(CGAffineTransform transform) {
     return  sqrt(transform.a * transform.a + transform.c * transform.c);
 }
 
-/// Get the transform's scale.y
+/// 获取变换的 scale.y
 CG_INLINE CGFloat CGAffineTransformGetScaleY(CGAffineTransform transform) {
     return sqrt(transform.b * transform.b + transform.d * transform.d);
 }
 
-/// Get the transform's translate.x
+/// 获取变换的 translate.x
 CG_INLINE CGFloat CGAffineTransformGetTranslateX(CGAffineTransform transform) {
     return transform.tx;
 }
 
-/// Get the transform's translate.y
+/// 获取变换的 translate.y
 CG_INLINE CGFloat CGAffineTransformGetTranslateY(CGAffineTransform transform) {
     return transform.ty;
 }
 
 /**
- If you have 3 pair of points transformed by a same CGAffineTransform:
+ 若有三对点被同一 CGAffineTransform 变换：
  p1 (transform->) q1
  p2 (transform->) q2
  p3 (transform->) q3
- This method returns the original transform matrix from these 3 pair of points.
+ 本方法根据这三对点还原出原始变换矩阵。
  
  @see http://stackoverflow.com/questions/13291796/calculate-values-for-a-cgaffinetransform-from-three-points-in-each-of-two-uiview
  */
 CGAffineTransform ZKCGAffineTransformGetFromPoints(CGPoint before[_Nullable 3], CGPoint after[_Nullable 3]);
 
-/// Get the transform which can converts a point from the coordinate system of a given view to another.
+/// 获取将点从一个视图坐标系转换到另一视图坐标系的变换。
 CGAffineTransform ZKCGAffineTransformGetFromViews(UIView *from, UIView *to);
 
-/// Create a skew transform.
+/// 创建错切变换。
 CG_INLINE CGAffineTransform CGAffineTransformMakeSkew(CGFloat x, CGFloat y){
     CGAffineTransform transform = CGAffineTransformIdentity;
     transform.c = -x;
@@ -93,43 +93,43 @@ CG_INLINE CGAffineTransform CGAffineTransformMakeSkew(CGFloat x, CGFloat y){
     return transform;
 }
 
-/// Convert CALayer's gravity string to UIViewContentMode.
+/// 将 CALayer 的 gravity 字符串转换为 UIViewContentMode。
 UIViewContentMode ZKCAGravityToUIViewContentMode(NSString *gravity);
 
-/// Convert UIViewContentMode to CALayer's gravity string.
+/// 将 UIViewContentMode 转换为 CALayer 的 gravity 字符串。
 NSString *ZKUIViewContentModeToCAGravity(UIViewContentMode contentMode);
 
 
 
 /**
- Returns a rectangle to fit the @param rect with specified content mode.
+ 根据指定 content mode 在 rect 内适配内容，返回适配后的矩形。
  
- @param \rect The constrant rect
- @param size The content size
- @param mode The content mode
- @return A rectangle for the given content mode.
- @discussion UIViewContentModeRedraw is same as UIViewContentModeScaleToFill.
+ @param rect 约束矩形
+ @param size 内容尺寸
+ @param mode 内容模式
+ @return 适配后的矩形
+ @discussion UIViewContentModeRedraw 按 UIViewContentModeScaleToFill 处理。
  */
 CGRect ZKCGRectFitWithContentMode(CGRect rect, CGSize size, UIViewContentMode mode);
 
-/// Returns the center for the rectangle.
+/// 返回矩形的中心点。
 CG_INLINE CGPoint CGRectGetCenter(CGRect rect) {
     return CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect));
 }
 
-/// Returns the area of the rectangle.
+/// 返回矩形面积。
 CG_INLINE CGFloat CGRectGetArea(CGRect rect) {
     if (CGRectIsNull(rect)) return 0;
     rect = CGRectStandardize(rect);
     return rect.size.width * rect.size.height;
 }
 
-/// Returns the distance between two points.
+/// 返回两点之间的距离。
 CG_INLINE CGFloat CGPointGetDistanceToPoint(CGPoint p1, CGPoint p2) {
     return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
 }
 
-/// Returns the minmium distance between a point to a rectangle.
+/// 返回点到矩形的最短距离。
 CG_INLINE CGFloat CGPointGetDistanceToRect(CGPoint p, CGRect r) {
     r = CGRectStandardize(r);
     if (CGRectContainsPoint(r, p)) return 0;
@@ -153,17 +153,17 @@ CG_INLINE CGFloat CGFloatSafeValue(CGFloat value) {
     return isnan(value) ? 0 : value;
 }
 
-/// Convert point to pixel.
+/// 点转像素。
 CG_INLINE CGFloat CGFloatToPixel(CGFloat value) {
     return value * ZKScreenScale();
 }
 
-/// Convert pixel to point.
+/// 像素转点。
 CG_INLINE CGFloat CGFloatFromPixel(CGFloat value) {
     return value / ZKScreenScale();
 }
 
-/// floor point value for pixel-aligned
+/// 向下取整到像素对齐
 CG_INLINE CGFloat CGFloatPixelFloor(CGFloat value) {
     CGFloat scale = ZKScreenScale();
     return floor(value * scale) / scale;
@@ -197,46 +197,46 @@ CG_INLINE CGFloat flat(CGFloat floatValue) {
     return flatSpecificScale(floatValue, 0);
 }
 
-/// round point value for pixel-aligned
+/// 四舍五入到像素对齐
 CG_INLINE CGFloat CGFloatPixelRound(CGFloat value) {
     CGFloat scale = ZKScreenScale();
     return round(value * scale) / scale;
 }
 
-/// ceil point value for pixel-aligned
+/// 向上取整到像素对齐
 CG_INLINE CGFloat CGFloatPixelCeil(CGFloat value) {
     CGFloat scale = ZKScreenScale();
     return ceil(value * scale) / scale;
 }
 
-/// round point value to .5 pixel for path stroke (odd pixel line width pixel-aligned)
+/// 取整到半像素，用于路径描边（奇数线宽像素对齐）
 CG_INLINE CGFloat CGFloatPixelHalf(CGFloat value) {
     CGFloat scale = ZKScreenScale();
     return (floor(value * scale) + 0.5) / scale;
 }
 
-/// floor point value for pixel-aligned
+/// 点坐标向下取整到像素对齐
 CG_INLINE CGPoint CGPointPixelFloor(CGPoint point) {
     CGFloat scale = ZKScreenScale();
     return CGPointMake(floor(point.x * scale) / scale,
                        floor(point.y * scale) / scale);
 }
 
-/// round point value for pixel-aligned
+/// 点坐标四舍五入到像素对齐
 CG_INLINE CGPoint CGPointPixelRound(CGPoint point) {
     CGFloat scale = ZKScreenScale();
     return CGPointMake(round(point.x * scale) / scale,
                        round(point.y * scale) / scale);
 }
 
-/// ceil point value for pixel-aligned
+/// 点坐标向上取整到像素对齐
 CG_INLINE CGPoint CGPointPixelCeil(CGPoint point) {
     CGFloat scale = ZKScreenScale();
     return CGPointMake(ceil(point.x * scale) / scale,
                        ceil(point.y * scale) / scale);
 }
 
-/// round point value to .5 pixel for path stroke (odd pixel line width pixel-aligned)
+/// 点坐标取整到半像素，用于路径描边（奇数线宽像素对齐）
 CG_INLINE CGPoint CGPointPixelHalf(CGPoint point) {
     CGFloat scale = ZKScreenScale();
     return CGPointMake((floor(point.x * scale) + 0.5) / scale,
@@ -245,28 +245,28 @@ CG_INLINE CGPoint CGPointPixelHalf(CGPoint point) {
 
 
 
-/// floor point value for pixel-aligned
+/// 尺寸向下取整到像素对齐
 CG_INLINE CGSize CGSizePixelFloor(CGSize size) {
     CGFloat scale = ZKScreenScale();
     return CGSizeMake(floor(size.width * scale) / scale,
                       floor(size.height * scale) / scale);
 }
 
-/// round point value for pixel-aligned
+/// 尺寸四舍五入到像素对齐
 CG_INLINE CGSize CGSizePixelRound(CGSize size) {
     CGFloat scale = ZKScreenScale();
     return CGSizeMake(round(size.width * scale) / scale,
                       round(size.height * scale) / scale);
 }
 
-/// ceil point value for pixel-aligned
+/// 尺寸向上取整到像素对齐
 CG_INLINE CGSize CGSizePixelCeil(CGSize size) {
     CGFloat scale = ZKScreenScale();
     return CGSizeMake(ceil(size.width * scale) / scale,
                       ceil(size.height * scale) / scale);
 }
 
-/// round point value to .5 pixel for path stroke (odd pixel line width pixel-aligned)
+/// 尺寸取整到半像素，用于路径描边（奇数线宽像素对齐）
 CG_INLINE CGSize CGSizePixelHalf(CGSize size) {
     CGFloat scale = ZKScreenScale();
     return CGSizeMake((floor(size.width * scale) + 0.5) / scale,
@@ -311,7 +311,7 @@ CG_INLINE CGRect CGRectPixelFloor(CGRect rect) {
     return ret;
 }
 
-/// round point value for pixel-aligned
+/// 矩形四舍五入到像素对齐
 CG_INLINE CGRect CGRectPixelRound(CGRect rect) {
     CGPoint origin = CGPointPixelRound(rect.origin);
     CGPoint corner = CGPointPixelRound(CGPointMake(rect.origin.x + rect.size.width,
@@ -319,7 +319,7 @@ CG_INLINE CGRect CGRectPixelRound(CGRect rect) {
     return CGRectMake(origin.x, origin.y, corner.x - origin.x, corner.y - origin.y);
 }
 
-/// ceil point value for pixel-aligned
+/// 矩形向上取整到像素对齐
 CG_INLINE CGRect CGRectPixelCeil(CGRect rect) {
     CGPoint origin = CGPointPixelFloor(rect.origin);
     CGPoint corner = CGPointPixelCeil(CGPointMake(rect.origin.x + rect.size.width,
@@ -332,7 +332,7 @@ CG_INLINE CGRect CGRectFlatted(CGRect rect) {
     return CGRectMake(flat(rect.origin.x), flat(rect.origin.y), flat(rect.size.width), flat(rect.size.height));
 }
 
-/// round point value to .5 pixel for path stroke (odd pixel line width pixel-aligned)
+/// 矩形取整到半像素，用于路径描边（奇数线宽像素对齐）
 CG_INLINE CGRect CGRectPixelHalf(CGRect rect) {
     CGPoint origin = CGPointPixelHalf(rect.origin);
     CGPoint corner = CGPointPixelHalf(CGPointMake(rect.origin.x + rect.size.width,
@@ -393,12 +393,12 @@ CG_INLINE UIEdgeInsets UIEdgeInsetsConcat(UIEdgeInsets insets1, UIEdgeInsets ins
     return insets1;
 }
 
-/// Negates/inverts a UIEdgeInsets.
+/// 对 UIEdgeInsets 取反。
 CG_INLINE UIEdgeInsets UIEdgeInsetsInvert(UIEdgeInsets insets) {
     return UIEdgeInsetsMake(-insets.top, -insets.left, -insets.bottom, -insets.right);
 }
 
-/// floor UIEdgeInset for pixel-aligned
+/// UIEdgeInsets 向下取整到像素对齐
 CG_INLINE UIEdgeInsets UIEdgeInsetPixelFloor(UIEdgeInsets insets) {
     insets.top = CGFloatPixelFloor(insets.top);
     insets.left = CGFloatPixelFloor(insets.left);
@@ -407,7 +407,7 @@ CG_INLINE UIEdgeInsets UIEdgeInsetPixelFloor(UIEdgeInsets insets) {
     return insets;
 }
 
-/// ceil UIEdgeInset for pixel-aligned
+/// UIEdgeInsets 向上取整到像素对齐
 CG_INLINE UIEdgeInsets UIEdgeInsetPixelCeil(UIEdgeInsets insets) {
     insets.top = CGFloatPixelCeil(insets.top);
     insets.left = CGFloatPixelCeil(insets.left);
@@ -480,22 +480,22 @@ CG_INLINE void kai_view_singleFillet(UIView *view, UIRectCorner angle, CGFloat r
 }
 
 
-// main screen's scale
+// 主屏 scale
 #ifndef kScreenScale
 #define kScreenScale ZKScreenScale()
 #endif
 
-// main screen's size (portrait)
+// 主屏尺寸（竖屏）
 #ifndef kScreenSize
 #define kScreenSize ZKScreenSize()
 #endif
 
-// main screen's width (portrait)
+// 主屏宽度（竖屏）
 #ifndef kScreenWidth
 #define kScreenWidth ZKScreenSize().width
 #endif
 
-// main screen's height (portrait)
+// 主屏高度（竖屏）
 #ifndef kScreenHeight
 #define kScreenHeight ZKScreenSize().height
 #endif

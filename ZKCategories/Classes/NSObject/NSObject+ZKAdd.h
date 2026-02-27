@@ -104,7 +104,7 @@ typedef void (^ZKNSObjectDelayBlock)(BOOL cancel);
  block 会捕获调用时的 `self`。为在 block 内访问实例，会将实例指针作为 block 的唯一参数传入。
  @param selectorName 方法名。
  @param block 实例方法对应的 block，其唯一参数为指向实例的指针。
- @returns 操作成功返回 `YES`。
+ @return 操作成功返回 `YES`。
  */
 + (BOOL)addInstanceMethodWithSelectorName:(NSString *)selectorName block:(void (^)(id))block;
 

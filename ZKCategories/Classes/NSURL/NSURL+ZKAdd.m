@@ -12,8 +12,8 @@
 @implementation NSURL (ZKAdd)
 
 + (NSURL *)appStoreURLforApplicationIdentifier:(NSString *)identifier {
-    NSString *link = [NSString stringWithFormat:@"http://itunes.apple.com/us/app/id%@?mt=8", identifier];
-
+    // 不写国家代码，用户点击后会根据其地区/账号自动打开对应市场的 App Store
+    NSString *link = [NSString stringWithFormat:@"https://apps.apple.com/app/id%@", identifier];
     return [NSURL URLWithString:link];
 }
 

@@ -12,22 +12,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSURL (ZKAdd)
 
-/** Returns the URL to open the mobile app store on the app's page.
+/** 返回在 App Store 中打开该应用页面的 URL。
  
- URL construction as described in [QA1629](https://developer.apple.com/library/ios/#qa/qa2008/qa1629.html). Test and found to be opening the app store app directly even without the itms: or itms-apps: scheme. This kind of URL can also be used to forward a link to the app to non-iOS devices.
+ URL 构造参见 [QA1629](https://developer.apple.com/library/ios/#qa/qa2008/qa1629.html)。实测即使不带 itms: 或 itms-apps: scheme 也可直接打开 App Store。此类 URL 也可用于在非 iOS 设备上跳转应用链接。
  
- @param identifier The application identifier that gets assigned to a new app when you add it to iTunes Connect.
- @return Returns the URL to the direct app store link
+ @param identifier 在 iTunes Connect 中添加应用时分配的应用标识。
+ @return 直达 App Store 应用页的 URL
  */
 + (NSURL *)appStoreURLforApplicationIdentifier:(NSString *)identifier;
 
 
-/** Returns the URL to open the mobile app store on the app's review page.
+/** 返回在 App Store 中打开该应用评价页的 URL。
  
- The reviews page is a sub-page of the normal app landing page you get with appStoreURLforApplicationIdentifier:
+ 评价页为 appStoreURLforApplicationIdentifier: 返回的应用落地页的子页面。
  
- @param identifier The application identifier that gets assigned to a new app when you add it to iTunes Connect.
- @return Returns the URL to the direct app store link
+ @param identifier 在 iTunes Connect 中添加应用时分配的应用标识。
+ @return 直达 App Store 应用评价页的 URL
  */
 + (NSURL *)appStoreReviewURLForApplicationIdentifier:(NSString *)identifier;
 
@@ -41,9 +41,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSURL (ZKComparing)
 
 /**
- Compares the receiver with another URL
- @param URL another URL
- @returns `YES` if the receiver is equivalent with the passed URL
+ 将接收者与另一 URL 比较。
+ @param URL 另一 URL
+ @return 若接收者与传入 URL 等价则返回 `YES`
  */
 - (BOOL)isEqualToURL:(NSURL *)URL;
 

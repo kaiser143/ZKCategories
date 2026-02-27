@@ -28,44 +28,32 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)resumeTimerAfterTimeInterval:(NSTimeInterval)interval;
 
 /**
- Creates and returns a new NSTimer object and schedules it on the current run
- loop in the default mode.
+ 创建并返回新的 NSTimer，并以默认 mode 加入当前 run loop。
  
- @discussion     After seconds seconds have elapsed, the timer fires,
- sending the message aSelector to target.
+ @discussion 经过 seconds 秒后定时器触发，执行 block。
  
- @param seconds  The number of seconds between firings of the timer. If seconds
- is less than or equal to 0.0, this method chooses the
- nonnegative value of 0.1 milliseconds instead.
+ @param seconds 定时器触发间隔（秒）。若小于等于 0.0，则使用 0.1 毫秒。
  
- @param block    The block to invoke when the timer fires. The timer  maintains
- a strong reference to the block until it (the timer) is invalidated.
- @param repeats  If YES, the timer will repeatedly reschedule itself until
- invalidated. If NO, the timer will be invalidated after it fires.
+ @param block   定时器触发时调用的 block。定时器会强引用该 block 直至 invalidate。
+ @param repeats YES 表示重复触发直到 invalidate；NO 表示触发一次后自动 invalidate。
  
- @return A new NSTimer object, configured according to the specified parameters.
+ @return 根据参数配置好的新 NSTimer 对象。
  */
 + (NSTimer *)scheduledTimerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
 
 /**
- Creates and returns a new NSTimer object initialized with the specified block.
+ 使用指定 block 创建并返回新的 NSTimer 对象。
  
- @discussion      You must add the new timer to a run loop, using addTimer:forMode:.
- Then, after seconds have elapsed, the timer fires, invoking
- block. (If the timer is configured to repeat, there is no need
- to subsequently re-add the timer to the run loop.)
+ @discussion 需自行通过 addTimer:forMode: 将定时器加入 run loop。
+ 经过 seconds 秒后定时器触发并调用 block。（若为重复定时器，无需再次加入 run loop。）
  
- @param seconds  The number of seconds between firings of the timer. If seconds
- is less than or equal to 0.0, this method chooses the
- nonnegative value of 0.1 milliseconds instead.
+ @param seconds 定时器触发间隔（秒）。若小于等于 0.0，则使用 0.1 毫秒。
  
- @param block    The block to invoke when the timer fires. The timer instructs
- the block to maintain a strong reference to its arguments.
+ @param block   定时器触发时调用的 block，需在 block 内强引用所需参数。
  
- @param repeats  If YES, the timer will repeatedly reschedule itself until
- invalidated. If NO, the timer will be invalidated after it fires.
+ @param repeats YES 表示重复触发直到 invalidate；NO 表示触发一次后自动 invalidate。
  
- @return A new NSTimer object, configured according to the specified parameters.
+ @return 根据参数配置好的新 NSTimer 对象。
  */
 + (NSTimer *)timerWithTimeInterval:(NSTimeInterval)seconds block:(void (^)(NSTimer *timer))block repeats:(BOOL)repeats;
 

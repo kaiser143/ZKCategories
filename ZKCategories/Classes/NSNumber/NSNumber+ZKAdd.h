@@ -56,12 +56,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)stringWithFormat:(NSString *)format;
 
 /**
- Creates and returns an NSNumber object from a string.
- Valid format: @"12", @"12.345", @" -0xFF", @" .23e99 "...
+ 从字符串创建并返回 NSNumber 对象。
+ 合法格式示例：@"12", @"12.345", @" -0xFF", @" .23e99 "...
  
- @param string  The string described an number.
+ @param string 表示数字的字符串。
  
- @return an NSNumber when parse succeed, or nil if an error occurs.
+ @return 解析成功返回 NSNumber，失败返回 nil。
  */
 + (nullable NSNumber *)numberWithString:(NSString *)string;
 

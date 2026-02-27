@@ -36,7 +36,7 @@ extern NSString *const NSRunloopTimeoutException;
 @interface NSRunLoop (ZKAdd)
 
 /**
- *	@brief	extension of NSRunLoop for waiting.
+ *	@brief	NSRunLoop 的等待相关扩展。
  */
 - (void)performBlockAndWait:(void (^)(BOOL *finish))block timeoutInterval:(NSTimeInterval)timeoutInterval;
 

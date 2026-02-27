@@ -500,27 +500,31 @@ static inline UIViewAnimationOptions UIViewAnimationCurveToAnimationOptions(UIVi
 - (void)snapshotImageWithBlock:(void(^)(UIImage *))block {
     if (!block) return;
     
-    //保存offset
+    CGSize contentSize = self.contentSize;
+    if (contentSize.width <= 0 || contentSize.height <= 0) {
+        block(nil);
+        return;
+    }
+    
     CGPoint oldContentOffset = self.contentOffset;
-    //保存frame
     CGRect oldFrame = self.frame;
     
-    if (self.contentSize.height > self.frame.size.height) {
-        self.contentOffset = CGPointMake(0, self.contentSize.height - self.frame.size.height);
-    }
-    self.frame = CGRectMake(0, 0, self.contentSize.width, self.contentSize.height);
-    
-    //延迟0.3秒，避免有时候渲染不出来的情况
-    [NSThread sleepForTimeInterval:0.3];
-    
     self.contentOffset = CGPointZero;
-    UIImage *snapshotImage = self.snapshotImage;
+    self.frame = CGRectMake(0, 0, contentSize.width, contentSize.height);
+    [self layoutIfNeeded];
     
-    self.frame = oldFrame;
-    //还原
-    self.contentOffset = oldContentOffset;
-
-    !block ?: block(snapshotImage);
+    __weak typeof(self) wself = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        __strong typeof(wself) self = wself;
+        if (!self) {
+            block(nil);
+            return;
+        }
+        UIImage *snapshotImage = self.snapshotImage;
+        self.frame = oldFrame;
+        self.contentOffset = oldContentOffset;
+        block(snapshotImage);
+    });
 }
 
 #pragma mark - :. 解决手势返回和scrollView的冲突

@@ -10,10 +10,10 @@
 #define ZKUIConstants_h
 
 /**
- Returns a constant font size difference reflecting the current accessibility settings.
+ 根据当前无障碍内容尺寸类别返回对应的字号差值。
  
- @param category A content size category constant string.
- @returns A float constant font size difference.
+ @param category 内容尺寸类别常量字符串。
+ @return 字号差值（浮点常量）。
  */
 __unused static CGFloat ZKPointSizeDifferenceForCategory(NSString *category)
 {
