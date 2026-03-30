@@ -35,7 +35,7 @@
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
         [self scrollToRowAtIndexPath:indexPath
                     atScrollPosition:UITableViewScrollPositionTop
-                            animated:NO];
+                            animated:animated];
     }
 }
 
@@ -47,7 +47,7 @@
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:rowCount - 1 inSection:section];
             [self scrollToRowAtIndexPath:indexPath
                         atScrollPosition:UITableViewScrollPositionBottom
-                                animated:NO];
+                                animated:animated];
         }
     }
 }
@@ -149,7 +149,14 @@
 }
 
 - (KAITableViewCellPosition)positionForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSInteger numberOfRowsInSection = [self.dataSource tableView:self numberOfRowsInSection:indexPath.section];
+    if (!indexPath) {
+        return KAITableViewCellPositionNone;
+    }
+    id<UITableViewDataSource> dataSource = self.dataSource;
+    if (![dataSource respondsToSelector:@selector(tableView:numberOfRowsInSection:)]) {
+        return KAITableViewCellPositionNone;
+    }
+    NSInteger numberOfRowsInSection = [dataSource tableView:self numberOfRowsInSection:indexPath.section];
     if (numberOfRowsInSection == 1) {
         return KAITableViewCellPositionSingleInSection;
     }

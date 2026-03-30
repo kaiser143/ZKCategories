@@ -94,20 +94,18 @@ static NSUInteger __internalOperationCount = 0;
 }
 
 - (BOOL)isBeingDebugged {
-    size_t size = sizeof(struct kinfo_proc);
     struct kinfo_proc info;
-    int ret = 0, name[4];
-    memset(&info, 0, sizeof(struct kinfo_proc));
-
+    memset(&info, 0, sizeof(info));
+    size_t size = sizeof(info);
+    int name[4];
     name[0] = CTL_KERN;
     name[1] = KERN_PROC;
     name[2] = KERN_PROC_PID;
     name[3] = getpid();
-
-    if (ret == (sysctl(name, 4, &info, &size, NULL, 0))) {
-        return ret != 0;
+    if (sysctl(name, 4, &info, &size, NULL, 0) != 0) {
+        return NO;
     }
-    return (info.kp_proc.p_flag & P_TRACED) ? YES : NO;
+    return (info.kp_proc.p_flag & P_TRACED) != 0;
 }
 
 - (int64_t)memoryUsage {

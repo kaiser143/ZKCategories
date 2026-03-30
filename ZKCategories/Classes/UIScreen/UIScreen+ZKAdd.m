@@ -88,7 +88,6 @@ ZKSYNTH_DUMMY_CLASS(UIScreen_ZKAdd);
 
     static CGFloat ppi = 0;
     static dispatch_once_t one;
-    static NSString *name;
     dispatch_once(&one, ^{
         NSDictionary<NSString *, NSNumber *> *dic = @{
             @"Watch1,1": @326, //@"Apple Watch 38mm",
@@ -162,7 +161,10 @@ ZKSYNTH_DUMMY_CLASS(UIScreen_ZKAdd);
         };
         NSString *model = [UIDevice currentDevice].machineModel;
         if (model) {
-            ppi = dic[name].doubleValue;
+            NSNumber *n = dic[model];
+            if (n) {
+                ppi = n.doubleValue;
+            }
         }
         if (ppi == 0) ppi = 326;
     });
