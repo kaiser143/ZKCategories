@@ -8,6 +8,28 @@
 
 #import "NSUserDefaults+ZKAdd.h"
 
+static NSNumber *ZKNSNumberFromID(id value) {
+    static NSCharacterSet *dot;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dot = [NSCharacterSet characterSetWithRange:NSMakeRange('.', 1)];
+    });
+    if (!value) return nil;
+    if ([value isKindOfClass:[NSNumber class]]) return value;
+    if ([value isKindOfClass:[NSString class]]) {
+        NSString *lower = ((NSString *)value).lowercaseString;
+        if ([lower isEqualToString:@"true"] || [lower isEqualToString:@"yes"]) return @(YES);
+        if ([lower isEqualToString:@"false"] || [lower isEqualToString:@"no"]) return @(NO);
+        if ([lower isEqualToString:@"nil"] || [lower isEqualToString:@"null"]) return nil;
+        if ([(NSString *)value rangeOfCharacterFromSet:dot].location != NSNotFound) {
+            return @(((NSString *)value).doubleValue);
+        } else {
+            return @(((NSString *)value).longLongValue);
+        }
+    }
+    return nil;
+}
+
 @implementation NSUserDefaults (ZKAdd)
 
 - (void)setValue:(id)value forKey:(NSString *)key iCloudSync:(BOOL)sync {
@@ -75,6 +97,95 @@
     res &= [[NSUbiquitousKeyValueStore defaultStore] synchronize];
 
     return res;
+}
+
+#pragma mark -
+#pragma mark :. DefaultValueAccess
+
+#define RETURN_UD_VALUE(_type_)                                              \
+    if (!key) return defaultValue;                                           \
+    id value = [self objectForKey:key];                                      \
+    if (!value) return defaultValue;                                         \
+    if ([value isKindOfClass:[NSNumber class]]) return ((NSNumber *)value)._type_; \
+    if ([value isKindOfClass:[NSString class]]) return ZKNSNumberFromID(value)._type_; \
+    return defaultValue;
+
+- (BOOL)boolValueForKey:(NSString *)key defaultValue:(BOOL)defaultValue {
+    RETURN_UD_VALUE(boolValue);
+}
+
+- (char)charValueForKey:(NSString *)key defaultValue:(char)defaultValue {
+    RETURN_UD_VALUE(charValue);
+}
+
+- (unsigned char)unsignedCharValueForKey:(NSString *)key defaultValue:(unsigned char)defaultValue {
+    RETURN_UD_VALUE(unsignedCharValue);
+}
+
+- (short)shortValueForKey:(NSString *)key defaultValue:(short)defaultValue {
+    RETURN_UD_VALUE(shortValue);
+}
+
+- (unsigned short)unsignedShortValueForKey:(NSString *)key defaultValue:(unsigned short)defaultValue {
+    RETURN_UD_VALUE(unsignedShortValue);
+}
+
+- (int)intValueForKey:(NSString *)key defaultValue:(int)defaultValue {
+    RETURN_UD_VALUE(intValue);
+}
+
+- (unsigned int)unsignedIntValueForKey:(NSString *)key defaultValue:(unsigned int)defaultValue {
+    RETURN_UD_VALUE(unsignedIntValue);
+}
+
+- (long)longValueForKey:(NSString *)key defaultValue:(long)defaultValue {
+    RETURN_UD_VALUE(longValue);
+}
+
+- (unsigned long)unsignedLongValueForKey:(NSString *)key defaultValue:(unsigned long)defaultValue {
+    RETURN_UD_VALUE(unsignedLongValue);
+}
+
+- (long long)longLongValueForKey:(NSString *)key defaultValue:(long long)defaultValue {
+    RETURN_UD_VALUE(longLongValue);
+}
+
+- (unsigned long long)unsignedLongLongValueForKey:(NSString *)key defaultValue:(unsigned long long)defaultValue {
+    RETURN_UD_VALUE(unsignedLongLongValue);
+}
+
+- (float)floatValueForKey:(NSString *)key defaultValue:(float)defaultValue {
+    RETURN_UD_VALUE(floatValue);
+}
+
+- (double)doubleValueForKey:(NSString *)key defaultValue:(double)defaultValue {
+    RETURN_UD_VALUE(doubleValue);
+}
+
+- (NSInteger)integerValueForKey:(NSString *)key defaultValue:(NSInteger)defaultValue {
+    RETURN_UD_VALUE(integerValue);
+}
+
+- (NSUInteger)unsignedIntegerValueForKey:(NSString *)key defaultValue:(NSUInteger)defaultValue {
+    RETURN_UD_VALUE(unsignedIntegerValue);
+}
+
+- (NSNumber *)numberValueForKey:(NSString *)key defaultValue:(NSNumber *)defaultValue {
+    if (!key) return defaultValue;
+    id value = [self objectForKey:key];
+    if (!value) return defaultValue;
+    if ([value isKindOfClass:[NSNumber class]]) return value;
+    if ([value isKindOfClass:[NSString class]]) return ZKNSNumberFromID(value);
+    return defaultValue;
+}
+
+- (NSString *)stringValueForKey:(NSString *)key defaultValue:(NSString *)defaultValue {
+    if (!key) return defaultValue;
+    id value = [self objectForKey:key];
+    if (!value) return defaultValue;
+    if ([value isKindOfClass:[NSString class]]) return value;
+    if ([value isKindOfClass:[NSNumber class]]) return ((NSNumber *)value).description;
+    return defaultValue;
 }
 
 #pragma mark -

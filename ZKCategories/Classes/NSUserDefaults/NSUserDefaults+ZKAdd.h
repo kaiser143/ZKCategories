@@ -21,6 +21,43 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)synchronizeAlsoiCloudSync:(BOOL)sync;
 
 #pragma mark-
+#pragma mark :. DefaultValueAccess
+
+/**
+ 读取指定 key 对应的值并转为目标类型。
+ 
+ @param key          存储时使用的 key。
+ @param defaultValue key 不存在、值为 nil 或无法转换时返回的默认值。
+ @return 转换后的值，失败时返回 defaultValue。
+ @note 支持 NSNumber 直接转换；NSString 会尝试解析为数值或布尔值（如 "true"、"yes"）。
+ */
+- (BOOL)boolValueForKey:(NSString *)key defaultValue:(BOOL)defaultValue NS_SWIFT_NAME(bool(forKey:defaultValue:));
+
+- (char)charValueForKey:(NSString *)key defaultValue:(char)defaultValue NS_SWIFT_NAME(char(forKey:defaultValue:));
+- (unsigned char)unsignedCharValueForKey:(NSString *)key defaultValue:(unsigned char)defaultValue NS_SWIFT_NAME(unsignedChar(forKey:defaultValue:));
+
+- (short)shortValueForKey:(NSString *)key defaultValue:(short)defaultValue NS_SWIFT_NAME(short(forKey:defaultValue:));
+- (unsigned short)unsignedShortValueForKey:(NSString *)key defaultValue:(unsigned short)defaultValue NS_SWIFT_NAME(unsignedShort(forKey:defaultValue:));
+
+- (int)intValueForKey:(NSString *)key defaultValue:(int)defaultValue NS_SWIFT_NAME(int(forKey:defaultValue:));
+- (unsigned int)unsignedIntValueForKey:(NSString *)key defaultValue:(unsigned int)defaultValue NS_SWIFT_NAME(unsignedInt(forKey:defaultValue:));
+
+- (long)longValueForKey:(NSString *)key defaultValue:(long)defaultValue NS_SWIFT_NAME(long(forKey:defaultValue:));
+- (unsigned long)unsignedLongValueForKey:(NSString *)key defaultValue:(unsigned long)defaultValue NS_SWIFT_NAME(unsignedLong(forKey:defaultValue:));
+
+- (long long)longLongValueForKey:(NSString *)key defaultValue:(long long)defaultValue NS_SWIFT_NAME(longLong(forKey:defaultValue:));
+- (unsigned long long)unsignedLongLongValueForKey:(NSString *)key defaultValue:(unsigned long long)defaultValue NS_SWIFT_NAME(unsignedLongLong(forKey:defaultValue:));
+
+- (float)floatValueForKey:(NSString *)key defaultValue:(float)defaultValue NS_SWIFT_NAME(float(forKey:defaultValue:));
+- (double)doubleValueForKey:(NSString *)key defaultValue:(double)defaultValue NS_SWIFT_NAME(double(forKey:defaultValue:));
+
+- (NSInteger)integerValueForKey:(NSString *)key defaultValue:(NSInteger)defaultValue NS_SWIFT_NAME(integer(forKey:defaultValue:));
+- (NSUInteger)unsignedIntegerValueForKey:(NSString *)key defaultValue:(NSUInteger)defaultValue NS_SWIFT_NAME(unsignedInteger(forKey:defaultValue:));
+
+- (nullable NSNumber *)numberValueForKey:(NSString *)key defaultValue:(nullable NSNumber *)defaultValue NS_SWIFT_NAME(number(forKey:defaultValue:));
+- (nullable NSString *)stringValueForKey:(NSString *)key defaultValue:(nullable NSString *)defaultValue NS_SWIFT_NAME(string(forKey:defaultValue:));
+
+#pragma mark-
 #pragma mark :. SafeAccess
 
 + (NSString *)stringForKey:(NSString *)defaultName NS_SWIFT_UNAVAILABLE("");
