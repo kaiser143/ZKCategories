@@ -88,6 +88,36 @@ pod 'ZKCategories', :git => 'https://github.com/kaiser143/ZKCategories.git', :ta
 pod install
 ```
 
+### Swift Package Manager 安装
+
+在 Xcode 中：**File → Add Package Dependencies...**，输入仓库地址：
+
+```
+https://github.com/kaiser143/ZKCategories.git
+```
+
+或在 `Package.swift` 中添加：
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/kaiser143/ZKCategories.git", from: "0.4.24"),
+],
+targets: [
+    .target(
+        name: "YourTarget",
+        dependencies: ["ZKCategories"]
+    ),
+]
+```
+
+然后在代码中导入：
+
+```objc
+#import <ZKCategories/ZKCategories.h>
+```
+
+> **说明**：SPM 目前对应 CocoaPods 的 `Core` 子模块。KVO 防闪退功能（`ZKKVOSAFE`）请继续使用 CocoaPods 子模块。
+
 ### 手动安装
 
 1. 下载项目源码
