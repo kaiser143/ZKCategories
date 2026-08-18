@@ -70,18 +70,6 @@
     }
 }
 
-- (BOOL)touchesShouldCancelInContentView:(UIView *)view {
-    // Because we set delaysContentTouches = NO, we return YES for UIButtons
-    // so that scrolling works correctly when the scroll gesture
-    // starts in the UIButtons.
-
-    if ([view isKindOfClass:[UIControl class]]) {
-        return YES;
-    }
-
-    return [super touchesShouldCancelInContentView:view];
-}
-
 - (void)updateWithBlock:(void (^)(UITableView *tableView))block {
     [self beginUpdates];
     block(self);
@@ -272,6 +260,20 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        // Category 直接重写 touchesShouldCancelInContentView: 不会生效：该方法在 UITableView 上已有实现时 class_addMethod 会失败。
+        // 用 OverrideImplementation 替换/补上 IMP，手指落在 UIControl 上拖动时才能取消控件触摸并开始滚动。
+        OverrideImplementation([UITableView class], @selector(touchesShouldCancelInContentView:), ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
+            return ^BOOL(UITableView *selfObject, UIView *view) {
+                if ([view isKindOfClass:[UIControl class]]) {
+                    return YES;
+                }
+
+                BOOL (*originSelectorIMP)(id, SEL, UIView *);
+                originSelectorIMP = (BOOL (*)(id, SEL, UIView *))originalIMPProvider();
+                return originSelectorIMP(selfObject, originCMD, view);
+            };
+        });
+
         // -[UITableViewDelegate tableView:willDisplayCell:forRowAtIndexPath:] 比这个还晚，所以不用担心触发 delegate
         OverrideImplementation([UITableView class], NSSelectorFromString(@"_configureCellForDisplay:forIndexPath:"), ^id(__unsafe_unretained Class originClass, SEL originCMD, IMP (^originalIMPProvider)(void)) {
             return ^(UITableView *selfObject, UITableViewCell *cell, NSIndexPath *indexPath) {
