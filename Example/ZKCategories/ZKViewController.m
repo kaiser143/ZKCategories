@@ -9,6 +9,7 @@
 #import "ZKViewController.h"
 #import <ZKCategories/ZKCategories.h>
 #import "ZKKVOViewController.h"
+#import "ZKControlViewController.h"
 
 @interface ZKViewController () <UIScrollViewDelegate>
 
@@ -82,6 +83,20 @@
 //                                   [self kai_pushViewController:controller];
         NSLog(@"test", nil);
                                }];
+
+    UIButton *controlButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [controlButton kai_setTitle:@"UIControl 高亮"];
+    [controlButton setTitleColor:UIColor.blackColor];
+    controlButton.top     = 280;
+    controlButton.size    = CGSizeMake(140, 50);
+    controlButton.centerX = self.view.centerX;
+    kai_view_border_radius(controlButton, 8.f, 1, [UIColor colorWithHexString:@"#eeeeee"]);
+    [self.view addSubview:controlButton];
+    [controlButton addBlockForControlEvents:UIControlEventTouchUpInside
+                                      block:^(__kindof UIControl *_Nonnull sender) {
+                                          @strongify(self);
+                                          [self kai_pushViewController:[[ZKControlViewController alloc] init]];
+                                      }];
 
     i++;
 }

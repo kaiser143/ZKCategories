@@ -49,16 +49,22 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)removeAllBlocksForControlEvents:(UIControlEvents)controlEvents;
 
-/*!
- *  @brief
- *  UIControl 被放在 UIScrollView 上时的点击体验。系统默认行为下，UIControl 在 UIScrollView 上会有300毫秒的延迟，当你快速点击某个 UIControl 时，将不会看到 setHighlighted 的效果。
- *  当置为 YES，会使用自己的一套计算方式去判断触发 setHighlighted 的时机，从而保证既不影响 UIScrollView 的滚动，又能让 UIControl 在被快速点击时也能立马看到 setHighlighted 的效果。
+/**
+ 是否优化 UIControl 被放在 UIScrollView 上时的点击体验。系统默认行为下，UIControl 在 UIScrollView 上会有 300 毫秒的延迟，当你快速点击某个 UIControl 时，将不会看到 setHighlighted 的效果。
+
+ 此时可以将该属性置为 YES，会使用自己的一套计算方式去判断触发 setHighlighted 的时机：
+ - 手指按下后未满 300ms：不因 touchesBegan 进入高亮，避免拖动滚动时控件误高亮，从而不影响 UIScrollView 滚动；
+ - 按住超过 300ms 且未移动：进入高亮；
+ - 快速点击（抬起时仍在控件内）：在 touchesEnded 时短暂高亮，保证能看到点击反馈。
+
+ @warning 使用了这个属性则不需要设置 UIScrollView.delaysContentTouches。因为如果将 UIScrollView.delaysContentTouches 置为 NO 来取消这个延迟，则系统无法判断 touch 时是要点击还是要滚动，你就会观察到当你想要滚动 UIScrollView 时，手指触摸到的那个 UIControl 会呈现出 highlighted 的效果，但通常这并不符合预期。
  */
 @property (nonatomic, assign) BOOL automaticallyAdjustTouchHighlightedInScrollView;
 
-/*!
- *  @brief  当置为 YES 时，连续的快速点击只有第一次会触发
- *  @warning 不能与 @c automaticallyAdjustTouchHighlightedInScrollView 同时开启。
+/**
+ 当快速重复点击某个 UIControl 时，系统的默认行为是每次点击都会触发一次 UIControlEventTouchUpInside 事件，但通常这并不是我们想要的，可能会导致某段逻辑被重复触发。因此提供这个属性，当置为 YES 时，连续的快速点击只有第一次会触发 UIControlEventTouchUpInside，当停止 300ms 后再重新点击，才会重新触发一次 UIControlEventTouchUpInside。该属性对非 UIControlEventTouchUpInside 的事件无效。
+
+ @warning 不能与 @c automaticallyAdjustTouchHighlightedInScrollView 同时开启。
  */
 @property (nonatomic, assign) BOOL preventsRepeatedTouchUpInsideEvent;
 
