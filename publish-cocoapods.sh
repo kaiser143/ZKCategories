@@ -7,7 +7,7 @@ SKIP_CONFIRM=0
 
 usage() {
   cat <<'EOF'
-Usage: ./UpdateCocoaPod.sh [options]
+Usage: ./publish-cocoapods.sh [options]
 
 Bump patch version in ZKCategories.podspec, commit, tag, push, and publish to CocoaPods trunk.
 
