@@ -8,6 +8,7 @@
 
 #import "UIControl+ZKAdd.h"
 #import "NSObject+ZKAdd.h"
+#import "ZKCategoriesMacro.h"
 
 @interface _KAIUIControlBlockTarget : NSObject
 
@@ -191,11 +192,11 @@
         if (self.highlighted) {
             [self setHighlighted:NO];
         }
-        __weak typeof(self) weakSelf = self;
+        @weakify(self);
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (strongSelf.canSetHighlighted) {
-                [strongSelf setHighlighted:YES];
+            @strongify(self);
+            if (self.canSetHighlighted) {
+                [self setHighlighted:YES];
             }
         });
     } else {
@@ -217,14 +218,14 @@
         if (self.touchInside) {
             [self setHighlighted:YES];
             // 避免 dispatch retain 住 self；期间 self 可能已被 remove，再触发点击易导致业务异常
-            __weak typeof(self) weakSelf = self;
+            @weakify(self);
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.02 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 // 如果延迟时间太长，会导致快速点击两次，事件会触发两次
                 // 对于 3D Touch 的机器，如果点击按钮的时候在按钮上停留时间稍微长一点点，那么 touchesEnded 会被调用两次
-                __strong typeof(weakSelf) strongSelf = weakSelf;
-                [strongSelf sendActionsForAllTouchEventsIfCan];
-                if (strongSelf.highlighted) {
-                    [strongSelf setHighlighted:NO];
+                @strongify(self);
+                [self sendActionsForAllTouchEventsIfCan];
+                if (self.highlighted) {
+                    [self setHighlighted:NO];
                 }
             });
         } else {
