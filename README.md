@@ -2,11 +2,11 @@
 ZKCategories
 </h1>
 <p align="center">
-<img src="https://img.shields.io/cocoapods/v/ZKCategories.svg?style=flat" />
-<img src="https://img.shields.io/badge/supporting-objectiveC-yellow.svg" />
-<img src="https://img.shields.io/badge/license-MIT-brightgreen.svg" />
-<img src="https://img.shields.io/badge/platform- iOS -lightgrey.svg" />
-<img src="https://img.shields.io/badge/support-iOS 7+ -blue.svg?style=flat" />
+<img src="https://img.shields.io/cocoapods/v/ZKCategories.svg?style=for-the-badge" />
+<img src="https://img.shields.io/badge/supporting-objectiveC-yellow.svg?style=for-the-badge" />
+<img src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=for-the-badge" />
+<img src="https://img.shields.io/badge/platform- iOS -lightgrey.svg?style=for-the-badge" />
+<img src="https://img.shields.io/badge/support-iOS 7+ -blue.svg?style=for-the-badge" />
 </p>
 
 <p align="center"><b>一个功能丰富的iOS分类库，为Foundation和UIKit提供便捷的扩展方法</b></p>
