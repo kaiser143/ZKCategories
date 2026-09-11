@@ -458,18 +458,34 @@ CG_INLINE void kai_view_border_radius(UIView *view, CGFloat radius, CGFloat widt
 }
 
 /**
- view 单个圆角
- 
- @param view 试图
- @param angle 某个圆角
- * UIRectCornerTopLeft
- * UIRectCornerTopRight
- * UIRectCornerBottomLeft
- * UIRectCornerBottomRight
- * UIRectCornerAllCorners
- @param radius 圆角度
+ * view 单个圆角（已废弃）
+ *
+ * @deprecated 请改用 `CALayer.cornerRadius` + `CALayer.maskedCorners`，避免依赖 `bounds` 的 mask，布局变化后无需重新设置。
+ *
+ * @code
+    // Objective-C
+    view.layer.cornerRadius = 40;
+    view.layer.maskedCorners = kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner; // 左上 + 右上
+    view.layer.masksToBounds = YES;
+
+    // Swift
+    view.layer.cornerRadius = 40
+    view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+    view.layer.masksToBounds = true
+ * @endcode
+ *
+ * UIRectCorner 与 CACornerMask 对应关系：
+ * - UIRectCornerTopLeft     → kCALayerMinXMinYCorner
+ * - UIRectCornerTopRight    → kCALayerMaxXMinYCorner
+ * - UIRectCornerBottomLeft  → kCALayerMinXMaxYCorner
+ * - UIRectCornerBottomRight → kCALayerMaxXMaxYCorner
+ * - UIRectCornerAllCorners  → kCALayerMinXMinYCorner | kCALayerMaxXMinYCorner | kCALayerMinXMaxYCorner | kCALayerMaxXMaxYCorner
+ *
+ * @param view 视图
+ * @param angle 某个圆角
+ * @param radius 圆角半径
  */
-CG_INLINE void kai_view_singleFillet(UIView *view, UIRectCorner angle, CGFloat radius) {
+CG_INLINE void kai_view_singleFillet(UIView *view, UIRectCorner angle, CGFloat radius) ZK_API_DEPRECATED(layer.maskedCorners) {
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:view.bounds
                                                    byRoundingCorners:angle
                                                          cornerRadii:CGSizeMake(radius, radius)];
@@ -500,6 +516,14 @@ CG_INLINE void kai_view_singleFillet(UIView *view, UIRectCorner angle, CGFloat r
 #define kScreenHeight ZKScreenSize().height
 #endif
 
+/**
+ *  判断某个 class 是否重写了父类的指定实例方法
+ *
+ *  @param targetClass 要检查的 class
+ *  @param targetSelector 要检查的实例方法
+ *  @return YES 表示 targetClass 自身实现了该方法（非继承自父类）；
+ *          NO  表示该方法不存在，或与父类共用同一实现（未重写）
+ */
 CG_INLINE BOOL HasOverrideSuperclassMethod(Class targetClass, SEL targetSelector) {
     Method method = class_getInstanceMethod(targetClass, targetSelector);
     if (!method) return NO;
