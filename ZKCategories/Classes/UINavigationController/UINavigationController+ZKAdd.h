@@ -88,7 +88,9 @@ typedef void (^ZKNavigationActionDidChangeBlock)(ZKNavigationAction action, BOOL
 /// 默认为 NO，即导航栏默认显示。
 @property (nonatomic, assign) BOOL kai_prefersNavigationBarHidden ZK_API_DEPRECATED(ZKNavigationBarConfigureStyle);
 
-/// 开始交互式返回手势时，允许的距左边缘的最大初始距离。默认为 0，表示不限制。
+/// 开始交互式返回手势时，允许的距左边缘的最大初始距离。默认为 0，表示不限制，全屏任意位置起滑都能返回。
+/// 设为大于 0 的值（例如 44）后，仅允许从左边缘该距离内起滑才返回，其余区域留给页面自己的横滑，可解决与 ScrollView/PageViewController/侧滑菜单等水平手势的冲突。
+/// 若想彻底禁用该页返回，请用 kai_interactivePopDisabled = YES（精细限流 vs 一刀切）。
 @property (nonatomic, assign) CGFloat kai_interactivePopMaxAllowedInitialDistanceToLeftEdge;
 
 @end
