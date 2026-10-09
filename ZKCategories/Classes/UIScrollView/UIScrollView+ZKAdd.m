@@ -384,10 +384,22 @@ static inline UIViewAnimationOptions UIViewAnimationCurveToAnimationOptions(UIVi
     CGRect screenRect    = [[UIScreen mainScreen] bounds];
     CGFloat screenHeight = screenRect.size.height;
 
-    UIWindow *panWindow = [[UIApplication sharedApplication] keyWindow];
-    CGPoint location    = [pan locationInView:panWindow];
+    UIWindow *panWindow = self.window;
+    if (!panWindow && @available(iOS 15.0, *)) {
+        for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
+            if (![scene isKindOfClass:[UIWindowScene class]]) continue;
+            if (scene.activationState != UISceneActivationStateForegroundActive) continue;
+            panWindow = [(UIWindowScene *)scene keyWindow];
+            if (panWindow) break;
+        }
+    }
+    if (!panWindow && @available(iOS 13.0, *)) {
+        panWindow = [UIApplication sharedApplication].windows.firstObject;
+    }
+    UIView *gestureView = panWindow ?: self.superview;
+    CGPoint location    = [pan locationInView:gestureView];
     location.y += self.messageInputBarHeight;
-    CGPoint velocity = [pan velocityInView:panWindow];
+    CGPoint velocity = [pan velocityInView:gestureView];
 
     switch (pan.state) {
         case UIGestureRecognizerStateBegan:
