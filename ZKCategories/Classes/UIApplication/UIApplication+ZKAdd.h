@@ -53,6 +53,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign, readonly, getter=isRunningTestFlightBeta) BOOL runningTestFlightBeta;
 
+/// 当前激活 Scene 的 keyWindow，iOS 26 安全版本
+/// 主线程调用，找不到返回 nil
+@property (nonatomic, readonly, nullable) UIWindow *kai_keyWindow;
+
+/// 所有激活 Scene 的窗口集合，用于找第一响应者等遍历场景
+@property (nonatomic, readonly) NSArray<UIWindow *> *kai_allWindows;
+
 /**
  在 iPad 分屏模式下可获得实际运行区域的窗口大小，如需适配 iPad 分屏，建议用这个方法来代替 [UIScreen mainScreen].bounds.size
  @return 应用运行的窗口大小

@@ -231,11 +231,11 @@ static NSUInteger __internalOperationCount = 0;
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     CGRect applicationFrame = [UIScreen mainScreen].applicationFrame;
 #pragma clang diagnostic pop
-    
+
     CGSize applicationSize = CGSizeMake(applicationFrame.size.width + applicationFrame.origin.x, applicationFrame.size.height + applicationFrame.origin.y);
     if (CGSizeEqualToSize(applicationSize, CGSizeZero)) {
         // 实测 MacCatalystApp 通过 [UIScreen mainScreen].applicationFrame 拿不到大小，这里做一下保护
-        UIWindow *window = UIApplication.sharedApplication.delegate.window;
+        UIWindow *window = UIApplication.sharedApplication.kai_keyWindow;
         if (window) {
             applicationSize = window.bounds.size;
         } else {
@@ -243,6 +243,64 @@ static NSUInteger __internalOperationCount = 0;
         }
     }
     return applicationSize;
+}
+
+- (UIWindow *)kai_keyWindow {
+    if (![NSThread isMainThread]) return nil;
+    if (@available(iOS 15.0, *)) {
+        for (UIScene *scene in self.connectedScenes) {
+            if (scene.activationState != UISceneActivationStateForegroundActive) continue;
+            if (![scene isKindOfClass:[UIWindowScene class]]) continue;
+            UIWindow *window = [(UIWindowScene *)scene keyWindow];
+            if (window) return window;
+        }
+    }
+    if (@available(iOS 13.0, *)) {
+        for (UIScene *scene in self.connectedScenes) {
+            if (![scene isKindOfClass:[UIWindowScene class]]) continue;
+            for (UIWindow *window in [(UIWindowScene *)scene windows]) {
+                if (window.isKeyWindow) return window;
+            }
+        }
+        UIWindowScene *scene = (UIWindowScene *)self.connectedScenes.allObjects.firstObject;
+        if ([scene isKindOfClass:[UIWindowScene class]] && scene.windows.count) {
+            return scene.windows.firstObject;
+        }
+        NSArray<UIWindow *> *windows = [self valueForKey:@"windows"];
+        if ([windows isKindOfClass:[NSArray class]] && windows.count) {
+            return windows.firstObject;
+        }
+        return nil;
+    } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        return self.keyWindow;
+#pragma clang diagnostic pop
+    }
+}
+
+- (NSArray<UIWindow *> *)kai_allWindows {
+    if (![NSThread isMainThread]) return @[];
+    NSMutableArray<UIWindow *> *result = [NSMutableArray array];
+    if (@available(iOS 13.0, *)) {
+        for (UIScene *scene in self.connectedScenes) {
+            if (![scene isKindOfClass:[UIWindowScene class]]) continue;
+            if (scene.activationState != UISceneActivationStateForegroundActive &&
+                scene.activationState != UISceneActivationStateForegroundInactive) continue;
+            for (UIWindow *window in [(UIWindowScene *)scene windows]) {
+                if (![result containsObject:window]) [result addObject:window];
+            }
+        }
+        if (result.count) return [result copy];
+        NSArray<UIWindow *> *windows = [self valueForKey:@"windows"];
+        if ([windows isKindOfClass:[NSArray class]]) return [windows copy];
+        return @[];
+    } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        return self.windows ?: @[];
+#pragma clang diagnostic pop
+    }
 }
 
 @end
