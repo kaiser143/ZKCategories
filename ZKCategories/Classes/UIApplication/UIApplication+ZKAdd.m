@@ -248,20 +248,22 @@ static NSUInteger __internalOperationCount = 0;
 - (UIWindow *)kai_keyWindow {
     if (![NSThread isMainThread]) return nil;
     if (@available(iOS 15.0, *)) {
-        for (UIScene *scene in self.connectedScenes) {
-            if (scene.activationState != UISceneActivationStateForegroundActive) continue;
-            if (![scene isKindOfClass:[UIWindowScene class]]) continue;
-            UIWindow *window = [(UIWindowScene *)scene keyWindow];
-            if (window) return window;
-        }
+        NSArray<UIScene *> *scenes = [self.connectedScenes.allObjects filter:^BOOL (UIScene *scene) {
+            if (scene.activationState != UISceneActivationStateForegroundActive) return NO;
+            if (![scene isKindOfClass:[UIWindowScene class]]) return NO;
+            return [(UIWindowScene *)scene keyWindow] != nil;
+        }];
+        UIWindowScene *scene = (UIWindowScene *)scenes.firstObject;
+        if (scene) return scene.keyWindow;
     }
     if (@available(iOS 13.0, *)) {
-        for (UIScene *scene in self.connectedScenes) {
-            if (![scene isKindOfClass:[UIWindowScene class]]) continue;
-            for (UIWindow *window in [(UIWindowScene *)scene windows]) {
-                if (window.isKeyWindow) return window;
-            }
-        }
+        NSArray<UIScene *> *windowScenes = [self.connectedScenes.allObjects filter:^BOOL (UIScene *scene) {
+            return [scene isKindOfClass:[UIWindowScene class]];
+        }];
+        NSArray<UIWindow *> *keyWindows = [[windowScenes flatten:@"windows"] filter:^BOOL (UIWindow *window) {
+            return window.isKeyWindow;
+        }];
+        if (keyWindows.firstObject) return keyWindows.firstObject;
         UIWindowScene *scene = (UIWindowScene *)self.connectedScenes.allObjects.firstObject;
         if ([scene isKindOfClass:[UIWindowScene class]] && scene.windows.count) {
             return scene.windows.firstObject;
@@ -281,15 +283,15 @@ static NSUInteger __internalOperationCount = 0;
 
 - (NSArray<UIWindow *> *)kai_allWindows {
     if (![NSThread isMainThread]) return @[];
-    NSMutableArray<UIWindow *> *result = [NSMutableArray array];
     if (@available(iOS 13.0, *)) {
-        for (UIScene *scene in self.connectedScenes) {
-            if (![scene isKindOfClass:[UIWindowScene class]]) continue;
-            if (scene.activationState != UISceneActivationStateForegroundActive &&
-                scene.activationState != UISceneActivationStateForegroundInactive) continue;
-            for (UIWindow *window in [(UIWindowScene *)scene windows]) {
-                if (![result containsObject:window]) [result addObject:window];
-            }
+        NSArray<UIScene *> *scenes = [self.connectedScenes.allObjects filter:^BOOL (UIScene *scene) {
+            if (![scene isKindOfClass:[UIWindowScene class]]) return NO;
+            return scene.activationState == UISceneActivationStateForegroundActive ||
+                scene.activationState == UISceneActivationStateForegroundInactive;
+        }];
+        NSMutableArray<UIWindow *> *result = [NSMutableArray array];
+        for (UIWindow *window in [scenes flatten:@"windows"]) {
+            if (![result containsObject:window]) [result addObject:window];
         }
         if (result.count) return [result copy];
         NSArray<UIWindow *> *windows = [self valueForKey:@"windows"];
